@@ -1,0 +1,69 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+{% block base_subtitle %} Post Categories{% endblock %}
+{% block base_subhead_heading %} Post Categories &rAarr; List{% endblock %}
+{% block base_subhead_paragraph %}List of all available Post Categories{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-primary" href="{% url 'admins:post-category-add' %}">
+        Add Post Category
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                {% if object_list %}
+
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Parent</th>
+                            <th>Status</th>
+                            <th>-</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for object in object_list %}
+                            <tr>
+                                <td>{{ object.name }}</td>
+                                <td>{{ object.parent }}</td>
+                                <td>
+                                    {% if object.is_active %}
+                                        <b class="text-success"><i class="fa fa-check"></i></b>
+                                    {% else %}
+                                        <b class="text-danger"><i class="fa fa-times"></i></b>
+                                    {% endif %}
+                                </td>
+                                <th>
+                                    <a href="{% url 'admins:post-category-update' object.pk %}">
+                                        <i class="fa fa-edit"></i>
+                                    </a> &nbsp;
+                                    <a href="{% url 'admins:post-category-delete' object.pk %}" class="text-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </th>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-danger mb-0"><b>No objects available</b></p>
+                    </div>
+                {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

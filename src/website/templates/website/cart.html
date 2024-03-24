@@ -1,0 +1,139 @@
+{% extends  'website/base.html' %}
+{% load static %}
+{% block content %}
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>cart</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active">cart</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% if cart %}
+<section class="cart-section section-b-space">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-12 table-responsive-xs">
+                <table class="table cart-table">
+                    <thead>
+                    <tr class="table-head">
+                        <th scope="col">image</th>
+                        <th scope="col">product name</th>
+                        <th scope="col">price</th>
+                        <th scope="col">quantity</th>
+                        <th scope="col">action</th>
+                        <th scope="col">total</th>
+                    </tr>
+                    </thead>
+                    {% for cart in cart %}
+                    <tbody>
+                    <tr>
+                        <td>
+                            <a href="#"><img alt="" src="{{cart.product.thumbnail_image.url}}"></a>
+                        </td>
+                        <td><a href="#">{{cart.product.name}}</a>
+
+                            <div class="mobile-cart-content row">
+                                <div class="col">
+                                    <div class="qty-box">
+                                        <div class="input-group">
+                                            <input class="form-control input-number" name="quantity" type="text"
+                                                   value="{{cart.quantity}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>          <td><a href="#">{{cart.product.price}}
+
+                            <div class="mobile-cart-content row">
+                                <div class="col">
+                                    <div class="qty-box">
+                                        <div class="input-group">
+                                            <input class="form-control input-number" name="quantity" type="text"
+                                                   value="{{cart.quantity}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h2 class="td-color">${{cart.product.price}}</h2>
+                                </div>
+                                <div class="col">
+                                    <h2 class="td-color"><a class="icon" href="#"><i class="ti-close"></i></a>
+                                    </h2>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                          <div class="col">
+                                    <h3 class="">{{cart.quantity}}</h3>
+                                </div>
+                        </td>
+                        <td>
+                            <a class="icon" href="{% url 'website:increment' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-arrow-up"></i></a>&nbsp;&nbsp;
+                            <a class="icon" href="{% url 'website:decrement' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-arrow-down"></i></a>&nbsp;&nbsp;
+                            <a class="icon" href="{% url 'website:remove-cart' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-close"></i></a>
+                        </td>
+                        <td>
+                            <h3 class="td-color">{{cart.get_item_price}}</h3>
+                        </td>
+                    </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                <div class="table-responsive-md">
+                    <table class="table cart-table ">
+                        <tfoot>
+                        <tr>
+                            <td class="text-danger">total price :</td>
+                            <td>
+                                <h2>${{total_amount}}</h2>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row cart-buttons">
+            <div class="col-6"><a class="btn btn-outline-danger" href="{% url 'website:shop' %}"><i class="ti-arrow-left"></i>&nbsp; continue
+                shopping</a></div>
+            <div class="col-6"><a class="btn btn-danger" href="{% url 'website:order' %}">check out</a></div>
+        </div>
+    </div>
+</section>
+{% else %}
+<h3 class="text-center mt-4 text-danger">Cart is Empty</h3>
+<div class="row justify-content-center mt-4 mb-4 ">
+            <div class="col-12 text-center">
+                <a class="btn btn-outline-danger" href="{% url 'website:shop' %}"><i class="ti-arrow-left"></i>&nbsp; continue
+                shopping</a>
+            </div>
+        </div>
+{% endif %}
+<script>
+const quantityInput = document.getElementById("quantity");
+const updateBtn = document.getElementById("updateBtn");
+
+quantityInput.addEventListener("input", () => {
+  if (quantityInput.value != "1") {
+    updateBtn.disabled = false;
+  } else {
+    updateBtn.disabled = true;
+  }
+});
+
+
+</script>
+{% endblock content %}

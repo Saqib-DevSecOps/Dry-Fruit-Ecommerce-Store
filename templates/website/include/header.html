@@ -1,0 +1,183 @@
+{% load static %}
+
+<header class="color-dark">
+    <div class="mobile-fix-option"></div>
+    <div class="top-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header-contact">
+                        <ul>
+                            <li class="mt-2">Welcome to Ecommerce Site</li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 my-3">
+                    <ul class="font">
+                        <li><a href="#"><img src="{% static  'website/logos/white_facebook.png' %}" class="mx-1" style="width:30px"></i></a></li>
+                        <li><a href="#"><img src="{% static  'website/logos/w_twitter.png' %}" style="width:30px" class="mx-2"></i></a></li>
+                        <li><a href="#"><img src="{% static  'website/logos/white_insta.png' %}" style="width:26px" class="mx-2"></i></a></li>
+                        <li><a href="#"><img  class="mx-1" src="{% static  'website/logos/white_youtube.png' %}" style="width:30px" class="mx-2"></i></a></li>
+                        <li><a href="#"><img src="{% static  'website/logos/discord_logo.png' %}" style="width:30px" class="mx-2"></i></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 my-3">
+                                                                <div id="google_translate_element"></div>
+
+                </div>
+                <div class="col-lg-4 text-end">
+                    <ul class="header-dropdown">
+                        <li class="mobile-wishlist"><a href="{% url 'client:wishlist' %}"><i aria-hidden="true" class="fa fa-heart"></i></a>
+                        </li>
+                        <li class="onhover-dropdown mobile-account">
+                            <i aria-hidden="true" class="fa fa-user"></i> My Account
+                            <ul class="onhover-show-div">
+                                {% if request.user.is_authenticated %}
+                                <li><a href="{% url 'accounts:cross-auth' %}">Dashboard</a></li>
+                                <li><a href="{% url 'account_logout' %}">Logout</a></li>
+                                {% else %}
+                                <li><a href="{% url 'account_login' %}">Login</a></li>
+                                <li><a href="{% url 'account_signup' %}">register</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="main-menu">
+                    <div class="menu-left">
+                        <div class="brand-logo">
+                            <a href="/">
+                                <img alt=""
+                                     class="blur-up lazyload" height="100"
+                                     src="{% static 'website/logo.png' %}">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-right pull-right">
+                        <div>
+                            <nav id="main-nav">
+                                <div class="toggle-nav">
+                                    <i class="fa fa-bars sidebar-bar"></i>
+                                </div>
+                                <ul class="sm pixelstrap sm-horizontal" id="main-menu">
+                                    <li>
+                                        <div class="mobile-back text-end">Back
+                                            <i aria-hidden="true" class="fa fa-angle-right ps-2"></i>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a href="/">Home</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{% url 'website:shop' %}">Shop</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:posts' %}">Blog</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:about_us' %}">About Us</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:contact_us' %}">Contact Us</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <div>
+                            <div class="icon-nav">
+                                <ul>
+
+                                    {# SEARCH #}
+                                    <li class="onhover-div mobile-search">
+                                        <div><img alt=""
+                                                  class="img-fluid blur-up lazyload"
+                                                  onclick="openSearch()"
+                                                  src="{% static 'website/images/icon/search.png' %}"> <i
+                                                class="ti-search"
+                                                onclick="openSearch()"></i>
+                                        </div>
+                                        <div class="search-overlay" id="search-overlay">
+                                            <div>
+                                                    <span class="closebtn" onclick="closeSearch()"
+                                                          title="Close Overlay">×</span>
+                                                <div class="overlay-content">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-xl-12">
+                                                                <form action="{% url 'website:shop' %}">
+                                                                    <div class="form-group"><input class="form-control"
+                                                                                                   id="exampleInputPassword1"
+                                                                                                   name="title"
+                                                                                                   placeholder="Search a Product"
+                                                                                                   type="text">
+                                                                    </div>
+                                                                    <button class="btn btn-primary" type="submit"><i
+                                                                            class="fa fa-search"></i></button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+
+                                    {# CART #}
+                                    <li class="onhover-div mobile-cart">
+                                        <div><img alt=""
+                                                  class="img-fluid blur-up lazyload"
+                                                  src="{% static 'website/images/icon/cart.png' %}"> <i
+                                                class="ti-shopping-cart"></i></div>
+                                        <ul class="show-div shopping-cart">
+                                            {% if request.user.is_authenticated %}
+                                            {% if request.user.cart_set.all  %}
+                                            {% for object in request.user.cart_set.all %}
+                                            <li>
+                                                <div class="media">
+                                                    <a href="{% url 'website:cart' %}"><img alt="Generic placeholder image"
+                                                                     class="me-3"
+                                                                     src="{{object.product.thumbnail_image.url}}"></a>
+                                                    <div class="media-body">
+                                                        <a href="{% url 'website:cart' %}">
+                                                            <h4>{{object.product.name}}</h4>
+                                                        </a>
+                                                        <h4><span>{{object.quantity}} x $ {{object.product_version.price}}</span></h4>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </li>
+                                            <li>
+                                                <div class="buttons"><a class="view-cart"
+                                                                        href="{% url 'website:cart' %}">view
+                                                    cart</a> <a class="checkout" href="{% url 'website:order' %}">checkout</a>
+                                                </div>
+
+                                            </li>
+                                            {% else %}
+                                            <h3 class="text-danger"> Cart is Empty</h3>
+                                            {% endif %}
+                                            {% endif %}
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+

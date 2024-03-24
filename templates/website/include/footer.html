@@ -1,0 +1,100 @@
+{% load static %}
+
+<!-- footer -->
+<footer class="bg-img-gym overlay-cls effect-cls footer-effect">
+    <img alt="" class="bg-img blur-up lazyload" src="{% static 'website/footer.jpg' %}">
+    <div class="dark-layout">
+        <div class="container">
+            <section class="section-b-space border-b">
+                <div class="row footer-theme2">
+                    <div class="col-lg-3">
+                        <div class="footer-title footer-mobile-title">
+                            <h4>about</h4>
+                        </div>
+                        <div class="footer-contant">
+                            <div class="footer-logo">
+                                <img alt="" height="150" src="{% static 'website/logo.png' %}">
+                            </div>
+                            <p>Ecommerce site is a market where you can buy quality Products </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 subscribe-wrapper">
+                        <div class="subscribe-block">
+                            <h2>newsletter</h2>
+                            <form>
+                                <div class="form-group">
+                                    <input class="form-control" id="exampleFormControlInput3"
+                                           placeholder="Enter your email"
+                                           type="text">
+                                    <button class="btn btn-solid " type="submit">subscribe</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 mt-4">
+                        <div class="footer-title">
+                            <h4>store information</h4>
+                        </div>
+                        <div class="footer-contant">
+                            <ul class="contact-details">
+                                <li>Ecommerce Site</li>
+                                General Inqueries: help@ecommerce.com<br>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="dark-layout">
+        <div class="container">
+            <section class="small-section">
+                <div class="row footer-theme2">
+                    <div class="col p-set">
+                        <div class="footer-link">
+                            <div class="footer-title">
+                            </div>
+                            <div class="footer-contant">
+                                <ul>
+                                    <li><a href="{% url 'website:privacy' %}">Privacy Policy</a></li>
+                                    <li><a href="#">Cookie Policy</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Return Policy</a></li>
+                                    <li><a href="#">Shipping Policy</a></li>
+                                    <li><a href="#">Jobs</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="sub-footer darker-subfooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="footer-end">
+                        <p><i aria-hidden="true" class="fa fa-copyright"></i> All Rights reserved - &copy; copyright
+                            2023 - {% now 'Y' %} - Developed and Designed by Haziq Ismail
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="payment-card-bottom">
+                        <ul>
+
+                            <li>
+                                <a href="#"><img alt="" class="mb-4"
+                                                 height="100px"
+                                                 src="{% static 'website/bg/pay.png' %}"></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- end footer -->

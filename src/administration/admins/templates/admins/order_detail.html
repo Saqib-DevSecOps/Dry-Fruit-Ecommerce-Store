@@ -1,0 +1,162 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block base_subtitle %} Orders Details{% endblock %}
+{% block base_subhead_heading %} Order &rAarr; Detail{% endblock %}
+{% block base_subhead_paragraph %}Order detailed down description{% endblock %}
+
+
+{% block base_subhead_button %}
+    <a class="btn btn-ghost-primary" href="{% url 'admins:order-list' %}">
+        <i class="fa fa-arrow-left"></i>&nbsp;Orders
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="shadow-none mb-0 card" style="">
+                <div class="card-body">
+                    <h5 class="mb-0 h4 card-title">Order Summary</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-borderless">
+
+                            <tbody>
+
+                            {% for product in object.order_items %}
+                                <tr>
+                                    <th scope="row">
+                                        {% if product.product.thumbnail_image %}
+                                            <img src="{{ product.product.thumbnail_image.url }}" height="50"
+                                                 alt="product-img"
+                                                 title="product-img"
+                                                 class="avatar-md">
+                                        {% else %}
+                                            <img src="{% static 'required/images/no-image-product-portrait.jpg' %}"
+                                                 height="50"
+                                                 alt="product-img"
+                                                 title="product-img"
+                                                 class="avatar-md">
+                                        {% endif %}
+                                    </th>
+                                    <td>
+                                        <h3 class="mb-0">
+                                            <a href="{% url 'admins:product-detail' product.product.pk %}"
+                                               class="text-dark">{{ product.product.name }}</a>
+                                        </h3>
+                                        <p class="text-muted mb-0">
+                                            <span class="bg-success-lt badge">{{ product.product.book_type }}</span>
+                                        </p>
+                                    </td>
+                                    <td><b class="font-weight-bolder">$ {{ product.product_version.price }}</b></td>
+                                    <td><b>{{ product.qty }}</b></td>
+                                </tr>
+                            {% endfor %}
+
+
+                            <tr class="border-top">
+                                <th colspan="3"><h2 class="m-0 text-right">Sub Total:</h2></th>
+                                <th><h2>$ {{ object.total }}</h2></th>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="bg-primary text-white">
+                                    <b><i class="fa fa-cart-plus"></i></b> Shipping
+                                </th>
+                                <th class="bg-primary text-white text-right">
+                                    <b>
+                                        {{object.shipping}}
+                                    </b>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th colspan="3"><h2 class="m-0 text-right">Total:</h2></th>
+                                <th><h2>$ {{ object.total }}</h2></th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+
+            <div class="card mb-2">
+                <div class="card-body text-center">
+                    {% if object.user.profile_image %}
+                        <img src="{{ object.user.profile_image.url }}" height="50" width="auto" class="rounded-circle">
+                    {% else %}
+                        <img src="{% static 'required/images/no-user.png' %}" height="100" width="auto"
+                             class="rounded-circle">
+                    {% endif %}
+                    <h2 class="mb-0 mt-2">
+                        <a href="{% url 'admins:user-detail' object.user.pk %}">{{ object.user.name_or_username }}</a>
+                    </h2>
+                    <p class="mb-0"><a href="mailto:{{ object.user.email }}">{{ object.user.email }}</a></p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+
+                            {% if object.order_status == 'pending' %}
+                                <h1 class="text-warning"><i class="fa fa-exclamation"></i></h1>
+                                <h3><span class="badge bg-warning-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% elif object.order_status == 'shipping' %}
+                                <h1 class="text-azure"><i class="fa fa-truck"></i></h1>
+                                <h3><span class="badge bg-azure-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% elif object.order_status == 'completed' %}
+                                <h1 class="text-success"><i class="fa fa-check"></i></h1>
+                                <h3><span class="badge bg-success-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% else %}
+                                <h1 class="text-danger"><i class="fa fa-times"></i></h1>
+                                <h3><span class="badge bg-danger-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% endif %}
+                            <p class="mb-0"><b>Order Status</b></p>
+
+
+                        </div>
+                        <div class="col-6 text-center">
+
+                            {% if object.payment_status == 'pending' %}
+                                <h1 class="text-warning"><i class="fa fa-exclamation"></i></h1>
+                                <h3><span class="badge bg-warning-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% elif object.payment_status == 'completed' %}
+                                <h1 class="text-success"><i class="fa fa-check"></i></h1>
+                                <h3><span class="badge bg-success-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% else %}
+                                <h1 class="text-danger"><i class="fa fa-times"></i></h1>
+                                <h3><span class="badge bg-danger-lt">{{ object.get_order_status_display }}</span></h3>
+                            {% endif %}
+                            <p class="mb-0"><b>Payment Status</b></p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">Shipment Details</div>
+                    <div class="mb-2">
+                        <i class="bx bx-map"></i>
+                        Street: <strong>{{ object.street_address }}</strong>
+                    </div>
+                    <div class="mb-2">
+                        <i class="bx bx-map-pin"></i>
+                        City: <strong>{{ object.city }}</strong>
+                    </div>
+                    <div class="mb-2">
+                        <i class="bx bx-home"></i>
+                        Country: <strong>{{ object.country }}</strong>
+                    </div>
+                    <div class="mb-2">
+                        <i class="bx bxl-telegram"></i>
+                        Postal Code: <strong>{{ object.postal_code }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

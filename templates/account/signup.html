@@ -1,0 +1,112 @@
+{% extends 'website/base.html' %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load account socialaccount %}
+{% load socialaccount %}
+
+{% block subtitle %}Sign Up{% endblock %}
+
+
+{% block content %}
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>create account</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li aria-current="page" class="breadcrumb-item active">create account</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="register-page section-b-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6 card">
+                        <div class="p-2">
+                            <form action="{% url 'account_signup' %}" class="signup" id="signup_form" method="post">
+                                {% csrf_token %}
+                                <h1>{% trans "Sign Up" %}</h1>
+
+                                <p>{% blocktrans %}Already have an account? Then please
+                                    <a href="{{ login_url }}">sign in</a>
+                                    .{% endblocktrans %}</p>
+
+
+                                {{ form | crispy }}
+                                {% if redirect_field_value %}
+                                <input name="{{ redirect_field_name }}" type="hidden"
+                                       value="{{ redirect_field_value }}"/>
+                                {% endif %}
+
+                                <div class="mt-4">
+                                    <button class="btn btn-success btn-block waves-effect waves-light"
+                                            type="submit">Register
+                                    </button>
+                                </div>
+
+                            </form>
+
+                            {% get_providers as socialaccount_providers %}
+                            {% if socialaccount_providers %}
+                            <hr>
+                            <ul class="list-unstyled">
+                                {% for provider in socialaccount_providers %}
+                                {% if provider.id == "openid" %}
+                                {% for brand in provider.get_brands %}
+                                <li>
+                                    <a class="socialaccount_provider {{ provider.id }} {{ brand.id }}"
+                                       href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                                       title="{{ brand.name }}"
+                                    >{{ brand.name }}</a>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                                {% if forloop.counter == 1 %}
+                                <li class="mb-2">
+                                    <a class="btn btn-block btn-danger" class="socialaccount_provider {{ provider.id }}"
+                                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                                       title="{{ provider.name }}">{{
+                                        provider.name }}</a>
+                                </li>
+                                {% else %}
+                                <li class="mb-2">
+                                    <a class="btn btn-block btn-primary" class="socialaccount_provider {{ provider.id }}"
+                                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                                       title="{{ provider.name }}">{{
+                                        provider.name }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+
+                            <div class="mt-4 text-center">
+                                <p class="mb-0">By registering you agree to the <a class="text-primary"
+                                                                                   href="#">Terms
+                                    of Use</a></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

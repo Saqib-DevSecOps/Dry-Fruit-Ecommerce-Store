@@ -1,0 +1,105 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>
+        {% block base_title %}
+            Monogatari | {% block base_subtitle %}{% endblock %}
+        {% endblock %}
+    </title>
+
+    {# GLOBAL CSS #}
+<link rel="icon" href="{% static 'website/logos/logo-light.png' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'website/logos/logo-light.png' %}" type="image/x-icon"/>
+    <link href="{% static 'admin/css/tabler.min.css' %}?1668287865" rel="stylesheet"/>
+    <link href="{% static 'admin/css/tabler-flags.min.css' %}?1668287865" rel="stylesheet"/>
+    <link href="{% static 'admin/css/tabler-payments.min.css' %}?1668287865" rel="stylesheet"/>
+    <link href="{% static 'admin/css/tabler-vendors.min.css' %}?1668287865" rel="stylesheet"/>
+    <link href="{% static 'admin/css/demo.min.css' %}?1668287865" rel="stylesheet"/>
+    <link href="{% static 'core/css/icons.css' %}" rel="stylesheet"/>
+    <script src="{% static 'required/js/jquery-3.6.2.slim.min.js' %}"></script>
+
+    {# INTERNAL CSS #}
+    {% block base_css %}
+
+    {% endblock base_css %}
+
+</head>
+{% block base_no_body %}
+    <body>
+    <script src="{% static 'admin/js/demo-theme.min.js' %}?1668287865"></script>
+
+    <div class="page">
+
+        {% block base_header %}
+            {% include 'admins/include/header.html' %}
+        {% endblock %}
+
+        <div class="page-wrapper">
+            {% block base_page_header %}
+                <div class="page-header d-print-none mb-2">
+                    <div class="container-xl">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <!-- Page pre-title -->
+                                <div class="page-pretitle">
+                                    {% block base_subhead_paragraph %}
+                                    {% endblock base_subhead_paragraph %}
+                                </div>
+                                <h2 class="page-title">
+                                    {% block base_subhead_heading %}
+                                    {% endblock base_subhead_heading %}
+                                </h2>
+                            </div>
+
+                            <div class="col-auto ms-auto d-print-none">
+                                <div class="btn-list" style="padding-right: 15px;">
+                                    {% block base_subhead_button %}
+
+                                    {% endblock %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row row-deck row-cards">
+
+                        {% include 'admins/include/messages.html' %}
+                        {% block base_content %}
+
+                        {% endblock %}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    {# GLOBAL SCRIPTS #}
+
+    <!-- Tabler Core -->
+    <script src="{% static 'admin/js/tabler.min.js' %}?1668287865" defer></script>
+    <script src="{% static 'admin/js/demo.min.js' %}?1668287865" defer></script>
+    {# INTERNAL SCRIPTS #}
+    {% block base_internal_scripts %}
+
+    {% endblock base_internal_scripts %}
+    </body>
+{% endblock %}
+
+</html>
+
+{# EXTERNAL SCRIPTS #}
+{% block base_external_scripts %}
+
+{% endblock base_external_scripts %}
