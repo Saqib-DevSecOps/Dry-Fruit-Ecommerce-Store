@@ -1,0 +1,125 @@
+{% extends  'website/base.html' %}
+{% load crispy_forms_tags%}
+{% load static %}
+
+{% block content %}
+
+<section class="section-b-space">
+    <div class="container">
+        <div class="checkout-page">
+            <div class="checkout-form">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="checkout-title">
+                                <h3>Billing Details</h3>
+                            </div>
+                            <div class="row ">
+                                {{form|crispy}}
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12 col-xs-12">
+                            <div class="checkout-details">
+                                <div class="order-box">
+                                    <div class="title-box">
+                                        <div>Product <span>Total</span></div>
+                                    </div>
+                                    <ul class="qty">
+                                        {% for cart in cart %}
+                                        <li>{{cart.product.name}} × {{cart.quantity}} <span>${{cart.product_version.price}}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <ul class="total">
+                                        <li>Total <span class="count" id="total_amount">{{total_amount}}</span></li>
+                                        <li hidden id="total">{{total_amount}}</li>
+                                    </ul>
+                                </div>
+
+                                <div class="payment-box">
+                                    <div class="upper-box">
+                                        <div class="payment-options">
+                                            <select class="form-select mb-4 mt-3" id="dropdown1" name="shipping"
+                                                    onchange="enableButton()">
+                                                <option selected value="default">Choose a Shipping Method</option>
+                                                <option value="normal">Normal</option>
+                                                <option value="premium">Premium</option>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="payment-box">
+                                    <div class="upper-box">
+                                        <div class="payment-options">
+                                            <select class="form-select mb-4 mt-3" id="dropdown" name="payment"
+                                                    onchange="enableButton()">
+                                                <option selected value="default">Choose a payment Method</option>
+                                                <option value="stripe">Stripe</option>
+                                            </select>
+                                            <img alt="" src="{% static 'website/logos/paypal.png' %}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-end">
+                                    <button class="btn btn-solid hover-solid btn-animation" disabled id="seedoc"
+                                            type="submit">
+                                        Place Order
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+<script>
+
+
+
+
+function enableButton() {
+  var selectelem = document.getElementById('dropdown');
+  var selectelem1 = document.getElementById('dropdown1');
+  var btnelem = document.getElementById('seedoc');
+  let total_amount = $('#total_amount')
+  let total = $('#total')
+
+if (selectelem1.value === "normal")
+{
+         total_amount.text(total.text());
+         total_amount.text(parseInt(total_amount.text()) + 4.99);
+}
+else if(selectelem1.value === "premium")
+{
+         total_amount.text(total.text());
+
+    total_amount.text(parseInt(total_amount.text()) + 9.99);
+}
+else if(selectelem1.value === "default")
+{
+         total_amount.text(total.text());
+}
+
+
+  if (selectelem.value !== "default" && selectelem1.value !== "default") {
+    btnelem.disabled = false;
+  } else {
+    btnelem.disabled = true;
+  }
+}
+
+
+
+</script>
+
+{% endblock content %}

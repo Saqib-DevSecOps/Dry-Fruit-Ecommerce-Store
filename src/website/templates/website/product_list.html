@@ -1,0 +1,499 @@
+{% extends  'website/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+
+    <section class="shop_list_sidebar sec_space_large">
+        <div class="shop_sidebar_wrap">
+            <div class="container-xxl	">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="shop_sidebar_searchbar position-relative">
+                            <input class="rounded-pill" type="search" name="search" placeholder="Search">
+                            <i class="fas fa-search position-absolute"></i>
+                        </div>
+                        <!-- blog category start -->
+                        <div class="blog_category aos-init aos-animate card" data-aos="fade-up" data-aos-duration="2000">
+                            <div class="blog_category_wrap">
+                                <h3 class="blog_category_title py-3">Categories</h3>
+                                <div class="blog_category_item">
+                                    <div class="row">
+                                        <div class="form-check">
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault1">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault1">
+                                                    Beverages
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault2">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault2">
+                                                    Biscuits, Snacks
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault3">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault3">
+                                                    Breakfast &amp; Dairy
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault4">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault4">
+                                                    Fruits &amp; Vegetables
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault5">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault5">
+                                                    Home Needs
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault6">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault6">
+                                                    Grocery &amp; Staples
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault7">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault7">
+                                                    Home &amp; Kitchen
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault8">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault8">
+                                                    Household Needs
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault9">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault9">
+                                                    Meats, Frozen
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault10">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault10">
+                                                    Noodles, Sauces
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault11">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault11">
+                                                    Personal Care
+                                                </label>
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="flexCheckDefault12">
+                                                <label class="form-check-label ms-2" for="flexCheckDefault12">
+                                                    Pet Care
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- blog category end -->
+
+                        <!-- filter range start -->
+                        <div class="price-range-area mt-3 card aos-init" data-aos="fade-up" data-aos-duration="2000">
+                            <h3 class="price_range_title mb-4">Filter By Price</h3>
+                            <div id="slider-range"
+                                 class="slider-range ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                                <div class="ui-slider-range ui-widget-header ui-corner-all"
+                                     style="left: 0%; width: 100%;"></div>
+                                <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"
+                                      style="left: 0%;"></span><span
+                                    class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"
+                                    style="left: 34.024%;"></span>
+                                <div class="ui-slider-range ui-widget-header ui-corner-all"
+                                     style="left: 0%; width: 34.024%;"></div>
+                            </div>
+                            <div class="price-text d-flex align-items-center mt-3">
+                                <span class="text-uppercase">Filter <i class="fas fa-long-arrow-alt-right"></i></span>
+                                <input type="text" id="amount" readonly="">
+                            </div>
+                        </div>
+                        <!-- filter range end -->
+
+                    </div>
+                    <div class="col-lg-9">
+                        <!-- shop list section start -->
+                        <section class="shop_list_sec aos-init" data-aos="fade-up" data-aos-duration="2000">
+                            <div class="shop_list_wrap">
+                                <div class="container">
+                                    <div class="filter_area d-flex justify-content-between align-items-center mb_30">
+                                        <ul class="nav layout_tab_nav ul_li" role="tablist">
+                                            <li>
+                                                <button class="active" data-bs-toggle="tab"
+                                                        data-bs-target="#grid_layout" type="button" role="tab"
+                                                        aria-selected="true">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+                                                         viewBox="0 0 12 12">
+                                                        <path id="grid" class="cls-1"
+                                                              d="M1784,905h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Z"
+                                                              transform="translate(-1784 -905)"></path>
+                                                    </svg>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button data-bs-toggle="tab" data-bs-target="#list_layout" type="button"
+                                                        role="tab" aria-selected="false">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+                                                         viewBox="0 0 12 12">
+                                                        <path id="list" class="cls-1"
+                                                              d="M1823,905h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-5-10h7v2h-7v-2Zm0,5h7v2h-7v-2Zm0,5h7v2h-7v-2Z"
+                                                              transform="translate(-1823 -905)"></path>
+                                                    </svg>
+                                                </button>
+                                            </li>
+                                            <span class="show_result">Showing 1–18 of 24 results</span>
+                                        </ul>
+                                        <form action="#">
+                                            <div class="sorting_from d-flex align-items-center">
+                                                <span class="sorting_from_title">Default Sorting:</span>
+                                                <div class=" clearfix">
+                                                    <select style="display: none;">
+                                                        <option data-display="Select">Nothing</option>
+                                                        <option value="1" selected="">Popularity</option>
+                                                        <option value="2">Organic</option>
+                                                        <option value="4">Fantastic</option>
+                                                    </select>
+                                                    <div class="nice-select" tabindex="0"><span class="current">Popularity</span>
+                                                        <ul class="list">
+                                                            <li data-value="Nothing" data-display="Select"
+                                                                class="option">Nothing
+                                                            </li>
+                                                            <li data-value="1" class="option selected">Popularity</li>
+                                                            <li data-value="2" class="option">Organic</li>
+                                                            <li data-value="4" class="option">Fantastic</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="shop_product_list">
+                                        <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
+                                                 aria-labelledby="pills-grid_layout-tab">
+                                                <div class="row g-4">
+                                                    {% for object in '12345678' %}
+                                                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                                                            <div class="product_layout_1 overflow-hidden position-relative">
+                                                                <div class="product_layout_content bg-white position-relative">
+                                                                    <div class="product_image_wrap">
+                                                                        <a class="product_image d-flex justify-content-center align-items-center"
+                                                                           href="product-detail.html" target="_blank">
+                                                                            <img class="pic-1"
+                                                                                 src="{% static 'website/images/product/product1.png' %}"
+                                                                                 alt="image_not_found">
+                                                                            <img class="pic-2"
+                                                                                 src="{% static 'website/images/product/product3.png' %}"
+                                                                                 alt="image_not_found">
+                                                                        </a>
+                                                                        <ul class="product_badge_group ul_li_block">
+                                                                            <li><span
+                                                                                    class="product_badge badge_meats position-absolute rounded-pill text-uppercase">Meats</span>
+                                                                            </li>
+                                                                            <li><span
+                                                                                    class="product_badge badge_discount position-absolute rounded-pill">-27%</span>
+                                                                            </li>
+                                                                        </ul>
+                                                                        <ul class="product_action_btns ul_li_block d-flex">
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Search Product" href="#!"><i
+                                                                                    class="fas fa-search"></i></a>
+                                                                            </li>
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Add To Cart"
+                                                                                   href="#product_quick_view"
+                                                                                   data-bs-toggle="modal"><i
+                                                                                    class="fas fa-shopping-bag"></i></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div class="rating_wrap d-flex">
+                                                                        <ul class="rating_star ul_li">
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i></li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i></li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i></li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i></li>
+                                                                            <li><i class="far fa-star"></i></li>
+                                                                        </ul>
+                                                                        <span class="shop_review_text">( 4.0
+                                                            )</span>
+                                                                    </div>
+                                                                    <div class="product_content">
+                                                                        <h3 class="product_title">
+                                                                            <a href="{% url 'website:product-detail' 0 %}"
+                                                                               target="_blank">Organic
+                                                                                Cabbage</a>
+                                                                        </h3>
+                                                                        <div class="product_price">
+                                                                            <span class="sale_price pe-1">$50.00</span>
+                                                                            <del>$65.00</del>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <!-- list layout start  -->
+                                            <div class="tab-pane fade show aos-init aos-animate" id="list_layout"
+                                                 role="tabpanel" aria-labelledby="pills-list_layout-tab"
+                                                 data-aos="fade-up" data-aos-duration="2000">
+                                                <div class="row g-3">
+                                                    <div class="col p-0">
+                                                        <div class="list_layout_wrap overflow-hidden">
+                                                            <div class="list_layout_content bg-white d-flex justify-content-between align-items-center">
+                                                                <div class="col-lg-5">
+                                                                    <a class="list_layout_thumb d-flex justify-content-start"
+                                                                       href="#!">
+                                                                        <img src="{% static 'website/images/product/product10.png' %}"
+                                                                             alt="image_not_found">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-lg-7">
+                                                                    <ul class="list_layout_bade list-unstyled d-flex">
+                                                                        <li><span
+                                                                                class="badge_meats rounded-pill text-uppercase">Meats</span>
+                                                                        </li>
+                                                                        <li><span
+                                                                                class="badge_discount text-white rounded-pill">-27%</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="rating_wrap d-flex">
+                                                                        <ul class="rating_star ul_li">
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li><i class="far fa-star"></i></li>
+                                                                        </ul>
+                                                                        <span class="shop_review_text">( 4.0
+                                                               )</span>
+                                                                    </div>
+                                                                    <div class="product_content">
+                                                                        <h3 class="product_title py-2">
+                                                                            <a href="{% url 'website:product-detail' 0 %}"
+                                                                               target="_blank">Organic
+                                                                                Cabbage</a>
+                                                                        </h3>
+                                                                        <div class="product_price">
+                                                                            <span class="sale_price pe-1">$50.00</span>
+                                                                            <del>$65.00</del>
+                                                                        </div>
+                                                                        <p class="list_layout_desc">Apparently
+                                                                            we had reached a great height in the
+                                                                            atmosphere, for the sky was a dead
+                                                                            black, and the stars had ceased to
+                                                                            twinkle.</p>
+                                                                        <ul class="product_action_btns ul_li_block d-flex">
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Search Product" href="#!"><i
+                                                                                    class="fas fa-search"></i></a>
+                                                                            </li>
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Add To Cart"
+                                                                                   href="#product_quick_view"
+                                                                                   data-bs-toggle="modal"><i
+                                                                                    class="fas fa-shopping-bag"></i></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col p-0">
+                                                        <div class="list_layout_wrap overflow-hidden">
+                                                            <div class="list_layout_content bg-white d-flex justify-content-between align-items-center">
+                                                                <div class="col-lg-5">
+                                                                    <a class="list_layout_thumb d-flex justify-content-start"
+                                                                       href="#!">
+                                                                        <img src="{% static 'website/images/product/product7.png' %}"
+                                                                             alt="image_not_found">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-lg-7">
+                                                                    <ul class="list_layout_bade list-unstyled d-flex">
+                                                                        <li><span
+                                                                                class="badge_meats rounded-pill text-uppercase">Meats</span>
+                                                                        </li>
+                                                                        <li><span
+                                                                                class="badge_discount text-white rounded-pill">-27%</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="rating_wrap d-flex">
+                                                                        <ul class="rating_star ul_li">
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li><i class="far fa-star"></i></li>
+                                                                        </ul>
+                                                                        <span class="shop_review_text">( 4.0
+                                                               )</span>
+                                                                    </div>
+                                                                    <div class="product_content">
+                                                                        <h3 class="product_title py-2">
+                                                                            <a href="{% url 'website:product-detail' 0 %}"
+                                                                               target="_blank">Organic
+                                                                                Cabbage</a>
+                                                                        </h3>
+                                                                        <div class="product_price">
+                                                                            <span class="sale_price pe-1">$50.00</span>
+                                                                            <del>$65.00</del>
+                                                                        </div>
+                                                                        <p class="list_layout_desc">Apparently
+                                                                            we had reached a great height in the
+                                                                            atmosphere, for the sky was a dead
+                                                                            black, and the stars had ceased to
+                                                                            twinkle.</p>
+                                                                        <ul class="product_action_btns ul_li_block d-flex">
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Search Product" href="#!"><i
+                                                                                    class="fas fa-search"></i></a>
+                                                                            </li>
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Add To Cart"
+                                                                                   href="#product_quick_view"
+                                                                                   data-bs-toggle="modal"><i
+                                                                                    class="fas fa-shopping-bag"></i></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col p-0">
+                                                        <div class="list_layout_wrap overflow-hidden">
+                                                            <div class="list_layout_content bg-white d-flex justify-content-between align-items-center">
+                                                                <div class="col-lg-5">
+                                                                    <a class="list_layout_thumb d-flex justify-content-start"
+                                                                       href="#!">
+                                                                        <img src="{% static 'website/images/product/product4.png' %}"
+                                                                             alt="image_not_found">
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-lg-7">
+                                                                    <ul class="list_layout_bade list-unstyled d-flex">
+                                                                        <li><span
+                                                                                class="badge_meats rounded-pill text-uppercase">Meats</span>
+                                                                        </li>
+                                                                        <li><span
+                                                                                class="badge_discount text-white rounded-pill">-27%</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="rating_wrap d-flex">
+                                                                        <ul class="rating_star ul_li">
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li class="active"><i
+                                                                                    class="fas fa-star"></i>
+                                                                            </li>
+                                                                            <li><i class="far fa-star"></i></li>
+                                                                        </ul>
+                                                                        <span class="shop_review_text">( 4.0
+                                                               )</span>
+                                                                    </div>
+                                                                    <div class="product_content">
+                                                                        <h3 class="product_title py-2">
+                                                                            <a href="{% url 'website:product-detail' 0 %}"
+                                                                               target="_blank">Organic
+                                                                                Cabbage</a>
+                                                                        </h3>
+                                                                        <div class="product_price">
+                                                                            <span class="sale_price pe-1">$50.00</span>
+                                                                            <del>$65.00</del>
+                                                                        </div>
+                                                                        <p class="list_layout_desc">Apparently
+                                                                            we had reached a great height in the
+                                                                            atmosphere, for the sky was a dead
+                                                                            black, and the stars had ceased to
+                                                                            twinkle.</p>
+                                                                        <ul class="product_action_btns ul_li_block d-flex">
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Search Product" href="#!"><i
+                                                                                    class="fas fa-search"></i></a>
+                                                                            </li>
+                                                                            <li><a class="tooltips" data-placement="top"
+                                                                                   title="Add To Cart"
+                                                                                   href="#product_quick_view"
+                                                                                   data-bs-toggle="modal"><i
+                                                                                    class="fas fa-shopping-bag"></i></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="pagination_nav mt-5 list-unstyled d-flex justify-content-center text-uppercase clearfix">
+                                        <li><a href="#!">1</a></li>
+                                        <li><a href="#!">2</a></li>
+                                        <li><a href="#!">3</a></li>
+                                        <li class="active"><a href="#!"><i class="fas fa-arrow-right"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- shop list section end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

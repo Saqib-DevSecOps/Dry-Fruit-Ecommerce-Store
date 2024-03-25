@@ -1,183 +1,222 @@
 {% load static %}
+<header class="header_section header_1">
+         <!-- top header start -->
+         <div class="top_header_main d-none d-sm-block">
+            <div class="container">
+               <div class="header_top d-flex align-items-center justify-content-between">
+                  <div class="header_top_content d-flex pt-2">
+                     <div class="mail_text_content d-flex">
+                        <p class="mail_icon"><span><i class="far fa-envelope text-white pe-2"></i></span></p>
+                        <p class="mail_text">info@webmail.com</p>
+                     </div>
+                     <div class="address_text_content d-flex">
+                        <p class="mail_icon"><span><i class="fas fa-map-marker-alt text-white pe-2"></i></span></p>
+                        <p class="address_text">15/A, Nest Tower,NYC</p>
+                     </div>
+                  </div>
+                  <div class="header_top_socials pt-2">
+                     <ul class="list-unstyled d-flex">
+                        <li><a href="#!"><i class="fab fa-facebook-f text-white pe-3"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-twitter text-white pe-3"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-instagram text-white pe-3"></i></a></li>
+                        <li><a href="#!"><i class="fab fa-linkedin-in text-white"></i></a></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- top header end -->
 
-<header class="color-dark">
-    <div class="mobile-fix-option"></div>
-    <div class="top-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="header-contact">
-                        <ul>
-                            <li class="mt-2">Welcome to Ecommerce Site</li>
-
+         <!-- bottom header start -->
+         <div class="header_bottom_main">
+            <div class="container">
+               <!-- web menubar start-->
+               <div class="webMenu d-none d-lg-block position-relative">
+                  <nav class="navbar navbar-expand-lg navbar-light">
+                     <a class="navbar-brand position-relative" href="index.html">
+                         <img style="height: 60px" src="{% static 'website/images/logo/logo.png' %}"
+                           alt="image_not_found"></a>
+                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                     </button>
+                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav main_menu_list m-auto after_navbar">
+                           <li class="nav-item nav_item_has_child px-2 dropdown">
+                              <a class="nav-link active" aria-current="page" href="{% url 'website:home' %}""
+                                 >Home</a>
+                           </li>
+                           <li class="nav-item  px-2 dropdown">
+                              <a class="nav-link" href="{% url 'website:shop' %}" id="shop_submenu"
+                                 >Shop</a>
+                           </li>
+                           <li class="nav-item nav_item_has_child px-2 dropdown">
+                              <a class="nav-link" href="{% url 'website:posts' %}" >Blogs</a>
+                           </li>
+                           <li class="nav-item nav_item_has_child px-2">
+                              <a class="nav-link" href="{% url 'website:about_us' %}">About Us</a>
+                           </li>
+                           <li class="nav-item nav_item_has_child dropdown px-2">
+                              <a class="nav-link" href="{% url 'website:contact_us' %}" >Contacts</a>
+                           </li>
                         </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 my-3">
-                    <ul class="font">
-                        <li><a href="#"><img src="{% static  'website/logos/white_facebook.png' %}" class="mx-1" style="width:30px"></i></a></li>
-                        <li><a href="#"><img src="{% static  'website/logos/w_twitter.png' %}" style="width:30px" class="mx-2"></i></a></li>
-                        <li><a href="#"><img src="{% static  'website/logos/white_insta.png' %}" style="width:26px" class="mx-2"></i></a></li>
-                        <li><a href="#"><img  class="mx-1" src="{% static  'website/logos/white_youtube.png' %}" style="width:30px" class="mx-2"></i></a></li>
-                        <li><a href="#"><img src="{% static  'website/logos/discord_logo.png' %}" style="width:30px" class="mx-2"></i></a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 my-3">
-                                                                <div id="google_translate_element"></div>
-
-                </div>
-                <div class="col-lg-4 text-end">
-                    <ul class="header-dropdown">
-                        <li class="mobile-wishlist"><a href="{% url 'client:wishlist' %}"><i aria-hidden="true" class="fa fa-heart"></i></a>
-                        </li>
-                        <li class="onhover-dropdown mobile-account">
-                            <i aria-hidden="true" class="fa fa-user"></i> My Account
-                            <ul class="onhover-show-div">
-                                {% if request.user.is_authenticated %}
-                                <li><a href="{% url 'accounts:cross-auth' %}">Dashboard</a></li>
-                                <li><a href="{% url 'account_logout' %}">Logout</a></li>
-                                {% else %}
-                                <li><a href="{% url 'account_login' %}">Login</a></li>
-                                <li><a href="{% url 'account_signup' %}">register</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                     </div>
+                     <div class="navbar_user me-2">
+                        <div class="navbar_user_icon">
+                           <ul class="list-unstyled d-flex mb-0">
+                              <li class="pe-3">
+                                 <button class="main_search_btn" data-bs-toggle="collapse"
+                                    data-bs-target="#main_search_collapse" aria-expanded="false"
+                                    aria-controls="main_search_collapse">
+                                    <i class="search_icon fas fa-search"></i>
+                                    <i class="search_close fas fa-times"></i>
+                                 </button>
+                              </li>
+                              <li class="pe-2 position-relative">
+                                 <a href="#collapseExample" data-bs-toggle="collapse" href="#collapseExample"
+                                    role="button" aria-expanded="false" aria-controls="collapseExample"><i
+                                       class="far fa-user" data-toggle="collapse" role="button"
+                                       data-target="#use_deropdown" aria-expanded="false"
+                                       aria-controls="use_deropdown"></i>
+                                 </a>
+                                 <!-- user profile start -->
+                                 <div id="collapseExample" class="collapse_dropdown collapse">
+                                    <div class="dropdown_content">
+                                       <div class="profile_info clearfix">
+                                          <div class="user_thumbnail">
+                                             <img src="{% static 'website/images/meta/meta1.png' %}" alt="image_not_found">
+                                          </div>
+                                          <div class="user_content">
+                                             <h4 class="user_name">Jone Doe</h4>
+                                             <span class="user_title">Seller</span>
+                                          </div>
+                                       </div>
+                                       <ul class="settings_options ul_li_block clearfix">
+                                          <li><a href="#!"><i class="fas fa-user-circle"></i> Profile</a></li>
+                                          <li><a href="#!"><i class="fas fa-user-cog"></i> Settings</a></li>
+                                          <li><a href="#!"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="pe-2"><a href="#!"><i class="far fa-heart"></i></a></li>
+                              <li>
+                                 <a href="#!">
+                                    <i class="fas fa-shopping-bag position-relative" data-bs-toggle="offcanvas"
+                                       data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><span
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span></i></a>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </nav>
+               </div>
+               <!-- mobile menubar start -->
+               <div class="mobileMenu d-block d-lg-none">
+                  <nav class="navbar navbar-expand-lg navbar-light">
+                     <a class="navbar-brand" href="index.html"><img style="height: 100px" src="{% static 'website/images/logo/logo.png' %}"
+                           alt="image_not_found"></a>
+                     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                     </button>
+                     <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+                        id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                        <div class="offcanvas-header">
+                           <button type="button" class="btn-close mobile_menu_close text-reset"
+                              data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                           <ul class="navbar-nav main_menu_list m-auto">
+                              <li class="nav-item pe-4 dropdown">
+                                 <a class="nav-link active" aria-current="page" href="#" id="home_submenu" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Home</a>
+                              </li>
+                              <li class="nav-item pe-4 dropdown">
+                                 <a class="nav-link" href="#" id="shop_submenu" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">Shop</a>
+                              </li>
+                              <li class="nav-item pe-4 dropdown">
+                                 <a class="nav-link" href="#" id="blog_submenu" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">Blog</a>
+                              </li>
+                              <li class="nav-item pe-5">
+                                 <a class="nav-link" href="#!">About Us</a>
+                              </li>
+                              <li class="nav-item pe-4 dropdown">
+                                 <a class="nav-link" href="#" id="contact_submenu" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Contacts</a>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div class="navbar_user me-2">
+                        <div class="navbar_user_icon">
+                           <ul class="list-unstyled d-flex mb-0">
+                              <li class="pe-3">
+                                 <button class="main_search_btn" data-bs-toggle="collapse"
+                                    data-bs-target="#main_search_collapse" aria-expanded="false"
+                                    aria-controls="main_search_collapse">
+                                    <i class="search_icon fas fa-search"></i>
+                                    <i class="search_close fas fa-times"></i>
+                                 </button>
+                              </li>
+                              <li class="pe-2 position-relative">
+                                 <a href="#collapseExample" data-bs-toggle="collapse" href="#collapseExample"
+                                    role="button" aria-expanded="false" aria-controls="collapseExample"><i
+                                       class="far fa-user" data-toggle="collapse" role="button"
+                                       data-target="#use_deropdown" aria-expanded="false"
+                                       aria-controls="use_deropdown"></i>
+                                 </a>
+                                 <!-- user profile start -->
+                                 <div id="collapseExample" class="collapse_dropdown collapse">
+                                    <div class="dropdown_content">
+                                       <div class="profile_info clearfix">
+                                          <div class="user_thumbnail">
+                                             <img src="{% static 'website/images/meta/meta1.png' %}" alt="image_not_found">
+                                          </div>
+                                          <div class="user_content">
+                                             <h4 class="user_name">Jone Doe</h4>
+                                             <span class="user_title">Seller</span>
+                                          </div>
+                                       </div>
+                                       <ul class="settings_options ul_li_block clearfix">
+                                          <li><a href="#!"><i class="fas fa-user-circle"></i> Profile</a></li>
+                                          <li><a href="#!"><i class="fas fa-user-cog"></i> Settings</a></li>
+                                          <li><a href="#!"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="pe-2"><a href="#!"><i class="far fa-heart"></i></a></li>
+                              <li>
+                                 <a href="#!">
+                                    <i class="fas fa-shopping-bag position-relative" data-bs-toggle="offcanvas"
+                                       data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><span
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span></i></a>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </nav>
+               </div>
             </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="main-menu">
-                    <div class="menu-left">
-                        <div class="brand-logo">
-                            <a href="/">
-                                <img alt=""
-                                     class="blur-up lazyload" height="100"
-                                     src="{% static 'website/logo.png' %}">
-                            </a>
+            <!-- collapse search - start -->
+            <div class="main_search_collapse collapse" id="main_search_collapse">
+               <div class="main_search_form position-relative card">
+                  <div class="container">
+                     <form action="#">
+                        <div class="form_item position-relative">
+                           <input type="search" class="form-control rounded-pill py-3" name="search"
+                              placeholder="Search Your Product...">
+                           <button type="submit" class="submit_btn"><i class="fas fa-search"></i></button>
                         </div>
-                    </div>
-
-                    <div class="menu-right pull-right">
-                        <div>
-                            <nav id="main-nav">
-                                <div class="toggle-nav">
-                                    <i class="fa fa-bars sidebar-bar"></i>
-                                </div>
-                                <ul class="sm pixelstrap sm-horizontal" id="main-menu">
-                                    <li>
-                                        <div class="mobile-back text-end">Back
-                                            <i aria-hidden="true" class="fa fa-angle-right ps-2"></i>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a href="/">Home</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="{% url 'website:shop' %}">Shop</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'website:posts' %}">Blog</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'website:about_us' %}">About Us</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'website:contact_us' %}">Contact Us</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-
-                        <div>
-                            <div class="icon-nav">
-                                <ul>
-
-                                    {# SEARCH #}
-                                    <li class="onhover-div mobile-search">
-                                        <div><img alt=""
-                                                  class="img-fluid blur-up lazyload"
-                                                  onclick="openSearch()"
-                                                  src="{% static 'website/images/icon/search.png' %}"> <i
-                                                class="ti-search"
-                                                onclick="openSearch()"></i>
-                                        </div>
-                                        <div class="search-overlay" id="search-overlay">
-                                            <div>
-                                                    <span class="closebtn" onclick="closeSearch()"
-                                                          title="Close Overlay">×</span>
-                                                <div class="overlay-content">
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <div class="col-xl-12">
-                                                                <form action="{% url 'website:shop' %}">
-                                                                    <div class="form-group"><input class="form-control"
-                                                                                                   id="exampleInputPassword1"
-                                                                                                   name="title"
-                                                                                                   placeholder="Search a Product"
-                                                                                                   type="text">
-                                                                    </div>
-                                                                    <button class="btn btn-primary" type="submit"><i
-                                                                            class="fa fa-search"></i></button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-
-
-                                    {# CART #}
-                                    <li class="onhover-div mobile-cart">
-                                        <div><img alt=""
-                                                  class="img-fluid blur-up lazyload"
-                                                  src="{% static 'website/images/icon/cart.png' %}"> <i
-                                                class="ti-shopping-cart"></i></div>
-                                        <ul class="show-div shopping-cart">
-                                            {% if request.user.is_authenticated %}
-                                            {% if request.user.cart_set.all  %}
-                                            {% for object in request.user.cart_set.all %}
-                                            <li>
-                                                <div class="media">
-                                                    <a href="{% url 'website:cart' %}"><img alt="Generic placeholder image"
-                                                                     class="me-3"
-                                                                     src="{{object.product.thumbnail_image.url}}"></a>
-                                                    <div class="media-body">
-                                                        <a href="{% url 'website:cart' %}">
-                                                            <h4>{{object.product.name}}</h4>
-                                                        </a>
-                                                        <h4><span>{{object.quantity}} x $ {{object.product_version.price}}</span></h4>
-                                                    </div>
-                                                </div>
-                                                {% endfor %}
-                                            </li>
-                                            <li>
-                                                <div class="buttons"><a class="view-cart"
-                                                                        href="{% url 'website:cart' %}">view
-                                                    cart</a> <a class="checkout" href="{% url 'website:order' %}">checkout</a>
-                                                </div>
-
-                                            </li>
-                                            {% else %}
-                                            <h3 class="text-danger"> Cart is Empty</h3>
-                                            {% endif %}
-                                            {% endif %}
-                                        </ul>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                     </form>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
-</header>
-
+            <!-- collapse search - end -->
+         </div>
+      </header>

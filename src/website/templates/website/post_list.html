@@ -1,0 +1,211 @@
+{% extends  'website/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="blog_grid_sec sec_space_small blog_list_sec">
+        <div class="blog_grid_wrap blog_list_wrap">
+            <div class="container">
+                <div class="row">
+                        <div class="col-lg-3">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <!-- blog category start -->
+                                    <div class="blog_category card mt-5 mt-lg-0 mx-5 mx-sm-0">
+                                        <div class="blog_category_wrap aos-init aos-animate" data-aos="fade-up"
+                                             data-aos-duration="2000">
+                                            <h3 class="blog_category_title">Categories</h3>
+                                            <div class="blog_category_item">
+                                                <div class="row">
+                                                    <div class="form-check">
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault1">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault1">
+                                                                Beverages
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault2">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault2">
+                                                                Biscuits, Snacks
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault3">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault3">
+                                                                Breakfast &amp; Dairy
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault4">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault4">
+                                                                Fruits &amp; Vegetables
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault5">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault5">
+                                                                Home Needs
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault6">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault6">
+                                                                Grocery &amp; Staples
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault7">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault7">
+                                                                Home &amp; Kitchen
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault8">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault8">
+                                                                Household Needs
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault9">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault9">
+                                                                Meats, Frozen
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault10">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault10">
+                                                                Noodles, Sauces
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault11">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault11">
+                                                                Personal Care
+                                                            </label>
+                                                        </div>
+                                                        <div class="col">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                   id="flexCheckDefault12">
+                                                            <label class="form-check-label ms-2"
+                                                                   for="flexCheckDefault12">
+                                                                Pet Care
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- blog category end -->
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+
+                                    <div class="recent_post  mt-5 mt-lg-0 mx-5 mx-sm-0">
+                                        <div class="recent_post_wrap card aos-init aos-animate" data-aos="fade-up"
+                                             data-aos-duration="2000">
+                                            <h4 class="recent_title">Recent Posts</h4>
+                                            <div class="recent_post_item d-flex justify-content-between align-items-center">
+                                                <div class="recent_post_thumb d-flex justify-content-center align-items-center">
+                                                    <img src="{% static 'website/images/product/product54.png' %}"
+                                                         alt="image_not_found">
+                                                </div>
+                                                <div class="recent_thumb_txet ms-2">
+                                                    <h5 class="thumb_title">Style Chicken into Meatballs</h5>
+                                                    <span class="author_name"><i class="far fa-user pe-1"></i>
+                                                            Jessica Doen</span>
+                                                </div>
+                                            </div>
+                                            <div class="recent_post_item d-flex justify-content-between align-items-center">
+                                                <div class="recent_post_thumb d-flex justify-content-center align-items-center">
+                                                    <img src="{% static 'website/images/product/product55.png' %}"
+                                                         alt="image_not_found">
+                                                </div>
+                                                <div class="recent_thumb_txet ms-2">
+                                                    <h5 class="thumb_title">Style Chicken into Meatballs</h5>
+                                                    <span class="author_name"><i class="far fa-user pe-1"></i>
+                                                            Jessica Doen</span>
+                                                </div>
+                                            </div>
+                                            <div class="recent_post_item d-flex justify-content-between align-items-center">
+                                                <div class="recent_post_thumb d-flex justify-content-center align-items-center">
+                                                    <img src="{% static 'website/images/product/product56.png' %}"
+                                                         alt="image_not_found">
+                                                </div>
+                                                <div class="recent_thumb_txet ms-2">
+                                                    <h5 class="thumb_title">Style Chicken into Meatballs</h5>
+                                                    <span class="author_name"><i class="far fa-user pe-1"></i>
+                                                            Jessica Doen</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                        <div class="col-9">
+                        <div class="row g-4">
+                            {% for object in '12345678' %}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="blog_grid_cont blog_list_cont aos-init aos-animate" data-aos="fade-up"
+                                         data-aos-duration="1000">
+                                        <div class="grid_img d-flex blog_list_img">
+                                            <img src="{% static 'website/images/blog/blog7.png' %}"
+                                                 alt="image_not_found">
+                                        </div>
+                                        <div class="blog_grid_text">
+                                            <a href="{% url 'website:post-detail' 0 %}" ><h3 class="grid_title">All
+                                                Natural
+                                                Italian-Style Chicken Meatballs</h3></a>
+                                            <div class="grid_author_cont">
+                                                <div class="gallery_mid_author_content py-2 d-flex justify-content-between">
+                                                    <div class="gallery_mid_author_title">
+                                                        <span><i class="far fa-user pe-1"></i> Jessica Doen</span>
+                                                    </div>
+                                                    <div class="gallery_mid_author_time">
+                                                        <span><i class="far fa-clock pe-1"></i> 6 hours ago</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="grid_desc">Qui nunc nobis videntur parum clari, sollemnes in
+                                                futurum
+                                                putamus parum claram legere.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <ul class="pagination_nav list-unstyled d-flex justify-content-center text-uppercase clearfix mt-5">
+                                <li><a href="#!">1</a></li>
+                                <li><a href="#!">2</a></li>
+                                <li><a href="#!">3</a></li>
+                                <li class="active"><a href="#!"><i class="fas fa-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+{% endblock content %}

@@ -90,22 +90,22 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(TemplateView):
     template_name = 'website/product_detail.html'
-    model = Product
-    pk_url_kwarg = "product_id"
-    slug_url_kwarg = 'slug'
-    query_pk_and_slug = True
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ProductDetailView, self).get_context_data(**kwargs)
-        product = Product.objects.get(slug=self.kwargs['slug'])
-        product.clicks += 1
-        context['related_product'] = Product.objects.filter(
-            Q(categories__in=product.categories.all()) & ~Q(id=product.id)
-        ).distinct()[:4]
-        product.save()
-        return context
+    # model = Product
+    # pk_url_kwarg = "product_id"
+    # slug_url_kwarg = 'slug'
+    # query_pk_and_slug = True
+    #
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super(ProductDetailView, self).get_context_data(**kwargs)
+    #     product = Product.objects.get(slug=self.kwargs['slug'])
+    #     product.clicks += 1
+    #     context['related_product'] = Product.objects.filter(
+    #         Q(categories__in=product.categories.all()) & ~Q(id=product.id)
+    #     ).distinct()[:4]
+    #     product.save()
+    #     return context
 
 
 """ ---------------- POST PAGES ------------------------------------------------------------------------------------ """
@@ -137,19 +137,19 @@ class BlogListView(ListView):
         return context
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(TemplateView):
     template_name = 'website/post_detail.html'
-    model = Blog
-    pk_url_kwarg = "post_id"
-    slug_url_kwarg = 'slug'
-    query_pk_and_slug = True
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(BlogDetailView, self).get_context_data(**kwargs)
-        post = Blog.objects.get(slug=self.kwargs['slug'])
-        post.visits += 1
-        post.save()
-        return context
+    # model = Blog
+    # pk_url_kwarg = "post_id"
+    # slug_url_kwarg = 'slug'
+    # query_pk_and_slug = True
+    #
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super(BlogDetailView, self).get_context_data(**kwargs)
+    #     post = Blog.objects.get(slug=self.kwargs['slug'])
+    #     post.visits += 1
+    #     post.save()
+    #     return context
 
 
 """ ORDER AND CART  ------------------------------------------------------------------------------------------ """
