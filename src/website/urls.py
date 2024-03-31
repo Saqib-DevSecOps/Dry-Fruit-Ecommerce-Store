@@ -4,7 +4,7 @@ from src.website.views import HomeTemplateView, \
     ContactUsTemplateView, BlogListView, CartTemplateView, AboutUsTemplateView, \
     ProductListView, ProductDetailView, BlogDetailView, AddToCart, IncrementCart, DecrementCart, \
     RemoveFromCartView, OrderCreate, SuccessPayment, CancelPayment, CookiePolicy, PrivacyPolicy, \
-    TermsAndCondition, Jobs, ReturnPolicy, ShippingPolicy
+    TermsAndCondition, Jobs, ReturnPolicy, ShippingPolicy, WishListListView
 
 app_name = "website"
 urlpatterns = [
@@ -22,6 +22,8 @@ urlpatterns = [
     path('remove-cart/', RemoveFromCartView.as_view(), name='remove-cart'),
     path('increment/cart/item', IncrementCart.as_view(), name='increment'),
     path('decrement/cart/item', DecrementCart.as_view(), name='decrement'),
+
+    path('wishlist/', WishListListView.as_view(), name='wishlist_list'),
 
     path('billing', OrderCreate.as_view(), name='order'),
     path('payment-success/', SuccessPayment.as_view(), name="success"),

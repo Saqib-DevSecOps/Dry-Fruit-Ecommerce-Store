@@ -1,0 +1,53 @@
+{% load static %}
+<div class="col-lg-3">
+    <div class="">
+        <div class="vd_space mb-4">
+            <div class="vd_info_wrap text-center">
+                <div class="vd_image">
+                    <div class="image_wrap">
+                        <img src="{% static 'website/images/meta/meta1.png' %}" alt="image_not_found">
+                    </div>
+                </div>
+                <h2 class="vd_mane">Vicent George</h2>
+                <span class="vd_mail"><a href="#!">vicentgeorg@gmail.com</a></span>
+            </div>
+        </div>
+
+        <ul class="vd_tab_nav text-center nav ul_li_block" role="tablist">
+            <li>
+                <a href="{% url 'client:dashboard' %}" {% if request.path == '/c/dashboard/' %}class="active"
+                   aria-selected="true"{% endif %}>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'client:order_list' %}" {% if request.path == '/c/order_list/' %}class="active"
+                   aria-selected="true"{% endif %}>
+                    My Orders
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'client:cancel_order' %}" {% if request.path == '/c/cancel_order/' %}class="active"
+                   aria-selected="true"{% endif %}>
+                    Cancel Orders
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'client:address' %}" {% if request.path == '/c/my-address/' %}class="active" aria-selected="true"{% endif %}>
+                    Address Book
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'client:wishlist' %}" {% if request.path == '/c/wishlist/' %}class="active"
+                   aria-selected="true"{% endif %}>
+                    My Wishlist
+                </a>
+            </li>
+            <li>
+                <a {% if request.path == '/c/my_payment/' %}class="active" aria-selected="true"{% endif %}>
+                    My Payment
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

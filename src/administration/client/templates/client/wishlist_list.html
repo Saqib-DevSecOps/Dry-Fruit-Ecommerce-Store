@@ -1,0 +1,68 @@
+{% extends  'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Cancel Orders</h3>
+                                </div>
+                                <div class="row">
+                                    {% for object in '12345' %}
+                                        <div class="col-sm-12 m-2">
+                                            <div class="card">
+                                                <div class="card-body">
+
+                                                    <label style="font-size: 22px"><b>Dry Fruit of Mix</b></label>
+                                                    <p>purchased on 22 nov 2023</p>
+                                                    <div class="row align-items-end">
+                                                        <div class="col-sm-4">
+                                                            <div class="d-flex position-relative">
+                                                                <img src="{% static 'website/images/meta/meta1.png' %}"
+                                                                     style="height: 70px;"
+                                                                     class="flex-shrink-0 me-3 avatar-xl rounded"
+                                                                     alt="...">
+                                                                <div>
+                                                                    <p class="mt-0">Custom component with stretched
+                                                                        link</p>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-sm-4 text-center">
+                                                            <div>
+                                                                <p class="mt- text-warning ">Qty:1 </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 text-end">
+                                                            <a style="background-color: #fdc315"
+                                                               class="p-1 text-white px-3 text-dark"><i
+                                                                    class="fa fa-times" aria-hidden="true"></i>
+
+                                                            </a>&nbsp;&nbsp;<a style="background-color: #fdc315"
+                                                                               class="p-1 px-4 text-white"><i
+                                                                class="fa fa-shopping-cart" aria-hidden="true"></i>
+
+                                                        </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

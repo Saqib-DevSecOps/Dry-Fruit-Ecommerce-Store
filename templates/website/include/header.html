@@ -44,8 +44,7 @@
                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav main_menu_list m-auto after_navbar">
                            <li class="nav-item nav_item_has_child px-2 dropdown">
-                              <a class="nav-link active" aria-current="page" href="{% url 'website:home' %}""
-                                 >Home</a>
+                              <a class="nav-link"  href="{% url 'website:home' %}">Home</a>
                            </li>
                            <li class="nav-item  px-2 dropdown">
                               <a class="nav-link" href="{% url 'website:shop' %}" id="shop_submenu"
@@ -100,7 +99,7 @@
                                     </div>
                                  </div>
                               </li>
-                              <li class="pe-2"><a href="#!"><i class="far fa-heart"></i></a></li>
+                              <li class="pe-2"><a href="{% url 'website:wishlist_list' %}"><i class="far fa-heart"></i></a></li>
                               <li>
                                  <a href="#!">
                                     <i class="fas fa-shopping-bag position-relative" data-bs-toggle="offcanvas"

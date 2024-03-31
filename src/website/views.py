@@ -16,9 +16,7 @@ from src.administration.admins.models import (
     Product, Blog, BlogCategory, Order, Cart, OrderItem
 )
 from src.website.filters import ProductFilter, BlogFilter
-from src.website.forms import OrderForm
-from src.website.models import BackgroundImage, DigitalPlatforms, Banner, ComingSoon, HomeSliderImage, FooterImage
-from src.website.utility import total_amount, total_quantity
+from src.website.models import BackgroundImage, DigitalPlatforms, Banner, ComingSoon, HomeSliderImage
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
 
@@ -155,15 +153,19 @@ class BlogDetailView(TemplateView):
 """ ORDER AND CART  ------------------------------------------------------------------------------------------ """
 
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class CartTemplateView(TemplateView):
     template_name = 'website/cart.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CartTemplateView, self).get_context_data(**kwargs)
-        context['cart'] = Cart.objects.filter(user=self.request.user)
-        context['total_amount'] = total_amount(self.request)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(CartTemplateView, self).get_context_data(**kwargs)
+    #     context['cart'] = Cart.objects.filter(user=self.request.user)
+    #     context['total_amount'] = total_amount(self.request)
+    #     return context
+
+
+class WishListListView(TemplateView):
+    template_name = 'website/wishlist_list.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -222,89 +224,88 @@ class RemoveFromCartView(View):
 stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGTyLBfXhbdORJybRfmzVm2cjPBTkkuGyAjVfP00cf3sDcP9'
 
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class OrderCreate(View):
 
     def get(self, request):
+        # cart = Cart.objects.filter(user=self.request.user)
+        # amount = total_amount(self.request)
+        # context = {'form': OrderForm, 'cart': cart, 'total_amount': amount}
+        return render(request, 'website/order.html')
 
-        cart = Cart.objects.filter(user=self.request.user)
-        amount = total_amount(self.request)
-        context = {'form': OrderForm, 'cart': cart, 'total_amount': amount}
-        return render(request, 'website/order.html', context)
-
-    def post(self, request):
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            shipping = self.request.POST.get('shipping')
-            if shipping == "normal":
-                shipping_charges = 6
-            else:
-                shipping_charges = 10
-            price = int(total_amount(request)) + shipping_charges
-            line_items = []
-            cart = Cart.objects.filter(user=self.request.user)
-            qty = 0
-            for product in cart:
-                line_items.append({
-                    'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': int(product.product.price * 100),
-                        'product_data': {
-                            'name': product.product.name,
-                        },
-                    },
-                    "quantity": product.quantity
-                })
-            for shipping in cart:
-                line_items.append({
-                    'price_data': {
-                        'currency': 'usd',
-                        'unit_amount': int(shipping_charges * 100),
-                        'product_data': {
-                            'name': 'Tax'
-                        },
-                    },
-                    "quantity": '1'
-                })
-                break
-            host = self.request.get_host()
-            customer = stripe.Customer.create(
-                name=self.request.user.username,
-                email=self.request.user.email
-            )
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                customer=customer,
-                submit_type='pay',
-                line_items=line_items,
-                mode='payment',
-                success_url='http://' + host + reverse('website:success') \
-                            + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url='http://' + host + reverse('website:cancel') \
-                           + '?session_id={CHECKOUT_SESSION_ID}',
-
-            )
-            stripe_id = checkout_session['id']
-            order = form.save(commit=False)
-            order.user = self.request.user
-            order.total = total_amount(request)
-            order.stripe_payment_id = stripe_id
-            if shipping == "normal":
-                order.shipping = "Normal"
-            elif shipping == "premium":
-                order.shipping = "Premium"
-            else:
-                pass
-            order.save()
-            cart = Cart.objects.filter(user=self.request.user)
-            for cart in cart:
-                cart_item = OrderItem(product=cart.product, order=order,
-                                      qty=cart.quantity)
-                cart_item.save()
-            return redirect(checkout_session.url, code=303)
-        else:
-            form = OrderForm()
-        return render(request, 'website/order.html', context={'form': OrderForm()})
+    # def post(self, request):
+    #     form = OrderForm(request.POST)
+    #     if form.is_valid():
+    #         shipping = self.request.POST.get('shipping')
+    #         if shipping == "normal":
+    #             shipping_charges = 6
+    #         else:
+    #             shipping_charges = 10
+    #         price = int(total_amount(request)) + shipping_charges
+    #         line_items = []
+    #         cart = Cart.objects.filter(user=self.request.user)
+    #         qty = 0
+    #         for product in cart:
+    #             line_items.append({
+    #                 'price_data': {
+    #                     'currency': 'usd',
+    #                     'unit_amount': int(product.product.price * 100),
+    #                     'product_data': {
+    #                         'name': product.product.name,
+    #                     },
+    #                 },
+    #                 "quantity": product.quantity
+    #             })
+    #         for shipping in cart:
+    #             line_items.append({
+    #                 'price_data': {
+    #                     'currency': 'usd',
+    #                     'unit_amount': int(shipping_charges * 100),
+    #                     'product_data': {
+    #                         'name': 'Tax'
+    #                     },
+    #                 },
+    #                 "quantity": '1'
+    #             })
+    #             break
+    #         host = self.request.get_host()
+    #         customer = stripe.Customer.create(
+    #             name=self.request.user.username,
+    #             email=self.request.user.email
+    #         )
+    #         checkout_session = stripe.checkout.Session.create(
+    #             payment_method_types=['card'],
+    #             customer=customer,
+    #             submit_type='pay',
+    #             line_items=line_items,
+    #             mode='payment',
+    #             success_url='http://' + host + reverse('website:success') \
+    #                         + '?session_id={CHECKOUT_SESSION_ID}',
+    #             cancel_url='http://' + host + reverse('website:cancel') \
+    #                        + '?session_id={CHECKOUT_SESSION_ID}',
+    #
+    #         )
+    #         stripe_id = checkout_session['id']
+    #         order = form.save(commit=False)
+    #         order.user = self.request.user
+    #         order.total = total_amount(request)
+    #         order.stripe_payment_id = stripe_id
+    #         if shipping == "normal":
+    #             order.shipping = "Normal"
+    #         elif shipping == "premium":
+    #             order.shipping = "Premium"
+    #         else:
+    #             pass
+    #         order.save()
+    #         cart = Cart.objects.filter(user=self.request.user)
+    #         for cart in cart:
+    #             cart_item = OrderItem(product=cart.product, order=order,
+    #                                   qty=cart.quantity)
+    #             cart_item.save()
+    #         return redirect(checkout_session.url, code=303)
+    #     else:
+    #         form = OrderForm()
+    #     return render(request, 'website/order.html', context={'form': OrderForm()})
 
 
 @method_decorator(login_required, name='dispatch')

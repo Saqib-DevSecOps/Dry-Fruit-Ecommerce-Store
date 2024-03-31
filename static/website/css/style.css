@@ -8499,8 +8499,8 @@ input[type=text]:focus {
     font-weight: 500;
     text-align: left;
     padding: 15px 40px;
-    background-color: #f7f7f7;
-    border-right: 5px solid #f7f7f7;
+    background-color: rgba(247, 247, 247, 0);
+    border-right: 5px solid rgba(247, 247, 247, 0);
 }
 
 .vd_tab_nav > li > button:hover, .vd_tab_nav > li > button.active,

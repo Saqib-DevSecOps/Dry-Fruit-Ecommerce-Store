@@ -4,85 +4,238 @@
 
 {% block content %}
 
-<section class="section-b-space">
-    <div class="container">
-        <div class="checkout-page">
-            <div class="checkout-form">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-lg-6 col-sm-12 col-xs-12">
-                            <div class="checkout-title">
-                                <h3>Billing Details</h3>
-                            </div>
-                            <div class="row ">
-                                {{form|crispy}}
 
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 col-xs-12">
-                            <div class="checkout-details">
-                                <div class="order-box">
-                                    <div class="title-box">
-                                        <div>Product <span>Total</span></div>
-                                    </div>
-                                    <ul class="qty">
-                                        {% for cart in cart %}
-                                        <li>{{cart.product.name}} × {{cart.quantity}} <span>${{cart.product_version.price}}</span>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-
-                                    <ul class="total">
-                                        <li>Total <span class="count" id="total_amount">{{total_amount}}</span></li>
-                                        <li hidden id="total">{{total_amount}}</li>
-                                    </ul>
-                                </div>
-
-                                <div class="payment-box">
-                                    <div class="upper-box">
-                                        <div class="payment-options">
-                                            <select class="form-select mb-4 mt-3" id="dropdown1" name="shipping"
-                                                    onchange="enableButton()">
-                                                <option selected value="default">Choose a Shipping Method</option>
-                                                <option value="normal">Normal</option>
-                                                <option value="premium">Premium</option>
-
-                                            </select>
+    <section class=" mt-4 clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                <div class="container">
+                    <!-- Billing info start -->
+                    <div class="billing_form mb_50">
+                        <h3 class="form_title mb_30">Billing details</h3>
+                        <form action="#">
+                            <div class="form_wrap card">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form_item">
+                                            <span class="input_title">First Name<sup>*</sup></span>
+                                            <input type="text" name="firstname">
                                         </div>
-
                                     </div>
 
-                                </div>
-                                <div class="payment-box">
-                                    <div class="upper-box">
-                                        <div class="payment-options">
-                                            <select class="form-select mb-4 mt-3" id="dropdown" name="payment"
-                                                    onchange="enableButton()">
-                                                <option selected value="default">Choose a payment Method</option>
-                                                <option value="stripe">Stripe</option>
-                                            </select>
-                                            <img alt="" src="{% static 'website/logos/paypal.png' %}">
+                                    <div class="col-lg-6">
+                                        <div class="form_item">
+                                            <span class="input_title">Last Name<sup>*</sup></span>
+                                            <input type="text" name="lastname">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="text-end">
-                                    <button class="btn btn-solid hover-solid btn-animation" disabled id="seedoc"
-                                            type="submit">
-                                        Place Order
-                                    </button>
+                                <div class="form_item">
+                                    <span class="input_title">Company Name<sup>*</sup></span>
+                                    <input type="text" name="company">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">Address<sup>*</sup></span>
+                                    <input type="text" name="address" placeholder="House number and street name">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">Town/City<sup>*</sup></span>
+                                    <input type="text" name="city">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">County<sup>*</sup></span>
+                                    <input type="text" name="county">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">Postcode / Zip<sup>*</sup></span>
+                                    <input type="text" name="postcode">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">Phone<sup>*</sup></span>
+                                    <input type="tel" name="phone">
+                                </div>
+
+                                <div class="form_item">
+                                    <span class="input_title">Email Address<sup>*</sup></span>
+                                    <input type="email" name="email">
+                                </div>
+
+                                <div class="checkbox_item">
+                                    <label for="account_create_checkbox"><input id="account_create_checkbox" type="checkbox"> Create an account?</label>
+                                </div>
+
+                                <hr>
+
+                                <div class="checkbox_item mb_30">
+                                    <label for="ship_address_checkbox"><input id="ship_address_checkbox" type="checkbox"> Ship to a different address?</label>
+                                </div>
+
+                                <div class="form_item mb_0">
+                                    <span class="input_title">Order notes<sup>*</sup></span>
+                                    <textarea name="note" placeholder="Note about your order, eg. special notes fordelivery."></textarea>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-            </div>
-            </form>
-        </div>
-    </div>
-    </div>
-</section>
-<script>
+                    <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
+                        <h3 class="form_title mb_30">Your order</h3>
+                        <form action="#">
+                            <div class="form_wrap card">
+                                <div class="checkout_table table-responsive">
+                                    <table class="table text-center mb_50">
+                                        <thead class="text-uppercase text-uppercase">
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="cart_product">
+                                                        <div class="item_image">
+                                                            <img src="{% static 'website/images/cart/cart1.png' %}" alt="image_not_found">
+                                                        </div>
+                                                        <div class="item_content">
+                                                            <h4 class="item_title mb_0">Top Curabitur Lectus</h4>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="price_text">$69.00</span>
+                                                </td>
+                                                <td>
+                                                    <span class="quantity_text">2</span>
+                                                </td>
+                                                <td><span class="total_price">$138.00</span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <div class="cart_product">
+                                                        <div class="item_image">
+                                                            <img src="{% static 'website/images/cart/cart2.png' %}" alt="image_not_found">
+                                                        </div>
+                                                        <div class="item_content">
+                                                            <h4 class="item_title mb_0">Dress Lobortis Laculis</h4>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="price_text">$69.00</span>
+                                                </td>
+                                                <td>
+                                                    <span class="quantity_text">2</span>
+                                                </td>
+                                                <td><span class="total_price">$138.00</span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <div class="cart_product">
+                                                        <div class="item_image">
+                                                            <img src="{% static 'website/images/cart/cart3.png' %}" alt="image_not_found">
+                                                        </div>
+                                                        <div class="item_content">
+                                                            <h4 class="item_title mb_0">Boot Curabitur Lectus</h4>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="price_text">$69.00</span>
+                                                </td>
+                                                <td>
+                                                    <span class="quantity_text">2</span>
+                                                </td>
+                                                <td><span class="total_price">$138.00</span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span class="subtotal_text">Subtotal</span>
+                                                </td>
+                                                <td><span class="total_price">$414.00</span></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span class="subtotal_text">Shipping</span>
+                                                </td>
+                                                <td class="text-left">
+                                                    <div class="checkbox_item mb_15">
+                                                        <label for="shipping_checkbox"><input id="shipping_checkbox" type="checkbox" checked=""> Free Shipping</label>
+                                                    </div>
+                                                    <div class="checkbox_item mb_15">
+                                                        <label for="flatrate_checkbox"><input id="flatrate_checkbox" type="checkbox"> Flat rate: $15.00</label>
+                                                    </div>
+                                                    <div class="checkbox_item">
+                                                        <label for="localpickup_checkbox"><input id="localpickup_checkbox" type="checkbox"> Local Pickup:
+                                                            $8.00</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span class="subtotal_text">TOTAL</span>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span class="total_price">$135.00</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="billing_payment_mathod">
+                                    <ul class="ul_li_block clearfix">
+                                        <li>
+                                            <div class="checkbox_item mb_15 pl-0">
+                                                <label for="bank_transfer_checkbox"><input id="bank_transfer_checkbox" type="checkbox" checked=""> Direct Bank Transfer</label>
+                                            </div>
+                                            <p class="mb_0">
+                                                Make your payment directly into our bank account. Please use your Order
+                                                ID as the payment reference. Your order will not be shipped until the
+                                                funds have cleared in our account.
+                                            </p>
+                                        </li>
+
+                                        <li>
+                                            <div class="checkbox_item mb_0 pl-0">
+                                                <label for="check_payments"><input id="check_payments" type="checkbox">Check Payments</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="checkbox_item mb_0 pl-0">
+                                                <label for="cash_delivery"><input id="cash_delivery" type="checkbox">
+                                                    Cash On Delivery</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="checkbox_item mb_0 pl-0">
+                                                <label for="paypal_checkbox"><input id="paypal_checkbox" type="checkbox"> Paypal</label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <button type="submit" class="custom_btn bg_default_red">PLACE ORDER</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+    <script>
 
 
 

@@ -1,139 +1,179 @@
 {% extends  'website/base.html' %}
 {% load static %}
 {% block content %}
-<div class="breadcrumb-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="page-title">
-                    <h2>cart</h2>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <nav aria-label="breadcrumb" class="theme-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active">cart</li>
-                    </ol>
-                </nav>
+    <style>
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 2px solid #b5b5b5;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            text-align: left;
+        }
+    </style>
+    <section class="aos-init aos-animate mb-0 p-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class=" table-responsive position-relative">
+                <h4>Cart Items</h4>
             </div>
         </div>
-    </div>
-</div>
-{% if cart %}
-<section class="cart-section section-b-space">
-    <div class="container">
-        <div class="row">
+    </section>
 
-            <div class="col-sm-12 table-responsive-xs">
-                <table class="table cart-table">
-                    <thead>
-                    <tr class="table-head">
-                        <th scope="col">image</th>
-                        <th scope="col">product name</th>
-                        <th scope="col">price</th>
-                        <th scope="col">quantity</th>
-                        <th scope="col">action</th>
-                        <th scope="col">total</th>
-                    </tr>
-                    </thead>
-                    {% for cart in cart %}
-                    <tbody>
-                    <tr>
-                        <td>
-                            <a href="#"><img alt="" src="{{cart.product.thumbnail_image.url}}"></a>
-                        </td>
-                        <td><a href="#">{{cart.product.name}}</a>
+    <section class=" clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container-lg">
+            <div class="row">
+                <div class="col-lg-8" style="overflow-y: hidden">
+                    <div class="card cart_table " data-aos="fade-up" data-aos-duration="2000">
+                        <form action="#">
+                            <div class="form_wrap">
+                                <div class="checkout_table table-responsive">
+                                    <table class="table text-center mb-0">
+                                        <thead class="text-uppercase text-uppercase">
+                                        <tr class="mt-4 mb-4">
+                                            <th>Item</th>
+                                            <th>Description</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in '1234' %}
+                                            <tr>
+                                                <td>
+                                                    <div class="cart_product position-relative">
+                                                        <div>
+                                                            <img style="height: 80px"
+                                                                 src="{% static 'website/images/cart/cart2.png' %}"
+                                                                 alt="image_not_found">
+                                                        </div>
+                                                        <button type="button" class="remove_btn position-absolute">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="item_content">
+                                                        <a href="shop-list.html">
+                                                            <h4 class="item_title">Curated Products</h4>
+                                                        </a>
+                                                        <span class="item_type">Shop groceries</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <del class="price_text">$69.00</del>
+                                                    <br>
+                                                    <span class="price_text">$69.00</span>
+                                                </td>
+                                                <td>
+                                                    <div class="quantity_input">
+                                                        <form action="#">
+                                                            <span class="input_number_decrement">–</span>
+                                                            <input class="input_number" value="1">
+                                                            <span class="input_number_increment">+</span>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
 
-                            <div class="mobile-cart-content row">
-                                <div class="col">
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input class="form-control input-number" name="quantity" type="text"
-                                                   value="{{cart.quantity}}">
-                                        </div>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        </td>          <td><a href="#">{{cart.product.price}}
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card p-3" data-aos="fade-up" data-aos-duration="2000">
+                                <h5>COUPON</h5>
 
-                            <div class="mobile-cart-content row">
-                                <div class="col">
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <input class="form-control input-number" name="quantity" type="text"
-                                                   value="{{cart.quantity}}">
-                                        </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <input type="text" placeholder="ENTER COUPON CODE" id="coupan" name="coupan">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <button class="btn custom_btn mt-4">Apply</button>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <h2 class="td-color">${{cart.product.price}}</h2>
-                                </div>
-                                <div class="col">
-                                    <h2 class="td-color"><a class="icon" href="#"><i class="ti-close"></i></a>
-                                    </h2>
-                                </div>
+
                             </div>
-                        </td>
-                        <td>
-                          <div class="col">
-                                    <h3 class="">{{cart.quantity}}</h3>
+
+
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="card widget-card border-light shadow-sm">
+                                <div class="card-body p-4">
+                                    <h5 class="card-title widget-card-title mb-4">SUMMARY</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless bsb-table-xl text-nowrap align-middle m-0">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Subtotal</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">23</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Discount</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">23</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Delivery Charges</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">34</p>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div><hr>
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless bsb-table-xl text-nowrap align-middle m-0">
+                                            <tbody>
+                                            <tr>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Delivery Charges</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">34</p>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                                <button class="btn custom_btn btn-lg mt-4">Continue To Checkout -323 $</button>
+
                                 </div>
-                        </td>
-                        <td>
-                            <a class="icon" href="{% url 'website:increment' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-arrow-up"></i></a>&nbsp;&nbsp;
-                            <a class="icon" href="{% url 'website:decrement' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-arrow-down"></i></a>&nbsp;&nbsp;
-                            <a class="icon" href="{% url 'website:remove-cart' %}?product_id={{cart.product_id}}&&version_id={{cart.product_version_id}}"><i class="ti-close"></i></a>
-                        </td>
-                        <td>
-                            <h3 class="td-color">{{cart.get_item_price}}</h3>
-                        </td>
-                    </tr>
-                    </tbody>
-                    {% endfor %}
-                </table>
-                <div class="table-responsive-md">
-                    <table class="table cart-table ">
-                        <tfoot>
-                        <tr>
-                            <td class="text-danger">total price :</td>
-                            <td>
-                                <h2>${{total_amount}}</h2>
-                            </td>
-                        </tr>
-                        </tfoot>
-                    </table>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row cart-buttons">
-            <div class="col-6"><a class="btn btn-outline-danger" href="{% url 'website:shop' %}"><i class="ti-arrow-left"></i>&nbsp; continue
-                shopping</a></div>
-            <div class="col-6"><a class="btn btn-danger" href="{% url 'website:order' %}">check out</a></div>
-        </div>
-    </div>
-</section>
-{% else %}
-<h3 class="text-center mt-4 text-danger">Cart is Empty</h3>
-<div class="row justify-content-center mt-4 mb-4 ">
-            <div class="col-12 text-center">
-                <a class="btn btn-outline-danger" href="{% url 'website:shop' %}"><i class="ti-arrow-left"></i>&nbsp; continue
-                shopping</a>
-            </div>
-        </div>
-{% endif %}
-<script>
-const quantityInput = document.getElementById("quantity");
-const updateBtn = document.getElementById("updateBtn");
+    </section>
 
-quantityInput.addEventListener("input", () => {
-  if (quantityInput.value != "1") {
-    updateBtn.disabled = false;
-  } else {
-    updateBtn.disabled = true;
-  }
-});
-
-
-</script>
 {% endblock content %}

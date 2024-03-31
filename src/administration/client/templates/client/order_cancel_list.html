@@ -12,17 +12,21 @@
                         <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
                             <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                                 <div class="vd_title_wrap">
-                                    <h3>My Orders</h3>
+                                    <h3>Cancel Orders</h3>
                                 </div>
                                 <div class="row">
                                     {% for object in '12345' %}
                                         <div class="col-sm-12 m-2">
                                             <div class="card">
                                                 <div class="card-body">
+
                                                     <label style="font-size: 22px"><b>Requested on 01 sep
                                                         2023</b></label>
-                                                    <p class="float-end fs-11">Order#123445566</p>
-                                                    <div class="row align-items-end mt-3 mb-3">
+                                                    <a href="#" class="text-warning float-end fs-11" aria-label="Close">More
+                                                        Details</a>
+
+                                                    <p>Order#123445566</p>
+                                                    <div class="row align-items-end">
                                                         <div class="col-sm-4">
                                                             <div class="d-flex position-relative">
                                                                 <img src="{% static 'website/images/meta/meta1.png' %}"
@@ -30,8 +34,8 @@
                                                                      class="flex-shrink-0 me-3 avatar-xl rounded"
                                                                      alt="...">
                                                                 <div>
-                                                                    <p class="mt-0">dryfruit of mix fresh of new and
-                                                                        organic</p>
+                                                                    <p class="mt-0">Custom component with stretched
+                                                                        link</p>
                                                                 </div>
                                                                 <div>
                                                                 </div>
@@ -43,10 +47,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4 text-end">
-                                                            <a href="{% url 'client:order_detail' %}"
-                                                               style="background-color: #f5b23c"
-                                                               class="p-1 px-2 text-white">Order Detail
-                                                            </a>
+                                                            <button style="background-color: #d5d5d5"
+                                                                    class="p-1 px-4 text-dark">Cancel
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>

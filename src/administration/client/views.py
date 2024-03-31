@@ -53,16 +53,16 @@ class AddressUpdate(UpdateView):
         return reverse('client:dashboard')
 
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class ClientDashboard(TemplateView):
     template_name = 'client/client_dashboard.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ClientDashboard, self).get_context_data(**kwargs)
-        context['total_orders'] = Order.objects.filter(user=self.request.user).count()
-        context['pending_orders'] = Order.objects.filter(user=self.request.user, order_status="pending").count()
-        context['wishlist'] = Wishlist.objects.filter(user=self.request.user).count()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(ClientDashboard, self).get_context_data(**kwargs)
+    #     context['total_orders'] = Order.objects.filter(user=self.request.user).count()
+    #     context['pending_orders'] = Order.objects.filter(user=self.request.user, order_status="pending").count()
+    #     context['wishlist'] = Wishlist.objects.filter(user=self.request.user).count()
+    #     return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -80,14 +80,14 @@ class WishCreateView(View):
         return redirect('website:product-detail', product.slug)
 
 
-@method_decorator(login_required, name='dispatch')
-class WishlistView(ListView):
-    model = Wishlist
+# @method_decorator(login_required, name='dispatch')
+class WishlistView(TemplateView):
+    # model = Wishlist
     template_name = 'client/wishlist_list.html'
-    context_object_name = 'objects'
-
-    def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+    # context_object_name = 'objects'
+    #
+    # def get_queryset(self):
+    #     return self.model.objects.filter(user=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -99,23 +99,31 @@ class WishListDelete(View):
         return redirect("client:wishlist")
 
 
-@method_decorator(login_required, name='dispatch')
-class OrderListView(ListView):
-    model = OrderItem
+# @method_decorator(login_required, name='dispatch')
+class OrderListView(TemplateView):
+    # model = OrderItem
     template_name = 'client/order_list.html'
-    context_object_name = 'objects'
+    # context_object_name = 'objects'
+    #
+    # def get_queryset(self):
+    #     return self.model.objects.filter(order__user=self.request.user)
 
-    def get_queryset(self):
-        return self.model.objects.filter(order__user=self.request.user)
+
+class OrderCancelListView(TemplateView):
+    # model = OrderItem
+    template_name = 'client/order_cancel_list.html'
 
 
-@method_decorator(login_required, name='dispatch')
-class AddressList(ListView):
-    model = Order
+class OrderDetailView(TemplateView):
+    # model = OrderItem
+    template_name = 'client/order_detail.html'
+
+
+# @method_decorator(login_required, name='dispatch')
+class AddressList(TemplateView):
+    # model = Order
     template_name = 'client/address.html'
-    context_object_name = 'objects'
-
-    def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
-
-
+    # context_object_name = 'objects'
+    #
+    # def get_queryset(self):
+    #     return self.model.objects.filter(user=self.request.user)
