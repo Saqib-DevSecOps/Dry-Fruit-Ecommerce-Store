@@ -13,7 +13,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory
 )
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.models import BackgroundImage, DigitalPlatforms, Banner, ComingSoon, HomeSliderImage
@@ -28,14 +28,8 @@ class HomeTemplateView(TemplateView):
         context = super(HomeTemplateView, self).get_context_data(**kwargs)
         context['new_products'] = Product.objects.order_by('-created_on')[:10]
         context['blogs'] = Blog.objects.order_by('-created_on')[:10]
-        context['top'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:5]
-        context['slider'] = HomeSliderImage.objects.all()
-        context['coming_soon'] = ComingSoon.objects.all()[:10]
-        context['digital_platform'] = DigitalPlatforms.objects.all()
-        banner = Banner.objects.all()
-        context['banner'] = banner.order_by('-created_on').first()
-        background = BackgroundImage.objects.all()
-        context['background'] = background.order_by('-created_on').first()
+        context['top_products'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:5]
+        context['top_categories'] = ProductCategory.objects.all()[:10]
         return context
 
 
@@ -82,8 +76,7 @@ class ProductListView(ListView):
         pagination = Paginator(filter_product.qs, 24)
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
-        context['products'] = page_obj
-        context['total'] = page_obj
+        context['object_list'] = page_obj
         context['filter_form'] = filter_product
         return context
 

@@ -1,0 +1,146 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block base_subtitle %}
+    Products
+{% endblock %}
+
+{% block base_subhead_heading %} Product &rAarr; Management{% endblock %}
+{% block base_subhead_paragraph %}All available products inside your inventory{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-primary" href="{% url 'admins:product-add' %}">
+        <i class="fa fa-plus"></i>&nbsp;Add New
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+
+        <div class="mt-2 mb-4">
+            <form method="get">
+                <div class="input-group">
+                    {{ filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i>&nbsp;Search
+                        </button>
+                        <a href="{% url 'admins:product-list' %}" class="btn btn-danger">
+                            <i class="fa fa-paint-brush"></i>&nbsp;Clear
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if object_list %}
+            <div class="row" id="product_list">
+                {% for object in object_list %}
+                    <div class="col-lg-3 col-md-4">
+                        <div class="card ribbon-box " id="company-overview">
+                            <div class="card-body">
+                                <div class="avatar-lg mx-auto mb-2">
+                                    <div class="avatar-title bg-light rounded">
+                                        <img src="{{ object.thumbnail_image|image_or_placeholder:"300x300?title=Thumbnail Image" }}"
+                                             alt="" class="avatar-lg img-fluid d-block rounded">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                    <a href="{% url 'admins:product-detail' object.pk %}">
+                                        <h3 class="text-center">{{ object.title }}</h3>
+                                    </a>
+                                <div class="table-responsive table-card">
+                                    <table class="table table-sm table-nowrap mb-4">
+                                        <tbody>
+                                        <tr>
+                                            <td class="fw-medium" scope="row">Price</td>
+                                            <td class="text-end">{{ object.get_price }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium" scope="row">Quantity</td>
+                                            <td class="text-end">{{ object.quantity }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium" scope="row">Total Sales</td>
+                                            <td class="text-end">{{ object.total_sales }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-medium" scope="row">Rating</td>
+                                            <td class="text-end"><span
+                                                    class="overview-rating">{{ object.average_review }}</span> <i
+                                                    class="ri-star-fill text-warning align-bottom"></i></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="hstack gap-3">
+                                    <a href="{% url 'admins:product-detail' object.pk %}"
+                                       class="btn btn-soft-success  w-100">
+                                        <span class="icon-on"><i
+                                                class="ri-eye-fill align-bottom me-1"></i> Overview</span>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-danger">
+                <b>
+                    <i class="fa fa-exclamation-circle"></i> No products available for now.
+                </b>
+            </p>
+        {% endif %}
+
+        {% if object_list %}
+            <div class="mt-3">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        $(document).ready(function () {
+
+            $("#id_category option:first").text("-- Select Category --");
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+    </script>
+{% endblock %}

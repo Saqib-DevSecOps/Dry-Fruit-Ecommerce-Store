@@ -4,191 +4,201 @@
 {% load crispy_forms_tags %}
 
 {% block base_subtitle %}
-{{ object.name }} Details
+    {{ object.name }} Details
 {% endblock %}
 
 {% block base_subhead_heading %} {{ object.name }}{% endblock %}
 {% block base_subhead_paragraph %}Details description of product{% endblock %}
 
 {% block base_subhead_button %}
-<a class="btn btn-link" href="{% url 'admins:product-list' %}">
-    <i class="fa fa-arrow-left"></i>&nbsp;Products
-</a>
-<a class="btn btn-outline-primary" href="{% url 'admins:product-update' object.pk %}">
-    <i class="fa fa-plus"></i>&nbsp;Edit
-</a>
-<a class="btn btn-outline-danger" href="{% url 'admins:product-delete' object.pk %}">
-    <i class="fa fa-plus"></i>&nbsp;Delete
-</a>
+    <a class="btn btn-link" href="{% url 'admins:product-list' %}">
+        <i class="fa fa-arrow-left"></i>&nbsp;Products
+    </a>
+    <a class="btn btn-outline-primary" href="{% url 'admins:product-update' object.pk %}">
+        <i class="fa fa-plus"></i>&nbsp;Edit
+    </a>
+    <a class="btn btn-outline-danger" href="{% url 'admins:product-delete' object.pk %}">
+        <i class="fa fa-plus"></i>&nbsp;Delete
+    </a>
+    <button class="btn btn-outline-success float-end pr-4-3" data-bs-target="#modal-image-add"
+            data-bs-toggle="modal" type="button">
+        <i class="fa fa-image"></i>&nbsp;Add Image
+    </button>
 {% endblock %}
 
 {% block base_content %}
 
-<div class="">
-    <div class="row d-flex justify-content-center">
-        <div class="col-12">
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="images p-3">
-                            <div class="text-center p-4">
-                                {% if object.thumbnail_image %}
-                                <img id="main-image" src="{{ object.thumbnail_image.url }}"/>
-                                {% else %}
-                                <img id="main-image"
-                                     src="{% static 'required/images/no-image-product-portrait.jpg' %}"/>
-                                {% endif %}
-                            </div>
-                            <div class="thumbnail text-center">
-                                <div class="row justify-content-center">
-                                    <div class="col-auto">
-                                        {% if object.thumbnail_image %}
-                                        <img height="100"
-                                             onclick="change_image(this)"
-                                             src="{{ object.thumbnail_image.url }}" width="auto">
-                                        {% else %}
-                                        <img height="100"
-                                             onclick="change_image(this)"
-                                             src="{% static 'required/images/no-image-product-portrait-small.jpg' %}"
-                                             width="auto">
-                                        {% endif %}
-                                    </div>
-                                    {% for image in object.get_images %}
-                                    <div class="col-auto">
-                                        <img height="100"
-                                             onclick="change_image(this)"
-                                             src="{{ image.image.url }}" width="auto">
-                                        <h3><a class="text-danger"
-                                               href="{% url 'admins:product-image-delete' object.pk image.pk %}"><i
-                                                class="fa fa-trash"></i></a></h3>
-                                    </div>
-                                    {% endfor %}
+    <div class="">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="images p-3">
+                                <div class="text-center p-4">
+                                    {% if object.thumbnail_image %}
+                                        <img id="main-image" src="{{ object.thumbnail_image.url }}"/>
+                                    {% else %}
+                                        <img id="main-image"
+                                             src="{% static 'required/images/no-image-product-portrait.jpg' %}"/>
+                                    {% endif %}
+                                </div>
+                                <div class="thumbnail text-center">
+                                    <div class="row justify-content-center">
+                                        <div class="col-auto">
+                                            {% if object.thumbnail_image %}
+                                                <img height="100"
+                                                     onclick="change_image(this)"
+                                                     src="{{ object.thumbnail_image.url }}" width="auto">
+                                            {% else %}
+                                                <img height="100"
+                                                     onclick="change_image(this)"
+                                                     src="{% static 'required/images/no-image-product-portrait-small.jpg' %}"
+                                                     width="auto">
+                                            {% endif %}
+                                        </div>
+                                        {% for image in object.get_images %}
+                                            <div class="col-auto">
+                                                <img height="100"
+                                                     onclick="change_image(this)"
+                                                     src="{{ image.image.url }}" width="auto">
+                                                <h3><a class="text-danger"
+                                                       href="{% url 'admins:product-image-delete' object.pk image.pk %}"><i
+                                                        class="fa fa-trash"></i></a></h3>
+                                            </div>
+                                        {% endfor %}
 
+
+                                    </div>
 
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mt-4 mt-xl-4 px-4">
-
-                            {# NAME #}
-                            <a class="text-primary" href="/">
-                                <b>{{ object.get_book_type_display }}</b>
-                            </a>
-                            <h4 class="mt-1 mb-2">{{ object.name }}</h4>
-                            <div class="mb-4">
-                                {% for cat in object.categories.all %}
-                                <span class="badge bg-success-lt">
-                                           {{ cat.name }}
-                                        </span>
-                                {% endfor %}
-                            </div>
-
-                            {# DESCRIPTION #}
-                            <p class="text-muted mb-4">
-                                {{ object.description }}
-                            </p>
-
-
-                            {# ORIGIN #}
-                            <div class="mb-3 row">
-                                <div class="mb-1">
-                                    <div class="card-title">
-                                        Origin
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div>
-                                        <div class="mb-2">
-                                            <i class="fa fa-usd" aria-hidden="true"></i>
-                                            Price: <strong>{{ object.price }}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div class="mb-2">
-                                            <i class="fa fa-mouse-pointer"></i>
-                                            Clicks: <strong>{{ object.clicks }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div>
-                                        <div class="mb-2">
-                                            <i class="fa fa-cart-plus"></i>
-                                            Sales: <strong>{{ object.sales }}</strong>
-                                        </div>
-                                    </div>
+                        <div class="col-md-7">
+                            <div class="row mt-4">
+                                <div class="col-lg-12 col-sm-6">
+                                    <h2 class="text-primary">{{ object.title }}</h2>
                                 </div>
                             </div>
-
-                            <hr>
-                                      {# Platform #}
-                                    <div class="mb-3 mt-5 row">
-                                        <div class="mb-0">
-                                            <div class="card-title">
-                                                Other Platforms
-                                            </div>
-                                        </div>
-                                        {% if object.product_platform %}
-
-                                        <div class="row">
-
-                                            {% for platform in object.product_platform.all %}
-                                            <div class="col-sm-4">
-                                                <div class="card card-sm">
-                                                    <div class="card-status-top bg-success"></div>
-                                                    <div class="card-body">
-                                                        <div class="mt-4">
-                                                            <div class="col">
-
-                                                                <div class="col-auto">
-                                                                    <img src="{{platform.image.url}}">
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <a class="text-danger"
-                                                                       href="{% url 'admins:product-other-delete' object.pk platform.pk %}">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-money-dollar-circle-fill"></i>
                                                 </div>
                                             </div>
-                                            {% endfor %}
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Price :</p>
+                                                <h5 class="mb-0">{{ object.price }}</h5>
+                                            </div>
                                         </div>
-                                        {% else %}
-                                        <p class="mb-0 text-danger">
-                                            <b>Other Platforms Not Offer.</b>
-                                        </p>
-                                        {% endif %}
-                                    </div>
-
-                            <hr>
-                            {# ACTIONS #}
-                            <div class="row">
-                                <div class="mb-0">
-                                    <div class="card-title">
-                                        Actions
                                     </div>
                                 </div>
-                                <div class="col-12">
-
-                                    <button class="btn btn-success" data-bs-target="#modal-platform-add"
-                                            data-bs-toggle="modal" type="button">
-                                        <i class="fa fa-link"></i>&nbsp;Add Platforms
-                                    </button>
-                                    <button class="btn btn-success" data-bs-target="#modal-image-add"
-                                            data-bs-toggle="modal" type="button">
-                                        <i class="fa fa-image"></i>&nbsp;Add Image
-                                    </button>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-file-copy-2-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">No. of Orders :</p>
+                                                <h5 class="mb-0">00</h5>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-stack-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Available Stocks :</p>
+                                                <h5 class="mb-0">{{ object.quantity }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="p-2 border border-dashed rounded">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-2">
+                                                <div class="avatar-title rounded bg-transparent text-success fs-24">
+                                                    <i class="ri-inbox-archive-fill"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <p class="text-muted mb-1">Total Revenue :</p>
+                                                <h5 class="mb-0">{{ object.total_revenue_generated }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end col -->
                             </div>
 
+
+                            <div class="mt-4 text-muted">
+                                <h5 class="fs-15">Description :</h5>
+                                <p>{{ object.description|safe }}</p>
+                            </div>
+                            <div class="product-content mt-5">
+                                <h5 class="fs-15 mb-3">Product Description :</h5>
+                                <nav>
+                                    <ul class="nav nav-tabs nav-tabs-custom nav-success" id="nav-tab"
+                                        role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="nav-speci-tab" data-bs-toggle="tab"
+                                               href="#nav-speci" role="tab" aria-controls="nav-speci"
+                                               aria-selected="true">Specification</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <div class="tab-content border border-top-0 p-4" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-speci" role="tabpanel"
+                                         aria-labelledby="nav-speci-tab">
+                                        <div class="table-responsive">
+                                            <table class="table mb-0">
+                                                <tbody>
+                                                <tr>
+                                                    <th scope="row" style="width: 200px;">
+                                                        Category
+                                                    </th>
+                                                    <td>{{ object.category }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Brand</th>
+                                                    <td>{{ object.manufacturer_brand }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Weight</th>
+                                                    <td>{{ object.weight }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Average Review</th>
+                                                    <td>{{ object.average_review|safe }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Total Reviews</th>
+                                                    <td>{{ object.total_reviews }}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -196,63 +206,40 @@
             </div>
         </div>
     </div>
-</div>
-
-
-
-{# MODELS IMAGES #}
-<div class="modal modal-blur fade hide" id="modal-platform-add" role="dialog">
-    <div class="modal-dialog modal-sm" role="document">
-        <form action="{% url 'admins:product-other-add' object.pk %}" enctype="multipart/form-data"
-              method="post">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Other Selling Platform</h5>
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-                </div>
-                <div class="modal-body">
-
-                    {% csrf_token %}
-                    {{ platform_form|crispy }}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary ms-auto" type="submit">
-                        <i class="fa fa-check"></i>&nbsp;Submit
-                    </button>
-                </div>
-            </div>
-        </form>
     </div>
-</div>
-<div class="modal modal-blur fade hide" id="modal-image-add" role="dialog">
-    <div class="modal-dialog modal-sm" role="document">
-        <form action="{% url 'admins:product-image-add' object.pk %}" enctype="multipart/form-data"
-              method="post">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Product Image</h5>
-                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-                </div>
-                <div class="modal-body">
 
-                    {% csrf_token %}
-                    {{ product_image_add_form|crispy }}
+
+
+
+    <div class="modal modal-blur fade hide" id="modal-image-add" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <form action="{% url 'admins:product-image-add' object.pk %}" enctype="multipart/form-data"
+                  method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Product Image</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        {% csrf_token %}
+                        {{ product_image_add_form|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ms-auto" type="submit">
+                            <i class="fa fa-check"></i>&nbsp;Submit
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary ms-auto" type="submit">
-                        <i class="fa fa-check"></i>&nbsp;Submit
-                    </button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 
 {% endblock %}
 
 {% block base_external_scripts %}
-<script>
+    <script>
         function change_image(image) {
             var container = document.getElementById("main-image");
             container.src = image.src;
@@ -262,5 +249,5 @@
         });
 
 
-</script>
+    </script>
 {% endblock %}

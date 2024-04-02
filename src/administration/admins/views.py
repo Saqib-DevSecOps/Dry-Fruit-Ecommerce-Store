@@ -13,9 +13,9 @@ from django.views.generic import (
 from src.accounts.decorators import admin_protected
 from src.accounts.models import User
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
-from src.administration.admins.forms import  ProductImageForm, MyProfileForm
+from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language
+    Language, ProductWeight
 
 """ MAIN """
 
@@ -30,6 +30,7 @@ class DashboardView(TemplateView):
         context['orders'] = Order.objects.count()
         context['users'] = User.objects.filter(is_staff=False).count()
         context['products'] = Product.objects.count()
+
         return context
 
 
@@ -157,14 +158,14 @@ class CategoryListView(ListView):
 @method_decorator(admin_protected, name='dispatch')
 class CategoryUpdateView(UpdateView):
     model = ProductCategory
-    fields = ['name', 'is_active']
+    fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
     success_url = reverse_lazy('admins:category-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
 class CategoryCreateView(CreateView):
     model = ProductCategory
-    fields = ['name', 'is_active']
+    fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
     success_url = reverse_lazy('admins:category-list')
 
 
@@ -175,28 +176,28 @@ class CategoryDeleteView(DeleteView):
 
 
 @method_decorator(admin_protected, name='dispatch')
-class LanguageListView(ListView):
-    queryset = Language.objects.all()
+class ProductWeightListView(ListView):
+    queryset = ProductWeight.objects.all()
 
 
 @method_decorator(admin_protected, name='dispatch')
-class LanguageUpdateView(UpdateView):
-    model = Language
-    fields = ['name']
-    success_url = reverse_lazy('admins:category-list')
+class ProductWeightUpdateView(UpdateView):
+    model = ProductWeight
+    fields = ['name','is_active']
+    success_url = reverse_lazy('admins:product-weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
-class LanguageCreateView(CreateView):
-    model = Language
-    fields = ['name']
-    success_url = reverse_lazy('admins:category-list')
+class ProductWeightCreateView(CreateView):
+    model = ProductWeight
+    fields = ['name','is_active']
+    success_url = reverse_lazy('admins:product-weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
-class LanguageDeleteView(DeleteView):
-    model = Language
-    success_url = reverse_lazy('admins:category-list')
+class ProductWeightDeleteView(DeleteView):
+    model = ProductWeight
+    success_url = reverse_lazy('admins:product-weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -207,14 +208,14 @@ class BlogCategoryListView(ListView):
 @method_decorator(admin_protected, name='dispatch')
 class BlogCategoryUpdateView(UpdateView):
     model = BlogCategory
-    fields = ['name', 'parent', 'is_active']
+    fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
     success_url = reverse_lazy('admins:post-category-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
 class BlogCategoryCreateView(CreateView):
     model = BlogCategory
-    fields = ['name', 'parent', 'is_active']
+    fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
     success_url = reverse_lazy('admins:post-category-list')
 
 
@@ -248,22 +249,14 @@ class ProductListView(ListView):
 @method_decorator(admin_protected, name='dispatch')
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = [
-        'thumbnail_image', 'name',
-        'categories','price',
-        'description', 'is_active'
-    ]
+    form_class = ProductForm
     success_url = reverse_lazy('admins:product-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
 class ProductCreateView(CreateView):
     model = Product
-    fields = [
-        'thumbnail_image', 'name',
-        'categories','price',
-        'description', 'is_active'
-    ]
+    form_class = ProductForm
     success_url = reverse_lazy('admins:product-list')
 
 
@@ -281,8 +274,6 @@ class ProductDetailView(DetailView):
 class ProductDeleteView(DeleteView):
     model = Product
     success_url = reverse_lazy('admins:product-list')
-
-
 
 
 @method_decorator(admin_protected, name='dispatch')

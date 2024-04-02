@@ -129,12 +129,14 @@
                                     aria-selected="true">All
                             </button>
                         </li>
+                        {% for object in top_categories %}
                         <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-pill me-1" id="pills-vegetables-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-vegetables" type="button" role="tab"
-                                    aria-controls="pills-vegetables" aria-selected="false">Vegetables
+                                    aria-controls="pills-vegetables" aria-selected="false">{{ object.name }}
                             </button>
                         </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

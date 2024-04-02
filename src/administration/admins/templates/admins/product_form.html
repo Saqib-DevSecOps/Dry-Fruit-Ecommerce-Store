@@ -1,0 +1,292 @@
+{% extends 'admins/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_subtitle %}Product Form{% endblock %}
+{% block base_subhead_heading %}Product &rAarr; Form {% endblock %}
+{% block base_subhead_paragraph %}{% endblock %}
+{% block base_subhead_button %}
+    <a href="{% url 'admins:product-list' %}">&larr; Products</a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+
+                {# CONTENT AREA #}
+                <div class="row">
+
+                    {# RIGHT #}
+                    <div class="col-lg-4 col-md-12">
+
+                        {# MEDIA #}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Media</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <div class="">
+                                        {% if form.instance.thumbnail_image %}
+                                            <img src="{{ form.instance.thumbnail_image.url }}" height="100" width="auto"
+                                                 alt="product-image">
+                                        {% else %}
+                                            <img src="{% static 'vendor/images/logo/upload.svg' %}"
+                                                 alt="product-image">
+                                        {% endif %}
+                                    </div>
+                                    <br>
+                                    <div style="text-align: left;">
+                                        {% render_field form.thumbnail_image class="form-control" placeholder='https://www.youtube.com/watch?v=V_iFtl6xggc' %}
+                                        <small class="form-text text-muted">{{ form.thumbnail_image.help_text }}</small>
+                                        {% if form.thumbnail_image.errors %}
+                                            <ul class="text-danger">
+                                                {% for error in form.thumbnail_image.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {# CATEGORY #}
+                                <div class="mt-4 mb-4">
+                                    <label for="{{ form.video_link.id_for_label }}"
+                                           class="form-label">{{ form.video_link.label }}</label>
+                                    {% render_field form.video_link class="form-control" placeholder='https://www.youtube.com/watch?v=V_iFtl6xggc' %}
+                                    <small class="form-text text-muted">{{ form.video_link.help_text }}</small>
+                                    {% if form.video_link.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.video_link.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# TAGS AND CATS #}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Categories</h4>
+                            </div>
+                            <div class="card-body">
+
+
+                                {# TAGS #}
+                                <div class="mb-4">
+                                    <h4>Category</h4>
+                                    {% render_field form.category class="form-control" %}
+                                    <small class="form-text text-muted">{{ form.category.help_text }}</small>
+                                    {% if form.category.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.category.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-4">
+                                    <h4>Tags</h4>
+                                    {% render_field form.tags class="form-control" style='height:100px' %}
+                                    <small class="form-text text-muted">{{ form.tags.help_text }}</small>
+                                    {% if form.tags.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.tags.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row  mt-2 justify-content-end">
+                                        <div class="col">
+                                            <button class="btn btn-primary rounded font-sm hover-up" type="submit">
+                                                Publish
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-danger">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    {# LEFT #}
+                    <div class="col-lg-8 col-md-12">
+
+                        {# BASIC DETAILS #}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Details</h4>
+                            </div>
+
+                            <div class="card-body">
+                                {% if form.non_field_errors %}
+                                    <div class="mb-4">
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                {% for error in form.non_field_errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {# SKU #}
+                                <div class="mb-4">
+                                    <label for="{{ form.sku.id_for_label }}"
+                                           class="form-label">{{ form.sku.label }}</label>
+                                    {% render_field form.sku class="form-control" placeholder='APPMOBB14X00' %}
+                                    <small class="form-text text-muted">{{ form.sku.help_text }}</small>
+                                    {% if form.sku.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.sku.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+
+                                {# TITLE #}
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label for="{{ form.title.id_for_label }}"
+                                                   class="form-label">{{ form.title.label }}</label>
+                                            {% render_field form.title class="form-control" placeholder='Iphone 14' %}
+                                            <small class="form-text text-muted">{{ form.title.help_text }}</small>
+                                            {% if form.title.errors %}
+                                                <ul class="text-danger">
+                                                    {% for error in form.title.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label for="{{ form.manufacturer_brand.id_for_label }}"
+                                                   class="form-label">{{ form.manufacturer_brand.label }}</label>
+                                            {% render_field form.manufacturer_brand class="form-control" placeholder='Iphone 14' %}
+                                            <small class="form-text text-muted">{{ form.manufacturer_brand.help_text }}</small>
+                                            {% if form.manufacturer_brand.errors %}
+                                                <ul class="text-danger">
+                                                    {% for error in form.manufacturer_brand.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label for="{{ form.weight.id_for_label }}"
+                                                   class="form-label">{{ form.weight.label }}</label>
+                                            {% render_field form.weight class="form-control" %}
+                                            <small class="form-text text-muted">{{ form.weight.help_text }}</small>
+                                            {% if form.weight.errors %}
+                                                <ul class="text-danger">
+                                                    {% for error in form.weight.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                {# QTY_PRICE_DISCOUNT #}
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label for="{{ form.quantity.id_for_label }}"
+                                                   class="form-label">{{ form.quantity.label }}</label>
+                                            {% render_field form.quantity class="form-control" placeholder='product details down quantity' %}
+                                            <small class="form-text text-muted">{{ form.quantity.help_text }}</small>
+                                            {% if form.quantity.errors %}
+                                                <ul class="text-danger">
+                                                    {% for error in form.quantity.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="{{ form.price.id_for_label }}"
+                                               class="form-label">{{ form.price.label }}</label>
+                                        {% render_field form.price class="form-control" placeholder='product details down price' %}
+                                        <small class="form-text text-muted">{{ form.price.help_text }}</small>
+                                        {% if form.price.errors %}
+                                            <ul class="text-danger">
+                                                {% for error in form.price.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="{{ form.discount.id_for_label }}"
+                                               class="form-label">{{ form.discount.label }}</label>
+                                        {% render_field form.discount class="form-control" placeholder='product details down discount' %}
+                                        <small class="form-text text-muted">{{ form.discount.help_text }}</small>
+                                        {% if form.discount.errors %}
+                                            <ul class="text-danger">
+                                                {% for error in form.discount.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# DESCRIPTION #}
+                        <div class="card mb-4">
+
+                            <div class="card-header">
+                                <h4>Description</h4>
+                            </div>
+
+                            <div class="card-body">
+
+                                {# DESC #}
+                                <div class="mb-4">
+                                    {{ form.description }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block base_external_scripts %}
+
+    <script>
+        $(document).ready(function () {
+            $('input').addClass('my-2');
+        })
+    </script>
+{% endblock %}

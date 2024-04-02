@@ -1,0 +1,101 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load crispy_forms_tags %}
+
+{% block base_subtitle %}
+    {{ object.title }}
+{% endblock %}
+
+{% block base_subhead_heading %}{% endblock %}
+{% block base_subhead_paragraph %}{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-ghost-indigo" href="{% url 'admins:post-list' %}">
+        <i class="bx bx-arrow-back"></i>&nbsp;Posts
+    </a>
+    <a class="btn btn-outline-primary" href="{% url 'admins:post-update' object.pk %}">
+        <i class="bx bx-edit"></i>&nbsp;Update
+    </a>
+    <a class="btn btn-outline-danger" href="{% url 'admins:post-delete' object.pk %}">
+        <i class="bx bx-trash"></i>&nbsp;Delete
+    </a>
+{% endblock %}
+
+{% block base_content %}
+    <div class="">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="col-sm-11">
+                            <div class="card">
+                                <div class="card-body">
+                                                    <div class="images p-3">
+                                    <div class="text-center p-4">
+                                        {% if object.thumbnail_image %}
+                                            <img id="main-image" src="{{ object.thumbnail_image.url }}"/>
+                                        {% else %}
+                                            <img id="main-image"
+                                                 src="{% static 'required/images/no-image-product-portrait.jpg' %}"/>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="col-sm-11 text-center">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-title">Information</div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-pen"></i>
+                                            Author: <strong>{{ object.author.name_or_username }}</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-book"></i>
+                                            Read Time: <strong>{{ object.read_time }} mins</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-mouse"></i>
+                                            Clicks: <strong>{{ object.visits }}</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-calendar-plus"></i>
+                                            Created On: <strong>{{ object.created_on }}</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-calendar-event"></i>
+                                            Last Update: <strong>{{ object.updated_on }}</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="bx bx-check"></i>
+                                            Status: <strong>
+                                            <span class="badge bg-success-lt">{{ object.get_status_display }}</span>
+                                        </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row mt-4">
+                                <div class="col-lg-12 col-sm-6">
+                                    <h2 class="text-primary">{{ object.title }}</h2>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-muted">
+                                <h5 class="fs-15">Description :</h5>
+                                <p>{{ object.content|safe }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

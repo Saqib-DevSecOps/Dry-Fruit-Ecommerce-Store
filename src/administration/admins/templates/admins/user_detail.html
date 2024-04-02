@@ -1,0 +1,215 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_subtitle %}{{ object.name_or_username }}{% endblock %}
+
+{% block base_content %}
+
+    <div class="container">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                {% if object.profile_image %}
+                    <img src="{{ object.profile_image.url }}" class="avatar avatar-rounded">
+                {% else %}
+                    <img src="{% static 'required/images/no-user.png' %}" class="avatar avatar-rounded">
+                {% endif %}
+            </div>
+            <div class="col">
+                <h2 class="page-title">
+                    tabler-icons.io
+                </h2>
+                <div class="text-muted">
+                    <ul class="list-inline list-inline-dots mb-0">
+                        <li class="list-inline-item">
+                            <b>
+                                {% if object.is_active %}
+                                    <span class="text-green">active</span>
+                                {% else %}
+                                    <span class="text-danger">inactive</span>
+                                {% endif %}
+                            </b>
+                        </li>
+                        <li class="list-inline-item">
+                            {% if object.last_login %}{{ object.last_login }}{% else %}-{% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-auto ms-auto d-print-none">
+                <div class="btn-list">
+                    <a href="{% url 'admins:user-update' object.pk %}" class="btn">
+                        <i class="bx bx-pen"></i>&nbsp;update
+                    </a>
+                    <a href="{% url 'admins:user-password-reset' object.pk %}" class="btn">
+                        <i class="bx bxs-shield"></i>&nbsp;password reset
+                    </a>
+                    <a href="{% url 'admins:user-delete' object.pk %}" class="btn btn-danger">
+                        <i class="bx bxs-trash"></i>&nbsp;Remove
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Personal Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="datagrid">
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Full Name</div>
+                    <div class="datagrid-content">
+                        {% if object.is_full_name %}{{ object.is_full_name }}{% else %}-{% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Username</div>
+                    <div class="datagrid-content">
+                        {% if object.username %}{{ object.username }}{% else %}-{% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Phone</div>
+                    <div class="datagrid-content">
+                        {% if object.phone_number %}
+                            <a href="tel:{{ object.phone_number }}">{{ object.phone_number }}</a>{% else %}-{% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Email</div>
+                    <div class="datagrid-content">
+                        {% if object.email %}<a href="mailto:{{ object.email }}">{{ object.email }}</a>{% else %}
+                            -{% endif %}
+                    </div>
+                </div>
+
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Super User</div>
+                    <div class="datagrid-content">
+                        {% if object.is_superuser %}
+                            <i class="fa fa-check text-success"></i>
+                        {% else %}
+                            <i class="fa fa-times text-danger"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Staff User</div>
+                    <div class="datagrid-content">
+                        {% if object.is_staff %}
+                            <i class="fa fa-check text-success"></i>
+                        {% else %}
+                            <i class="fa fa-times text-danger"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Client User</div>
+                    <div class="datagrid-content">
+                        {% if object.is_client %}
+                            <i class="fa fa-check text-success"></i>
+                        {% else %}
+                            <i class="fa fa-times text-danger"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Status</div>
+                    <div class="datagrid-content">
+                        {% if object.is_superuser %}
+                            <span class="badge bg-success-lt">active</span>
+                        {% else %}
+                            <span class="badge bg-danger-lt">inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Joined On</div>
+                    <div class="datagrid-content">
+                        {% if object.date_joined %}{{ object.date_joined }}{% else %}-{% endif %}
+                    </div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Last login</div>
+                    <div class="datagrid-content">
+                        {% if object.last_login %}{{ object.last_login }}{% else %}-{% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Orders</h3>
+        </div>
+        {% if orders %}
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+                    <table class="table table-hover card-table table-vcenter text-nowrap datatable">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>total</th>
+                            <th>payment status</th>
+                            <th>order status</th>
+                            <th>created on</th>
+                            <th>-</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for order in orders %}
+                            <tr class="">
+                                <td>
+                                    <a href="{% url 'admins:order-detail' order.pk %}"># {{ order.id }}</a>
+                                </td>
+                                <td>{{ order.total }}</td>
+                                <td>
+                                    {% if order.payment_status == 'pending' %}
+                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>
+                                    {% elif order.payment_status == 'completed' %}
+                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>
+                                    {% elif order.payment_status == 'cancelled' %}
+                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-lt">unknown</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.payment_status == 'pending' %}
+                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>
+                                    {% elif order.payment_status == 'completed' %}
+                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>
+                                    {% elif order.payment_status == 'cancelled' %}
+                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>
+                                    {% elif order.payment_status == 'shipping' %}
+                                        <span class="badge bg-primary-lt">{{ order.payment_status.display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary-lt">unknown</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ order.created_on }}</td>
+                                <td>
+                                    <a href="{% url 'admins:order-detail' order.pk %}"><i class="fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        {% else %}
+            <div class="card-body">
+                <b class="text-danger">No orders available for this user</b>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

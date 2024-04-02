@@ -19,7 +19,7 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = {'title'}
+        fields = {'title', 'category'}
 
 
 class OrderFilter(django_filters.FilterSet):
@@ -37,4 +37,3 @@ class BlogFilter(django_filters.FilterSet):
     class Meta:
         model = Blog
         fields = {'status'}
-

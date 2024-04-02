@@ -1,0 +1,58 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_subtitle %}User Form {% endblock %}
+{% block base_subhead_heading %}User &rAarr; Form {% endblock %}
+{% block base_subhead_paragraph %}User create/update form{% endblock %}
+{% block base_subhead_button %}
+    <a href="{% url 'admins:user-list' %}" class="btn btn-ghost-primary">&larr; Users</a>
+{% endblock %}
+
+
+{% block base_content %}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+
+                <div class="card-body text-center">
+                    {% if object %}
+                        <div class="mb-2">
+                            {% if not form.instance.profile_image %}
+                                <img src="{% static 'required/images/no-user.png' %}" height="100"
+                                     class="rounded-circle">
+                            {% else %}
+                                <img src="{{ form.instance.profile_image.url }}" height="100"
+                                     class="rounded-circle">
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-check-circle"></i>&nbsp;Submit
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        $(document).ready(function () {
+            $('input').addClass('my-2');
+        })
+    </script>
+{% endblock %}

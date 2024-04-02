@@ -2,7 +2,8 @@
 
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
-    OrderItem, BlogCategory, Blog, Wishlist
+    OrderItem, BlogCategory, Blog, Wishlist, BillingAddress, ShippingAddress, OrderBillingAddress, OrderShippingAddress, \
+    ProductWeight
 
 # Register your models here.
 
@@ -32,17 +33,14 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-            'sku', 'thumbnail_image', 'title', 'manufacturer_brand', 'slug', 'category', 'description', 'content',
-            'video_link')
+                'sku', 'thumbnail_image', 'title', 'manufacturer_brand', 'slug', 'category', 'description', 'content',
+                'video_link')
         }),
         ('Price & Inventory', {
-            'fields': ('price', 'quantity', 'discount', 'promotional')
+            'fields': ('price', 'quantity', 'discount', 'weight', 'promotional')
         }),
         ('Statistics', {
             'fields': ('total_views', 'total_sales', 'total_reviews', 'average_review')
-        }),
-        ('Shipment', {
-            'fields': ('height', 'width', 'length', 'weight')
         }),
         ('Status', {
             'fields': ('is_active',)
@@ -55,34 +53,42 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(BillingAddress)
+class BillingAddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country')
+    list_filter = ('user', 'country')
+
+
+@admin.register(ShippingAddress)
+class ShippingAddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country')
+    list_filter = ('user', 'country')
+
+
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    list_display = ('user', 'total', 'paid', 'shipping', 'payment_status', 'order_status', 'created_on', 'updated_on')
+    list_filter = ('user', 'payment_status', 'order_status', 'created_on', 'updated_on')
+    search_fields = ('user__username',)
     inlines = [OrderItemInline]
-    list_display = (
-        'user', 'name', 'street_address', 'city', 'country', 'total', 'paid', 'shipping', 'payment_status',
-        'order_status',
-        'created_on')
-    search_fields = ['user__username', 'name', 'street_address', 'city', 'country']
-    list_filter = ['shipping', 'payment_status', 'order_status']
-    readonly_fields = ('total',)
-    fieldsets = (
-        (None, {
-            'fields': ('user', 'name', 'street_address', 'postal_code', 'city', 'country', 'phone', 'email')
-        }),
-        ('Payment', {
-            'fields': ('total', 'paid', 'stripe_payment_id', 'payment_status')
-        }),
-        ('Order', {
-            'fields': ('shipping', 'order_status')
-        }),
-        ('Timestamps', {
-            'fields': ('created_on', 'updated_on'),
-            'classes': ('collapse',)
-        }),
-    )
+
+
+@admin.register(OrderBillingAddress)
+class OrderBillingAddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'order', 'address_line1', 'city', 'state', 'postal_code', 'country')
+    list_filter = ('user', 'order__created_on', 'country')
+    search_fields = ('user__username',)
+
+
+@admin.register(OrderShippingAddress)
+class OrderShippingAddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'order', 'address_line1', 'city', 'state', 'postal_code', 'country')
+    list_filter = ('user', 'order__created_on', 'country')
+    search_fields = ('user__username',)
 
 
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Order, OrderAdmin)
 admin.site.register(Blog)
 admin.site.register(Wishlist)
 admin.site.register(Cart)
+admin.site.register(ProductWeight)

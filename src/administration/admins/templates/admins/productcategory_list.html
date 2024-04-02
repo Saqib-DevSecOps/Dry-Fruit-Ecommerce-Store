@@ -1,0 +1,72 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+{% block base_subtitle %} Product Category{% endblock %}
+{% block base_subhead_heading %} Product Category &rAarr; List{% endblock %}
+{% block base_subhead_paragraph %}List of all available Product Category{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-primary" href="{% url 'admins:category-add' %}">
+        Add Product Category
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                {% if object_list %}
+
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Parent</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for object in object_list %}
+                            <tr>
+                                <td>{{ object.name }}</td>
+                                <td>{{ object.parent }}</td>
+                                <td>
+                                    {% if object.is_active %}
+                                        <b class="text-success"><i class="fa fa-check"></i></b>
+                                    {% else %}
+                                        <b class="text-danger"><i class="fa fa-times"></i></b>
+                                    {% endif %}
+                                </td>
+                                <td>{{ object.created_on }}</td>
+
+                                <td>
+                                    <a href="{% url 'admins:category-update' object.pk %}">
+                                        <i class="fa fa-edit"></i>
+                                    </a> &nbsp;
+                                    <a href="{% url 'admins:category-delete' object.pk %}" class="text-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-danger mb-0"><b>No objects available</b></p>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

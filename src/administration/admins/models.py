@@ -65,14 +65,34 @@ class ProductTag(models.Model):
 
 
 class ProductCategory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True)
-
+    thumbnail_image = models.ImageField(
+        upload_to='vendor/inventory/product_category/thumbnail', null=True, blank=True,
+        help_text='125*125 thumbnail image in png,jpg or jpeg format'
+    )
+    banner_image = models.ImageField(
+        upload_to='vendor/inventory/product_category/banner', null=True, blank=True,
+        help_text='1024*762 thumbnail image in png,jpg or jpeg format'
+    )
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_on']
         verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
+
+class ProductWeight(models.Model):
+    name = models.CharField(max_length=255, help_text="Product Size Like 1KG etc")
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -98,8 +118,7 @@ class Product(models.Model):
     slug = models.SlugField(blank=True, null=False, unique=False, )
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, through='ProductTag')
-    description = models.TextField(null=True, blank=True, help_text="Small description for your project")
-    content = HTMLField(null=True, blank=True, help_text="Full description for your project")
+    description = HTMLField()
     video_link = models.URLField(null=True, blank=True)
 
     promotional = models.CharField(max_length=50, choices=PROMOTIONAL_CHOICE, null=True, blank=True)
@@ -121,19 +140,7 @@ class Product(models.Model):
         ]
     )
 
-    # SHIPMENT
-    height = models.FloatField(
-        null=True, blank=True, validators=[positive_validator], help_text="measurement in inches"
-    )
-    width = models.FloatField(
-        null=True, blank=True, validators=[positive_validator], help_text="measurement in inches"
-    )
-    length = models.FloatField(
-        null=True, blank=True, validators=[positive_validator], help_text="measurement in inches"
-    )
-    weight = models.FloatField(
-        null=True, blank=True, validators=[positive_validator], help_text="weight in grams"
-    )
+    weight = models.ForeignKey(ProductWeight, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -157,6 +164,17 @@ class Product(models.Model):
 
     def get_images(self):
         return ProductImage.objects.filter(product=self)
+
+    def get_price(self):
+        if self.discount > 0:
+            return self.price - (self.price * self.discount / 100)
+        return self.price
+
+    def total_revenue_generated(self):
+        return self.total_sales * self.get_price()
+
+    def get_related_products(self):
+        return Product.objects.filter(category=self.category, is_active=True, is_listed=True).exclude(id=self.id)[:10]
 
 
 class ProductImage(models.Model):
@@ -209,6 +227,39 @@ class Cart(models.Model):
 
 
 """ ORDERS """
+Country = (
+    ('USA', 'USA'),
+    ('Canada', 'Canada'),
+    ('india', 'India'),
+)
+
+
+class BaseAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address_line1 = models.CharField(max_length=100)
+    address_line2 = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    postal_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=255, choices=Country)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f'Address of {self.user.username}'
+
+
+class BillingAddress(BaseAddress):
+    class Meta:
+        verbose_name = "Billing Address"
+        verbose_name_plural = "Billing Addresses"
+
+
+class ShippingAddress(BaseAddress):
+    class Meta:
+        verbose_name = "Delivery Address"
+        verbose_name_plural = "Delivery Addresses"
 
 
 class Order(models.Model):
@@ -228,26 +279,13 @@ class Order(models.Model):
         ('Normal', 'Normal'),
         ('Premium', 'Premium'),
     )
-    ORDER_COUNTRY = (
-        ('USA', 'USA'),
-        ('Canada', 'Canada'),
-    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=255)
-    street_address = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    country = models.CharField(max_length=255, choices=ORDER_COUNTRY)
-    phone = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
 
     total = models.FloatField(default=0)
     paid = models.FloatField(default=0)
 
     shipping = models.CharField(max_length=15, choices=SHIPPING_STATUS_CHOICE, default='Free')
-    stripe_payment_id = models.CharField(max_length=1000, null=True, blank=True)
     payment_status = models.CharField(max_length=15, choices=PAYMENT_STATUS_CHOICE, default='pending')
     order_status = models.CharField(max_length=15, choices=ORDER_STATUS_CHOICE, default='pending')
 
@@ -264,6 +302,22 @@ class Order(models.Model):
         return OrderItem.objects.filter(order=self)
 
 
+class OrderBillingAddress(BaseAddress):
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Order Billing Address"
+        verbose_name_plural = "Order Billing Addresses"
+
+
+class OrderShippingAddress(BaseAddress):
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Order Shipping Address"
+        verbose_name_plural = "Order Shipping Addresses"
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -277,9 +331,18 @@ class OrderItem(models.Model):
 
 
 class BlogCategory(models.Model):
-    name = models.CharField(max_length=255)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255, unique=True)
+    thumbnail_image = models.ImageField(
+        upload_to='vendor/inventory/product_category/thumbnail', null=True, blank=True,
+        help_text='125*125 thumbnail image in png,jpg or jpeg format'
+    )
+    banner_image = models.ImageField(
+        upload_to='vendor/inventory/product_category/banner', null=True, blank=True,
+        help_text='1024*762 thumbnail image in png,jpg or jpeg format'
+    )
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
-
+    description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 

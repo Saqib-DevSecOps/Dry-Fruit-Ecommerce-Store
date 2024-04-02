@@ -4,134 +4,46 @@
 {% block content %}
 
 
-    <section class="shop_list_sidebar sec_space_large">
+    <section class="shop_list_sidebar  mt-4">
         <div class="shop_sidebar_wrap">
-            <div class="container-xxl	">
+            <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
-                        <div class="shop_sidebar_searchbar position-relative">
-                            <input class="rounded-pill" type="search" name="search" placeholder="Search">
-                            <i class="fas fa-search position-absolute"></i>
-                        </div>
-                        <!-- blog category start -->
-                        <div class="blog_category aos-init aos-animate card" data-aos="fade-up" data-aos-duration="2000">
+                        <div class="blog_category aos-init aos-animate card" data-aos="fade-up"
+                             data-aos-duration="2000">
+                            Filters
+                            <div class="blog_category_wrap">
+                                <div class="blog_category_item">
+                                    <div class="row">
+                                        {{ filter_form.form.title }}
+                                    </div>
+                                </div>
+                            </div>
                             <div class="blog_category_wrap">
                                 <h3 class="blog_category_title py-3">Categories</h3>
                                 <div class="blog_category_item">
                                     <div class="row">
-                                        <div class="form-check">
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault1">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault1">
-                                                    Beverages
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault2">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault2">
-                                                    Biscuits, Snacks
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault3">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault3">
-                                                    Breakfast &amp; Dairy
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault4">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault4">
-                                                    Fruits &amp; Vegetables
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault5">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault5">
-                                                    Home Needs
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault6">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault6">
-                                                    Grocery &amp; Staples
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault7">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault7">
-                                                    Home &amp; Kitchen
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault8">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault8">
-                                                    Household Needs
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault9">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault9">
-                                                    Meats, Frozen
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault10">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault10">
-                                                    Noodles, Sauces
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault11">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault11">
-                                                    Personal Care
-                                                </label>
-                                            </div>
-                                            <div class="col">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                       id="flexCheckDefault12">
-                                                <label class="form-check-label ms-2" for="flexCheckDefault12">
-                                                    Pet Care
-                                                </label>
-                                            </div>
-                                        </div>
+                                        {{ filter_form.form.category }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog_category_wrap">
+                                <h3 class="blog_category_title py-3">Discount</h3>
+                                <div class="blog_category_item">
+                                    <div class="row">
+                                        {{ filter_form.form.discount }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog_category_wrap">
+                                <h3 class="blog_category_title py-3">Rating</h3>
+                                <div class="blog_category_item">
+                                    <div class="row">
+                                        {{ filter_form.form.ratings }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- blog category end -->
-
-                        <!-- filter range start -->
-                        <div class="price-range-area mt-3 card aos-init" data-aos="fade-up" data-aos-duration="2000">
-                            <h3 class="price_range_title mb-4">Filter By Price</h3>
-                            <div id="slider-range"
-                                 class="slider-range ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
-                                <div class="ui-slider-range ui-widget-header ui-corner-all"
-                                     style="left: 0%; width: 100%;"></div>
-                                <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"
-                                      style="left: 0%;"></span><span
-                                    class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"
-                                    style="left: 34.024%;"></span>
-                                <div class="ui-slider-range ui-widget-header ui-corner-all"
-                                     style="left: 0%; width: 34.024%;"></div>
-                            </div>
-                            <div class="price-text d-flex align-items-center mt-3">
-                                <span class="text-uppercase">Filter <i class="fas fa-long-arrow-alt-right"></i></span>
-                                <input type="text" id="amount" readonly="">
-                            </div>
-                        </div>
-                        <!-- filter range end -->
-
                     </div>
                     <div class="col-lg-9">
                         <!-- shop list section start -->
@@ -194,7 +106,7 @@
                                             <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
                                                  aria-labelledby="pills-grid_layout-tab">
                                                 <div class="row g-4">
-                                                    {% for object in '12345678' %}
+                                                    {% for object in "12345" %}
                                                         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4">
                                                             <div class="product_layout_1 overflow-hidden position-relative">
                                                                 <div class="product_layout_content bg-white position-relative">

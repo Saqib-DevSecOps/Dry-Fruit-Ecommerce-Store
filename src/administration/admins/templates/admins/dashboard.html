@@ -1,0 +1,333 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+{% block base_subtitle %}
+    Dashboard
+{% endblock %}
+
+{% block base_subhead_heading %} Admin &rAarr; Dashboard{% endblock %}
+{% block base_subhead_paragraph %}Detailed down admin dashboard view{% endblock %}
+
+{% block base_content %}
+
+    {# TOP STATISTICS #}
+    <div class="row">
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-success text-white avatar">
+                              <i class="bx bx-user"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="font-weight-medium">
+                                {{ users }} Users
+                            </div>
+                            <div class="text-muted">
+                                <a href="{% url 'admins:user-list' %}"><i class="fa fa-eye"></i> view</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-warning text-white avatar">
+                              <i class="bx bxs-truck"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="font-weight-medium">
+                                {{ orders }} Orders
+                            </div>
+                            <div class="text-muted">
+                                <a href="{% url 'admins:order-list' %}"><i class="fa fa-eye"></i> view</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-primary text-white avatar">
+                              <i class="bx bx-pen"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="font-weight-medium">
+                                {{ blogs }} Blogs
+                            </div>
+                            <div class="text-muted">
+                                <a href="{% url 'admins:post-list' %}"><i class="fa fa-eye"></i> view</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-danger text-white avatar">
+                              <i class="bx bxs-smile"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="font-weight-medium">
+                                {{ products }} Products
+                            </div>
+                            <div class="text-muted">
+                                <a href="{% url 'admins:product-list' %}"><i class="fa fa-eye"></i> view</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        {# YEARLY SALES #}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text">
+                        <h6 class="mb-0 card-title">{% now 'Y' %} Orders</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="chart">
+                        <!-- Your chart content goes here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# MONTHLY SALES #}
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text">
+                        <h6 class="mb-0 card-title">{% now 'Y' %} Sales</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="chart_year_months_amounts">
+                        <!-- Your chart content goes here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text">
+                        <a href="#" class="mb-0  float-end"><i class="fa fa-eye"></i> view all</a>
+                        <h6 class="mb-0 card-title">Recent Orders</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover card-table table-vcenter text-nowrap datatable">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Created On</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
+                                <th>-</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for object in '12345' %}
+                                <tr class="">
+                                    <td>
+                                        <b>
+                                            <a href="/admins/user/1/">saqib</a>
+                                        </b>
+                                    </td>
+                                    <td>23.0</td>
+                                    <td>232.0</td>
+                                    <td>April 1, 2024, 1:44 a.m.</td>
+                                    <td>
+
+                                        <span class="badge bg-azure-lt">Shipping</span>
+
+                                    </td>
+                                    <td>
+
+                                        <span class="badge bg-success-lt">Completed</span>
+
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" href="/admins/order/1/">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text">
+                        <h6 class="mb-0 card-title">OverAll Orders Statistics</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="order_chart">
+                        <!-- Your chart content goes here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'core/libs/apexcharts/apexcharts.min.js' %}"></script>
+
+    <script>
+        function coolNumberFormatter(value) {
+            return value.toLocaleString();
+        }
+
+        let options_year_months = {
+            series: [{
+                name: 'Orders',
+                data: [12, 34, 65, 7, 2, 3, 4, 5, 6, 3, 2, 4]
+            }]
+            ,
+            chart: {
+                height: 225,
+                type:
+                    'area'
+            }
+            ,
+            dataLabels: {
+                enabled: false
+            }
+            ,
+            stroke: {
+                curve: 'smooth'
+            }
+            ,
+            xaxis: {
+                type: 'number',
+                categories:
+                    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            }
+            ,
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return coolNumberFormatter(parseInt(value));
+                    }
+                }
+            }
+        };
+        let options_year_months_amounts = {
+            series: [{
+                name: 'Total',
+                data: [233, 435, 234, 4563, 234, 654]
+            }],
+            chart: {
+                height: 225,
+                type:
+                    'bar'
+            }
+            ,
+            dataLabels: {
+                enabled: false
+            }
+            ,
+            stroke: {
+                curve: 'smooth'
+            }
+            ,
+            xaxis: {
+                type: 'number',
+                categories:
+                    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            }
+            ,
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return coolNumberFormatter(parseInt(value));
+                    }
+                }
+            }
+        };
+        var id_order_pie_chart = {
+            series: [44, 55, 41, 17],
+            chart: {
+                width: 380,
+                type: 'donut',
+            },
+            labels: ['Total', 'Pending', 'Completed', 'Cancelled'],
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                type: 'gradient',
+            },
+            legend: {
+                formatter: function (val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                }
+            },
+
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        let chart_year_months_amounts = new ApexCharts(document.querySelector("#chart_year_months_amounts"), options_year_months_amounts);
+        var order_chart = new ApexCharts(document.querySelector("#order_chart"), id_order_pie_chart);
+        var chart = new ApexCharts(document.querySelector("#chart"), options_year_months);
+        chart_year_months_amounts.render();
+        order_chart.render();
+        chart.render();
+
+
+    </script>
+
+{% endblock %}

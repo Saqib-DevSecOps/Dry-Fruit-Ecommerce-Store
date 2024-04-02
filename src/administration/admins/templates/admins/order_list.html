@@ -1,0 +1,145 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block base_subtitle %} Orders Management{% endblock %}
+{% block base_subhead_heading %} Orders &rAarr; Management{% endblock %}
+{% block base_subhead_paragraph %}All available orders{% endblock %}
+
+{% block base_subhead_button %}
+
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+                    <form method="get">
+                        <div class="input-group">
+                            {{ filter_form }}
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i> Search
+                                </button>
+                                <a href="{% url 'admins:order-list' %}" class="btn btn-danger">
+                                    <i class="fa fa-paint-brush"></i>&nbsp;Clear
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {% if object_list %}
+                    <div class="table-responsive">
+                        <table class="table table-hover card-table table-vcenter text-nowrap datatable">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Created On</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
+                                <th>-</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for object in object_list %}
+                                <tr class="">
+                                    <td>
+                                        <b>
+                                            <a href="{% url 'admins:user-detail' object.user.pk %}">{{ object.user.name_or_username }}</a>
+                                        </b>
+                                    </td>
+                                    <td>{{ object.total }}</td>
+                                    <td>{{ object.paid }}</td>
+                                    <td>{{ object.created_on }}</td>
+                                    <td>
+                                        {% if object.order_status == 'pending' %}
+                                            <span class="badge bg-yellow-lt">{{ object.get_order_status_display }}</span>
+                                        {% elif object.order_status == 'shipping' %}
+                                            <span class="badge bg-azure-lt">{{ object.get_order_status_display }}</span>
+                                        {% elif object.order_status == 'completed' %}
+                                            <span class="badge bg-success-lt">{{ object.get_order_status_display }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger-lt">{{ object.get_order_status_display }}</span>
+
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if object.payment_status == 'pending' %}
+                                            <span class="badge bg-yellow-lt">{{ object.get_payment_status_display }}</span>
+                                        {% elif object.payment_status == 'completed' %}
+                                            <span class="badge bg-success-lt">{{ object.get_payment_status_display }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger-lt">{{ object.get_payment_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" href="{% url 'admins:order-detail' object.pk %}">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-body">
+                        <ul class="pagination">
+                            {% if object_list.has_previous %}
+                                <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                                </li>
+                            {% endif %}
+                            <li class="">
+                                <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                            </li>
+                            {% if object_list.has_next %}
+                                <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-danger mb-0"><b>No orders available yet.</b></p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        $(document).ready(function () {
+
+            $("#id_payment_status option:first").text("-- Payment Status --");
+            $("#id_order_status option:first").text("-- Order Status --");
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+    </script>
+{% endblock %}
