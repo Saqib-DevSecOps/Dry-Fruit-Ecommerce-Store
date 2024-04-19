@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'website/base.html' %}
 
 {% load i18n %}
 {% load account %}
@@ -8,33 +8,40 @@
 {% block title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block base_top_nav %}{% endblock %}
-{% block dont_include_details %}
 
-   {% include 'messages.html' %}
 
-    <div class="my-4 row justify-content-center">
-        <div class="col-11 col-sm-8">
-            <div class="text-center">
-                {% if user.is_authenticated %}
-                    {% include "account/snippets/already_logged_in.html" %}
-                {% endif %}
-            </div>
+{% block content %}
 
-            <hr class="border border-danger">
+    <section class="login-page section-b-space">
+        <div class="container">
+            <div class="row justify-content-center my-4">
+                <div class="col-5 card my-4">
+                    <div class="theme-card">
+                        <div class="p-2">
+                            <h4 class="text-center mt-4">Account Reset Form</h4>
 
-            <div class="card">
-                <div class="card-header text-center">
-                    <p class="card-title m-0">{% trans "Verify Your E-mail Address" %}</p>
+                            <div class="btn-group my-4" role="group" style="border: 2px solid #e2e1e1"
+                                 aria-label="Basic example">
+                                <a href="{% url 'account_login' %}" type="button" class="btn btn-white">Login</a>
+                                <a href="{% url 'account_signup' %}" class="btn custom_btn  text-white ">Signup</a>
+                            </div>
+                            <hr>
+                            <div class="row card p-2 mb-4 shadow">
+                                {% if user.is_authenticated %}
+                                    {% include "account/snippets/already_logged_in.html" %}
+                                {% endif %}
+                                <p class="card-text">we have sent you an e-mail for verification. Follow the link
+                                    provided to
+                                    finalize the signup
+                                    process. Please contact us if you do not receive it within a few minutes.</p>
+                            </div>
 
-                </div>
-                <div class="card-body">
-
-                    <p class="card-text">have sent an e-mail to you for verification. Follow the link provided to
-                        finalize the signup
-                        process. Please contact us if you do not receive it within a few minutes.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
 
 {% endblock %}

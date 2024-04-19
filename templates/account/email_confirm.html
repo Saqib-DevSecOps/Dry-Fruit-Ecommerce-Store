@@ -1,20 +1,67 @@
-{% extends 'base.html' %}
+{% extends 'website/base.html' %}
 
 {% load i18n %}
-{% load account %}
+{% load account socialaccount %}
 {% load static %}
+{% load socialaccount %}
+{% load crispy_forms_tags %}
 
-{% block title %}
-    Confirm Email
+{% block subtitle %}Login Now{% endblock %}
+
+
+{% block content %}
+
+    <section class="login-page section-b-space">
+        <div class="container">
+            <div class="row justify-content-center my-4">
+                <div class="col-5 card my-4">
+                    <div class="theme-card">
+                        <div class="p-2">
+                            <h4 class="text-center mt-4">Account Reset Form</h4>
+                            <div class="row card p-2 mb-4 shadow">
+                                {% if confirmation %}
+
+                                    {% user_display confirmation.email_address.user as user_display %}
+
+                                    <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm
+                                        that
+                                        <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user
+                                        {{ user_display }}
+                                        .{% endblocktrans %}</p>
+
+                                    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-warning text-white" type="submit"><i
+                                                class="fa fa-check"></i> {% trans 'Confirm' %}
+                                        </button>
+                                    </form>
+
+                                {% else %}
+
+                                    {% url 'account_email' as email_url %}
+
+                                    <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please
+                                        <a href="{{ email_url }}">issue a new e-mail confirmation request</a>
+                                        .{% endblocktrans %}
+                                    </p>
+
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 {% endblock %}
 
 
-{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+{% block xa %}
 
-{% block base_top_nav %} {% endblock %}
-{% block dont_include_details %}
-
-   {% include 'messages.html' %}
+    {% include 'messages.html' %}
 
     <div class="container my-4">
         <div class="row justify-content-center">

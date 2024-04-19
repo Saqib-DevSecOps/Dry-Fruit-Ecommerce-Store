@@ -29,7 +29,13 @@ class HomeTemplateView(TemplateView):
         context['new_products'] = Product.objects.order_by('-created_on')[:10]
         context['blogs'] = Blog.objects.order_by('-created_on')[:10]
         context['top_products'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:5]
-        context['top_categories'] = ProductCategory.objects.all()[:10]
+        categories = ProductCategory.objects.all()[:5]
+        context['top_categories'] = categories
+        context[f'product_category_all'] = Product.objects.all()[:8]
+        for i, category in enumerate(categories):
+            context[f'product_category_{i}'] = Product.objects.filter(category=category)[:8]
+        context['popular_discount'] = Product.objects.order_by('-discount')[:8]
+
         return context
 
 
@@ -84,19 +90,15 @@ class ProductListView(ListView):
 class ProductDetailView(TemplateView):
     template_name = 'website/product_detail.html'
     # model = Product
-    # pk_url_kwarg = "product_id"
-    # slug_url_kwarg = 'slug'
-    # query_pk_and_slug = True
     #
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super(ProductDetailView, self).get_context_data(**kwargs)
-    #     product = Product.objects.get(slug=self.kwargs['slug'])
-    #     product.clicks += 1
+    #     product = Product.objects.get(pk=self.kwargs['pk'])
     #     context['related_product'] = Product.objects.filter(
-    #         Q(categories__in=product.categories.all()) & ~Q(id=product.id)
-    #     ).distinct()[:4]
-    #     product.save()
-    #     return context
+    #         Q(category__in=product.category_set.all()) & ~Q(id=product.id)
+    # ).distinct()[:4]
+    # product.save()
+    # return context
 
 
 """ ---------------- POST PAGES ------------------------------------------------------------------------------------ """

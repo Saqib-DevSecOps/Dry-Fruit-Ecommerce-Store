@@ -10,7 +10,7 @@ app_name = "website"
 urlpatterns = [
     path('', HomeTemplateView.as_view(), name='home'),
     path('shop/', ProductListView.as_view(), name='shop'),
-    path('product-detail/<str:slug>', ProductDetailView.as_view(), name='product-detail'),
+    path('product-detail/<str:pk>', ProductDetailView.as_view(), name='product-detail'),
     path('blogs/', BlogListView.as_view(), name='posts'),
     path('blog-detail/<str:slug>', BlogDetailView.as_view(), name='post-detail'),
 

@@ -21,44 +21,18 @@
 
                             <div class="btn-group my-4" role="group" style="border: 2px solid #e2e1e1"
                                  aria-label="Basic example">
-                                <button type="button" class="btn btn-white">Login</button>
-                                <button type="button" class="btn custom_btn  text-white ">Signup</button>
+                                <a href="{% url 'account_login' %}" type="button" class="btn btn-white">Login</a>
+                                <a href="{% url 'account_signup' %}" class="btn custom_btn  text-white ">Signup</a>
                             </div>
                             <form class="login" id="login_form" method="POST" action="{% url 'account_login' %}">
 
                                 {% csrf_token %}
 
-                                <div id="div_id_login" class="mb-3">
-                                    <label for="id_login" class="form-label requiredField">
-                                        Email<span class="asteriskField">*</span>
-                                    </label>
-                                    <input type="email" name="login"
-                                           placeholder="Email address" autocomplete="email"
-                                           class="textinput form-control"
-                                           required="" id="id_login">
-                                </div>
-                                <div id="div_id_password" class="mb-3">
-                                    <label for="id_password"
-                                           class="form-label requiredField">
-                                        Password<span class="asteriskField">*</span> </label>
-                                    <input type="password" name="password" placeholder="Password"
-                                           autocomplete="current-password"
-                                           class="passwordinput form-control" required="" id="id_password"
-                                    >
-                                </div>
+                                {{ form|crispy }}
                                 <div class="row">
-                                    <div class="col-6">
-                                        <div id="div_id_remember" class="mb-3 form-check">
-                                            <input type="checkbox" name="remember"
-                                                   class="checkboxinput form-check-input"
-                                                   id="id_remember">
-                                            <label for="id_remember" class="form-check-label">
-                                                Remember Me
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center">
+
+                                    <div class="col-12 text-end">
+                                        <div class="text-end">
                                             <a href="{% url 'account_reset_password' %}" class="text-muted"><i
                                                     class="mdi mdi-lock mr-1"></i> Forgot your password?</a>
                                         </div>
@@ -72,7 +46,7 @@
 
 
                                 <div class="row">
-                                    <button type="submit" class="btn custom_btn  text-white ">Signup</button>
+                                    <button type="submit" class="btn custom_btn  text-white ">Login</button>
                                 </div>
 
                             </form>

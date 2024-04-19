@@ -69,6 +69,7 @@ class ProductFilter(django_filters.FilterSet):
     max_price = django_filters.NumberFilter(field_name='price', lookup_expr='lte', label="Max Price")
     category = django_filters.ModelMultipleChoiceFilter(
         queryset=ProductCategory.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-'}),
         label="Category"
     )
     tags = django_filters.ModelMultipleChoiceFilter(
@@ -109,9 +110,7 @@ class ProductFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.form.fields['title'].widget.attrs.update(
-            {'class': 'form-control form-control-sm', 'placeholder': 'Enter Product Name'})
-        self.form.fields['category'].widget.attrs.update(
-            {'class': 'form-control form-control-sm'})
+            {'class': 'form-control form-control', 'placeholder': 'Enter Product Name'})
         self.form.fields['min_price'].widget.attrs.update(
             {'class': 'form-control form-control-sm', 'placeholder': 'Min Price'})
         self.form.fields['max_price'].widget.attrs.update(

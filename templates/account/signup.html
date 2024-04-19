@@ -1,112 +1,61 @@
 {% extends 'website/base.html' %}
 
 {% load i18n %}
-{% load crispy_forms_tags %}
-{% load static %}
 {% load account socialaccount %}
+{% load static %}
 {% load socialaccount %}
+{% load crispy_forms_tags %}
 
-{% block subtitle %}Sign Up{% endblock %}
+{% block subtitle %}Login Now{% endblock %}
 
 
 {% block content %}
-<div class="breadcrumb-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="page-title">
-                    <h2>create account</h2>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <nav aria-label="breadcrumb" class="theme-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li aria-current="page" class="breadcrumb-item active">create account</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-<section class="register-page section-b-space">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-3"></div>
-                    <div class="col-6 card">
+
+    <section class="login-page section-b-space">
+        <div class="container">
+            <div class="row justify-content-center my-4">
+                <div class="col-5 card my-4">
+                    <div class="theme-card">
                         <div class="p-2">
+                            <h4 class="text-center mt-4">Login & Signup Form</h4>
+
+                            <div class="btn-group my-4" role="group" style="border: 2px solid #e2e1e1"
+                                 aria-label="Basic example">
+                                <a href="{% url 'account_login' %}" class="btn custom_btn  text-white ">Login</a>
+                                <a href="{% url 'account_signup' %}" type="button" class="btn btn-white">Signup</a>
+                            </div>
                             <form action="{% url 'account_signup' %}" class="signup" id="signup_form" method="post">
+
                                 {% csrf_token %}
-                                <h1>{% trans "Sign Up" %}</h1>
-
-                                <p>{% blocktrans %}Already have an account? Then please
-                                    <a href="{{ login_url }}">sign in</a>
-                                    .{% endblocktrans %}</p>
-
 
                                 {{ form | crispy }}
+
                                 {% if redirect_field_value %}
-                                <input name="{{ redirect_field_name }}" type="hidden"
-                                       value="{{ redirect_field_value }}"/>
+                                    <input type="hidden" name="{{ redirect_field_name }}"
+                                           value="{{ redirect_field_value }}"/>
                                 {% endif %}
 
-                                <div class="mt-4">
-                                    <button class="btn btn-success btn-block waves-effect waves-light"
-                                            type="submit">Register
-                                    </button>
+                                <div class="row">
+                                    <button type="submit" class="btn custom_btn  text-white ">SignUp</button>
                                 </div>
 
                             </form>
-
-                            {% get_providers as socialaccount_providers %}
-                            {% if socialaccount_providers %}
                             <hr>
-                            <ul class="list-unstyled">
-                                {% for provider in socialaccount_providers %}
-                                {% if provider.id == "openid" %}
-                                {% for brand in provider.get_brands %}
-                                <li>
-                                    <a class="socialaccount_provider {{ provider.id }} {{ brand.id }}"
-                                       href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-                                       title="{{ brand.name }}"
-                                    >{{ brand.name }}</a>
-                                </li>
-                                {% endfor %}
-                                {% endif %}
-                                {% if forloop.counter == 1 %}
-                                <li class="mb-2">
-                                    <a class="btn btn-block btn-danger" class="socialaccount_provider {{ provider.id }}"
-                                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-                                       title="{{ provider.name }}">{{
-                                        provider.name }}</a>
-                                </li>
-                                {% else %}
-                                <li class="mb-2">
-                                    <a class="btn btn-block btn-primary" class="socialaccount_provider {{ provider.id }}"
-                                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-                                       title="{{ provider.name }}">{{
-                                        provider.name }}</a>
-                                </li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-
-                            <div class="mt-4 text-center">
-                                <p class="mb-0">By registering you agree to the <a class="text-primary"
-                                                                                   href="#">Terms
-                                    of Use</a></p>
+                            <div class="row card p-2 mb-4 shadow">
+                                <button type="button" class="btn btn-white "><img
+                                        src="{% static 'website/images/google.png' %}" style="height:25px">&nbsp;&nbsp;Sign
+                                    Up
+                                    with Google
+                                </button>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-{% endblock %}
+    </section>
 
+
+{% endblock %}
 
