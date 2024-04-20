@@ -17,6 +17,7 @@ from src.administration.admins.models import (
 )
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.models import BackgroundImage, DigitalPlatforms, Banner, ComingSoon, HomeSliderImage
+from src.website.utility import total_amount
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
 
@@ -47,13 +48,11 @@ class AboutUsTemplateView(TemplateView):
     template_name = 'website/about.html'
 
 
-""" COMICS AND NOVELS PAGES ------------------------------------------------------------------------------------ """
 
 
 class ProductListView(ListView):
     template_name = 'website/product_list.html'
     queryset = Product.objects.all()
-    paginate_by = 24
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
@@ -79,7 +78,7 @@ class ProductListView(ListView):
         else:
             product = Product.objects.all().order_by('-created_on')
         filter_product = ProductFilter(self.request.GET, queryset=product)
-        pagination = Paginator(filter_product.qs, 24)
+        pagination = Paginator(filter_product.qs, 50)
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
         context['object_list'] = page_obj
@@ -87,21 +86,16 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(TemplateView):
+class ProductDetailView(DetailView):
     template_name = 'website/product_detail.html'
-    # model = Product
-    #
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super(ProductDetailView, self).get_context_data(**kwargs)
-    #     product = Product.objects.get(pk=self.kwargs['pk'])
-    #     context['related_product'] = Product.objects.filter(
-    #         Q(category__in=product.category_set.all()) & ~Q(id=product.id)
-    # ).distinct()[:4]
-    # product.save()
-    # return context
+    model = Product
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        product = Product.objects.get(pk=self.kwargs['pk'])
+        context['related_product'] = Product.objects.filter().distinct()[:4]
+        return context
 
-""" ---------------- POST PAGES ------------------------------------------------------------------------------------ """
 
 
 class BlogListView(ListView):
@@ -149,14 +143,15 @@ class BlogDetailView(TemplateView):
 
 
 # @method_decorator(login_required, name='dispatch')
-class CartTemplateView(TemplateView):
+class CartTemplateView(ListView):
     template_name = 'website/cart.html'
+    model = Cart
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(CartTemplateView, self).get_context_data(**kwargs)
-    #     context['cart'] = Cart.objects.filter(user=self.request.user)
-    #     context['total_amount'] = total_amount(self.request)
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(CartTemplateView, self).get_context_data(**kwargs)
+        context['cart'] = Cart.objects.filter(user=self.request.user)
+        context['total_amount'] = total_amount(self.request)
+        return context
 
 
 class WishListListView(TemplateView):

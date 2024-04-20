@@ -88,7 +88,7 @@ class ProductCategory(models.Model):
         return self.name
 
 
-class ProductWeight(models.Model):
+class Weight(models.Model):
     name = models.CharField(max_length=255, help_text="Product Size Like 1KG etc")
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -140,7 +140,6 @@ class Product(models.Model):
         ]
     )
 
-    weight = models.ForeignKey(ProductWeight, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -175,6 +174,19 @@ class Product(models.Model):
 
     def get_related_products(self):
         return Product.objects.filter(category=self.category, is_active=True, is_listed=True).exclude(id=self.id)[:10]
+
+
+class ProductWeight(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False)
+    weight = models.ForeignKey(Weight, on_delete=models.SET_NULL, null=True, blank=False)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[positive_validator])
+
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.product.title
 
 
 class ProductImage(models.Model):

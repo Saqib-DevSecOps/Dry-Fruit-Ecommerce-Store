@@ -7,41 +7,43 @@
     <!-- sidebar section end -->
 
     <!-- banner section start -->
-    <section class="banner_section_main position-relative">
-        <div class="banner_section_item sec_space_xxxlarge d-flex justify-content-center align-items-center"
-        >
+    <section class="banner_section_main position-relative banner_2">
+        <div class="banner_section_item sec_space_xxxlarge d-flex justify-content-center align-items-center">
             <div class="container">
-                <div class="row text-center">
-                    <div class="col banner_content">
-                        <div class="banner_sub_title position-relative">
-                            <h6 class="position-absolute text-white text-uppercase">100% Organic Dry Fruits</h6>
-                            <img class="sub_title_bg" src="{% static 'website/images/shapes/shape2.png' %}"
+                <div class="row">
+                    <div class="col-lg-7 ms-3">
+                        <div class="banner_sub_title2 position-relative">
+                            <h6 class="text-white text-uppercase position-absolute">100% Organic Foods</h6>
+                            <img class="sub_title_bg" src="{% static 'website/images/shapes/shape.png' %}"
                                  alt="image_not_found">
                         </div>
-                        <div class="banner_title m-auto">
-                            <h1 class="text-white">Organic <font class="first text-white">Dry Fruits & Foods</font> You
-                                Cook<font class="text-white">
-                                    <span>H</span><span>e</span><span>a</span><span>l</span><span>t</span><span>h</span><span>y</span>
-                                </font>
+                        <div class="banner_title2">
+                            <h1 class="text-white">Organic Veggies &amp; Foods You Cook<font class="text-effect">
+                                <span>H</span><span>e</span><span>a</span><span>l</span><span>t</span><span>h</span><span>y</span>
+                            </font>
                             </h1>
                         </div>
-                        <div class="banner_search_bar d-inline-block position-relative">
-                            <button style="border-radius: 20px" class="btn btn-warning btn-lg text-white">Shop Now
-                            </button>
+
+                        <div class="banner_btn">
+                            <a href="#!">
+                                <button type="button" class="btn custom_btn rounded-pill px-5 py-3 text-white">Shop <i
+                                        class="fas fa-long-arrow-alt-right"></i></button>
+                            </a>
                         </div>
                     </div>
+                    <div class="col-lg-5"></div>
                 </div>
             </div>
         </div>
+        <!-- header side thumb -->
         <!-- banner side image start -->
         <img class="banner_right_thumb img_moving_anim1 position-absolute"
              src="{% static 'website/images/banner/banner3.png' %}"
              alt="image_not_found">
         <img class="banner_left_thumb img_moving_anim2 position-absolute"
-             src="{% static 'website/images/banner/banner4.png' %}"
+             src="{% static 'website/images/banner/banner4.png' %}" style="height:450px;width: 400px"
              alt="image_not_found">
-        <!-- banner side image end -->
-    </section>
+        <!-- banner side image end -->            </section>
     <!-- banner section end -->
 
 
@@ -71,34 +73,31 @@
                     </div>
                 </div>
                 <div
-                        class="category_slick slideshow1_slider clearfix d-flex justify-content-center align-items-center justify-content-between px-0"
+                        class="category_slick slideshow1_slider clearfix  justify-content-center align-items-center justify-content-between px-0"
                         data-slick='{"dots": false}'>
-                    {% for object in '12345' %}
+                    {% for object in top_categories %}
                         <div class="col item_content slider_item text-center" style="position:relative;"
-                             data-aos="fade-up"
-                             data-aos-duration="300">
+                             data-aos="fade-up" data-aos-duration="300">
                             <a href="shop-list.html" target="_blank">
-                                <img style="height: 80px;margin-bottom: -45px;z-index: 1000"
+                                <img style="height: 80px;margin-bottom: -45px;z-index: 1000;position:relative;"
                                      src="{% static 'website/images/logo/logo.png' %}"
-                                     alt="image_not_found"></a>
-                            <div class="card"
-                                 style="border-radius: 20px;background-color: #d5c999;position: relative">
-
+                                     alt="image_not_found">
+                            </a>
+                            <div class="card" style="border-radius: 20px;background-color: #d5c999;position: relative">
                                 <div class="card-image" style="padding: 30px">
-                                    <h3 class="m-4" style="color: #6a4723;margin-bottom: 20px;">Exclusive</h3>
-
-                                    <img class="mb-4" src="{% static 'website/images/category/cat1.png' %}"
+                                    <h3 class="m-4" style="color: #6a4723;margin-bottom: 20px;">{{ object.name }}</h3>
+                                    <img class="mb-4" style="width: 200px;"
+                                         src="{{ object.thumbnail_image|image_or_placeholder }}"
                                          alt="Healthy Nut and Dried Fruit Combo Pack">
-
                                 </div>
-
                             </div>
                             <a href="shop-list.html" target="_blank">
-                                <img style="height: 80px;margin-top: -45px;"
-                                     src="{% static 'website/images/logo/logo.png' %}"
-                                     alt="image_not_found"></a>
-
+                                <img style="height: 45px;margin-top: -45px;z-index: 1000;position:relative;"
+                                     src="{% static 'website/images/logo/Button.png' %}"
+                                     alt="image_not_found">
+                            </a>
                         </div>
+
                     {% endfor %}
                 </div>
 
@@ -510,13 +509,16 @@
                              style="background-image: url('{% static 'website/images/deals/deals1.png' %}');"
                              data-aos="flip-right" data-aos-duration="1000">
                             <div class="deal_item_txt position-absolute">
-                                <div class="deal_title aos-init aos-animate" data-aos="flip-left"
+                                 <div class="deal_sub_title">
+                                    <h5 class="text-white">FRESH FROM OUR FARM</h5>
+                                </div>
+                                <div class="deal_title aos-init aos-animate " data-aos="flip-left"
                                      data-aos-duration="1000">
-                                    <h3>Get Every Vegetable You Need</h3>
+                                    <h3 class="text-white">Get Every Dry Fruit You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="shop-list.html" target="_blank">
-                                        <button type="button" class="btn">SHOP NOW <span><i
+                                    <a href="{% url 'website:shop' %}" >
+                                        <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
                                 </div>
@@ -531,15 +533,15 @@
                              data-aos="flip-right" data-aos-duration="1500">
                             <div class="deal_item_txt position-absolute">
                                 <div class="deal_sub_title">
-                                    <h5>FRESH FROM OUR FARM</h5>
+                                    <h5 class="text-white">FRESH FROM OUR FARM</h5>
                                 </div>
                                 <div class="deal_title aos-init aos-animate" data-aos="flip-left"
                                      data-aos-duration="1500">
-                                    <h3>Get Every 30% Vegetable You Need</h3>
+                                    <h3 class="text-white">Get Discounts on Dry Fruits You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="shop-list.html" target="_blank">
-                                        <button type="button" class="btn">SHOP NOW <span><i
+                                    <a href="{% url 'website:shop' %}" >
+                                        <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
                                 </div>
@@ -553,13 +555,16 @@
                              style="background-image: url('{% static 'website/images/deals/deals3.png' %}');"
                              data-aos="flip-right" data-aos-duration="2000">
                             <div class="deal_item_txt position-absolute">
+                                <div class="deal_sub_title">
+                                    <h5 class="text-white">FRESH FROM OUR FARM</h5>
+                                </div>
                                 <div class="deal_title aos-init aos-animate" data-aos="flip-left"
                                      data-aos-duration="2000">
-                                    <h3>First Deal Vegetable You Need</h3>
+                                    <h3 class="text-white">First Deal Dry Fruit You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="shop-list.html" target="_blank">
-                                        <button type="button" class="btn">SHOP NOW <span><i
+                                    <a href="{% url 'website:shop' %}" >
+                                        <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
                                 </div>

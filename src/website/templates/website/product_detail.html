@@ -1,116 +1,141 @@
 {% extends  'website/base.html' %}
 {% load static %}
 {% block content %}
+    <style>
+        input[type="radio"] {
+            display: none;
+        }
 
+        label {
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #f5b23c;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px; /* Adjust padding as needed */
+            text-transform: uppercase; /* Make text uppercase */
+
+        }
+
+        input[type="radio"]:checked + label {
+            background-color: #f5b23c;
+            color: #fff;
+            border: 1px solid #f5b23c;
+        }
+
+        label:hover {
+            background-color: #f5b23c;
+            color: #fff;
+            border: 1px solid #f5b23c;
+        }
+    </style>
     <section class="product10_sec position-relative aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="product10_wrap sec_space_small">
             <div class="container-xxl">
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <!-- User this HTML for Slider -->
-                 <!-- User this HTML for Slider -->
-                                <section class="banner-section">
-                                    <div class="container">
-                                        <div class="vehicle-detail-banner banner-content clearfix">
-                                            <div class="banner-slider">
-                                                <div class="slider slider-nav thumb-image">
-                                                    <div class="thumbnail-image">
-                                                        <div class="thumbImg bg-white">
-                                                            <a href="#!"><img src="{% static 'website/images/product/product1.png' %}"
-                                                                    alt="image_not_found"></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="thumbnail-image">
-                                                        <div class="thumbImg bg-white">
-                                                            <a href="#!"><img src="{% static 'website/images/product/product1.png' %}"
-                                                                    alt="image_not_found"></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="thumbnail-image">
-                                                        <div class="thumbImg bg-white">
-                                                            <a href="#!"><img src="{% static 'website/images/product/product1.png' %}"
-                                                                    alt="image_not_found"></a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="thumbnail-image">
-                                                        <div class="thumbImg bg-white">
-                                                            <a href="#!"><img src="{% static 'website/images/product/product1.png' %}"
-                                                                    alt="image_not_found"></a>
-                                                        </div>
-                                                    </div>
+                        <!-- User this HTML for Slider -->
+                        <section class="banner-section">
+                            <div class="container">
+                                <div class="vehicle-detail-banner banner-content clearfix">
+                                    <div class="banner-slider">
+                                        <div class="slider slider-nav thumb-image">
+                                            <div class="thumbnail-image">
+                                                <div class="thumbImg bg-white">
+                                                    <a href="#!"><img
+                                                            src="{% static 'website/images/product/product1.png' %}"
+                                                            alt="image_not_found"></a>
                                                 </div>
-
-                                                <div class="slider slider-for card">
-                                                    <div class="slider-banner-image img_moving_anim1 text-center bg-white">
-                                                        <img src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found">
-                                                    </div>
-                                                    <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                        <img src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found">
-                                                    </div>
-                                                    <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                        <img src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found">
-                                                    </div>
-                                                    <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                        <img src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found">
-                                                    </div>
+                                            </div>
+                                            <div class="thumbnail-image">
+                                                <div class="thumbImg bg-white">
+                                                    <a href="#!"><img
+                                                            src="{% static 'website/images/product/product1.png' %}"
+                                                            alt="image_not_found"></a>
+                                                </div>
+                                            </div>
+                                            <div class="thumbnail-image">
+                                                <div class="thumbImg bg-white">
+                                                    <a href="#!"><img
+                                                            src="{% static 'website/images/product/product1.png' %}"
+                                                            alt="image_not_found"></a>
+                                                </div>
+                                            </div>
+                                            <div class="thumbnail-image">
+                                                <div class="thumbImg bg-white">
+                                                    <a href="#!"><img
+                                                            src="{% static 'website/images/product/product1.png' %}"
+                                                            alt="image_not_found"></a>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="slider slider-for card">
+                                            <div class="slider-banner-image img_moving_anim1 text-center bg-white">
+                                                <img src="{% static 'website/images/product/product1.png' %}"
+                                                     alt="image_not_found">
+                                            </div>
+                                            <div class="slider-banner-image img_moving_anim1 bg-white">
+                                                <img src="{% static 'website/images/product/product1.png' %}"
+                                                     alt="image_not_found">
+                                            </div>
+                                            <div class="slider-banner-image img_moving_anim1 bg-white">
+                                                <img src="{% static 'website/images/product/product1.png' %}"
+                                                     alt="image_not_found">
+                                            </div>
+                                            <div class="slider-banner-image img_moving_anim1 bg-white">
+                                                <img src="{% static 'website/images/product/product1.png' %}"
+                                                     alt="image_not_found">
+                                            </div>
+                                        </div>
                                     </div>
-                                </section>
+                                </div>
+                            </div>
+                        </section>
                         <!-- End User this HTML for Slider -->
                     </div>
                     <div class="col-lg-6">
                         <div class="rating_wrap d-flex justify-content-between">
                             <div class="rating_review_cont d-flex d-flex align-items-center">
                                 <ul class="rating_star ul_li">
-                                    <li class="active"><i class="fas fa-star"></i></li>
-                                    <li class="active"><i class="fas fa-star"></i></li>
-                                    <li class="active"><i class="fas fa-star"></i></li>
-                                    <li class="active"><i class="fas fa-star"></i></li>
-                                    <li><i class="far fa-star"></i></li>
+                                    <i class="fa fa-circle text-warning" aria-hidden="true"></i>
                                 </ul>
-                                <a href="#!" class="review">Read 3 Reviews</a>
+                                <b>&nbsp;In Stock</b>
                             </div>
                             <div class="product_btn">
                                 <a href="#">
-                                    <button type="button" class="btn custom_btn rounded-pill px-4 text-white">
-                                        Smoothies
-                                    </button>
+                                    <ul class="rating_star ul_li">
+                                        <li class="active"><i class="fas fa-star"></i></li>
+                                        <li class="active"><i class="fas fa-star"></i></li>
+                                        <li class="active"><i class="fas fa-star"></i></li>
+                                        <li class="active"><i class="fas fa-star"></i></li>
+                                        <li><i class="far fa-star"></i></li>
+                                    </ul>
+                                    <a href="#!" class="review">Read 3 Reviews</a>
                                 </a>
                             </div>
                         </div>
-                        <h2 class="product_detail_title">Good Organic Products</h2>
-                        <p class="product_detail_desc py-2">Morbi eget congue lectus. Donec eleifend ultricies
-                            urna et euismod. Sed consectetur tellus eget odio aliquet, vel vestibulum tellus
-                            sollicitudin. Morbi maximus metus eu eros tincidunt, vitae mollis ante imperdiet.
-                            Nulla </p>
+                        <h2 class="product_detail_title">{{ object.title }}</h2>
                         <div class="row mt-5">
                             <div class="col-8">
                                 <div class="product10_value_content">
-                                    <h4 class="value_title mb-3">Nutritional Values:</h4>
+                                    <h4 class="value_title mb-3">Additional Info</h4>
                                     <div class="product10_value_table bg-white shadow-lg">
                                         <table class="table">
                                             <tbody>
                                             <tr>
-                                                <th scope="row">50G</th>
-                                                <td>Carbohydrates</td>
+                                                <th scope="row">Manufacturer</th>
+                                                <td>{{ object.manufacturer_brand }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">10G</th>
-                                                <td>Protein, Engry</td>
+                                                <th scope="row">Category</th>
+                                                <td>{{ object.category }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">20G</th>
-                                                <td> Minerals, and vitamins</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">90G</th>
-                                                <td>Nutrient requirements</td>
+                                                <th scope="row">Quantity</th>
+                                                <td>{{ object.quantity }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -118,18 +143,44 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-5">
+                            {% if object.productweight_set.all %}
+                                <h4 class="value_title mb-3" style="padding-left: 40px">Available In</h4>
+                                {% for object in object.productweight_set.all %}
+
+                                    <div class="col-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                                   id="{{ object.id }}">
+                                            <label class="form-check-label" for="{{ object.id }}">
+                                                {{ object.weight }}<br>
+                                                {{ object.price }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                        </div>
                         <div class="product10_quantity_btn_wrap d-flex align-items-center">
                             <div class="quantity_input bg-white">
                                 <form action="#">
                                     <span class="input_number_decrement">–</span>
-                                    <input class="input_number" value="2KG">
+                                    <input class="input_number" value="1">
                                     <span class="input_number_increment">+</span>
                                 </form>
                             </div>
-                            <a href="#">
+                            <a href="{% url 'website:add-to-cart' object.id %}">
                                 <button type="button" class="btn custom_btn rounded-pill ms-3 px-5 py-3 text-white">
-                                    Order Now <i class="fas fa-long-arrow-alt-right"></i></button>
-                            </a>
+                                    Add to Cart <i class="fas fa-long-arrow-alt-right"></i></button>
+                            </a>&nbsp;&nbsp;
+                            <ul class="product_action_btns ul_li_block d-flex">
+                                <li><a class="tooltips" data-placement="top"
+                                       title="Search Product"
+                                       href="{% url 'website:product-detail' object.pk %}"><i
+                                        class="far fa-heart"></i></a>
+                                </li>
+                            </ul>
                         </div>
                         <div class="product_tags_wrap d-flex align-items-center mt-5">
                             <h6 class="product_tags_title text-uppercase">tags:</h6>
@@ -168,13 +219,7 @@
                                 description
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link shadow rounded-pill text-uppercase" id="pills-Information-tab"
-                                    data-bs-toggle="pill" data-bs-target="#pills-Information" type="button" role="tab"
-                                    aria-controls="pills-Information" aria-selected="false">Additional
-                                Information
-                            </button>
-                        </li>
+
                         <li class="nav-item" role="presentation">
                             <button class="nav-link shadow rounded-pill text-uppercase" id="pills-reviews-tab"
                                     data-bs-toggle="pill" data-bs-target="#pills-reviews" type="button" role="tab"
@@ -192,48 +237,7 @@
                             <div class="col-lg-12">
                                 <div class="review_comment2 ms-3">
                                     <h3 class="title_text mb_15">Description:</h3>
-                                    <p class="mb_15">
-                                        Investigationes demonstraverunt lectores legere me lius quod ii legunt
-                                        saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem
-                                        consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc
-                                        putamus parum claram, anteposuerit litterarum formas humanitatis per
-                                        seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis
-                                        videntur parum clari, fiant sollemnes in futurum.
-                                    </p>
-                                    <p class="mb_15">
-                                        Investigationes demonstraverunt lectores legere me lius quod ii legunt
-                                        saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem
-                                        consuetudium lectorum.
-                                    </p>
-                                    <p class="mb-0">
-                                        Eodem modo typi, qui nunc nobis videntur parum clari.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade show" id="pills-information" role="tabpanel"
-                         aria-labelledby="pills-information-tab">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="review_comment2 ms-3">
-                                    <h3 class="title_text mb_15">Description:</h3>
-                                    <p class="mb_15">
-                                        Investigationes demonstraverunt lectores legere me lius quod ii legunt
-                                        saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem
-                                        consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc
-                                        putamus parum claram, anteposuerit litterarum formas humanitatis per
-                                        seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis
-                                        videntur parum clari, fiant sollemnes in futurum.
-                                    </p>
-                                    <p class="mb_15">
-                                        Investigationes demonstraverunt lectores legere me lius quod ii legunt
-                                        saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem
-                                        consuetudium lectorum.
-                                    </p>
-                                    <p class="mb-0">
-                                        Eodem modo typi, qui nunc nobis videntur parum clari.
-                                    </p>
+                                    <p>{{ object.description|safe }}</p>
                                 </div>
                             </div>
                         </div>

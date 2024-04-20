@@ -13,9 +13,9 @@ from django.views.generic import (
 from src.accounts.decorators import admin_protected
 from src.accounts.models import User
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
-from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm
+from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight
+    Language, ProductWeight, Weight
 
 """ MAIN """
 
@@ -176,28 +176,28 @@ class CategoryDeleteView(DeleteView):
 
 
 @method_decorator(admin_protected, name='dispatch')
-class ProductWeightListView(ListView):
-    queryset = ProductWeight.objects.all()
+class WeightListView(ListView):
+    model = Weight
 
 
 @method_decorator(admin_protected, name='dispatch')
-class ProductWeightUpdateView(UpdateView):
-    model = ProductWeight
-    fields = ['name','is_active']
-    success_url = reverse_lazy('admins:product-weight-list')
+class WeightUpdateView(UpdateView):
+    model = Weight
+    fields = ['name', 'is_active']
+    success_url = reverse_lazy('admins:weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
-class ProductWeightCreateView(CreateView):
-    model = ProductWeight
-    fields = ['name','is_active']
-    success_url = reverse_lazy('admins:product-weight-list')
+class WeightCreateView(CreateView):
+    model = Weight
+    fields = ['name', 'is_active']
+    success_url = reverse_lazy('admins:weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
-class ProductWeightDeleteView(DeleteView):
-    model = ProductWeight
-    success_url = reverse_lazy('admins:product-weight-list')
+class WeightDeleteView(DeleteView):
+    model = Weight
+    success_url = reverse_lazy('admins:weight-list')
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -267,6 +267,7 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['product_image_add_form'] = ProductImageForm()
+        context['product_weight_add_form'] = ProductWeightForm()
         return context
 
 
@@ -290,6 +291,19 @@ class ProductImageAddView(View):
 
 
 @method_decorator(admin_protected, name='dispatch')
+class ProductWeightAddView(View):
+
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, pk=product_id)
+        form = ProductWeightForm(data=request.POST)
+        if form.is_valid():
+            form.instance.product = product
+            form.save()
+            messages.success(request, "Product Weight added successfully")
+        return redirect("admins:product-detail", product_id)
+
+
+@method_decorator(admin_protected, name='dispatch')
 class ProductImageDeleteView(View):
 
     def get(self, request, product_id, pk):
@@ -304,6 +318,16 @@ class ProductImageDeleteView(View):
         product_image = get_object_or_404(ProductImage.objects.filter(product=product), pk=pk)
         product_image.delete()
         messages.success(request, "Product Image deleted successfully")
+        return redirect("admins:product-detail", product_id)
+
+
+@method_decorator(admin_protected, name='dispatch')
+class ProductWeightDeleteView(View):
+    def get(self, request, product_id, pk):
+        product = get_object_or_404(Product, pk=product_id)
+        product_weight = get_object_or_404(ProductWeight.objects.filter(product=product), pk=pk)
+        product_weight.delete()
+        messages.success(request, "Product Weight deleted successfully")
         return redirect("admins:product-detail", product_id)
 
 

@@ -4,7 +4,7 @@ from django.forms import TextInput
 from django import forms
 
 from src.administration.admins.models import Product, Blog, ProductCategory, ProductTag
-from src.administration.admins.templatetags.custom_tags import get_html_icons
+from src.administration.admins.templatetags.custom_tags import get_html_icons, get_html_icons_for_filter
 
 
 def get_category_choices():
@@ -60,10 +60,12 @@ def product_filter(queryset, name, value):
 
 
 class ProductFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr='icontains', label='Search'
-                                      , widget=TextInput(
-            attrs={'placeholder': ' Search Products ', 'class': 'form-control '}),
-                                      method='product_filter')
+    title = django_filters.CharFilter(
+        lookup_expr='icontains',
+        label='Search',
+        widget=TextInput(attrs={'placeholder': ' Search Products ', 'class': 'form-control '}),
+        method='product_filter'
+    )
 
     min_price = django_filters.NumberFilter(field_name='price', lookup_expr='gte', label="Min Price")
     max_price = django_filters.NumberFilter(field_name='price', lookup_expr='lte', label="Max Price")
@@ -79,12 +81,12 @@ class ProductFilter(django_filters.FilterSet):
     )
     ratings = django_filters.MultipleChoiceFilter(
         choices=[
-            ('5', get_html_icons(5)),
-            ('4', get_html_icons(4)),
-            ('3', get_html_icons(3)),
-            ('2', get_html_icons(2)),
-            ('1', get_html_icons(1)),
-            ('0', get_html_icons(0))
+            ('5', get_html_icons_for_filter(5)),
+            ('4', get_html_icons_for_filter(4)),
+            ('3', get_html_icons_for_filter(3)),
+            ('2', get_html_icons_for_filter(2)),
+            ('1', get_html_icons_for_filter(1)),
+            ('0', get_html_icons_for_filter(0))
         ],
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-'}),
         method='filter_by_rating',

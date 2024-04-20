@@ -3,7 +3,7 @@
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
     OrderItem, BlogCategory, Blog, Wishlist, BillingAddress, ShippingAddress, OrderBillingAddress, OrderShippingAddress, \
-    ProductWeight
+    ProductWeight, Weight
 
 # Register your models here.
 
@@ -37,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
                 'video_link')
         }),
         ('Price & Inventory', {
-            'fields': ('price', 'quantity', 'discount', 'weight', 'promotional')
+            'fields': ('price', 'quantity', 'discount', 'promotional')
         }),
         ('Statistics', {
             'fields': ('total_views', 'total_sales', 'total_reviews', 'average_review')
@@ -91,4 +91,5 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Blog)
 admin.site.register(Wishlist)
 admin.site.register(Cart)
+admin.site.register(Weight)
 admin.site.register(ProductWeight)

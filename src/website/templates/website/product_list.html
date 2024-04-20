@@ -127,155 +127,107 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
-                        <div class="blog_category aos-init aos-animate card" data-aos="fade-up"
-                             data-aos-duration="2000">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p class="" style="font-size: 20px">Filters</p>
+                        <form>
+                            <div class="blog_category aos-init aos-animate card" data-aos="fade-up"
+                                 data-aos-duration="2000">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="" style="font-size: 20px">Filters</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <img style="height: 30px;" src="{% static 'website/images/filter_image.png' %}">
+                                    </div>
                                 </div>
-                                <div class="col-6 text-end">
-                                    <img style="height: 30px;" src="{% static 'website/images/filter_image.png' %}">
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="accordion" id="accordionCategory">
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header " id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseCategory" aria-expanded="true"
-                                                    aria-controls="collapseCategory">
-                                                Category
-                                            </button>
-                                        </h2>
-                                        <div id="collapseCategory" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.category }}
+                                <hr>
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseCategory" aria-expanded="true"
+                                                        aria-controls="collapseCategory">
+                                                    Category
+                                                </button>
+                                            </h2>
+                                            <div id="collapseCategory" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.category }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
+                                <hr>
 
-                            <div class="accordion" id="accordionExample">
+                                <div class="accordion" id="accordionExample">
 
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseDiscount" aria-expanded="true"
-                                                    aria-controls="collapseDiscount">
-                                                Discount
-                                            </button>
-                                        </h2>
-                                        <div id="collapseDiscount" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.discount }}
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseDiscount" aria-expanded="true"
+                                                        aria-controls="collapseDiscount">
+                                                    Discount
+                                                </button>
+                                            </h2>
+                                            <div id="collapseDiscount" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.discount }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="accordion" id="accordionRating">
+                                <hr>
+                                <div class="accordion" id="accordionRating">
 
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseRating" aria-expanded="true"
-                                                    aria-controls="collapseRating">
-                                                Rating
-                                            </button>
-                                        </h2>
-                                        <div id="collapseRating" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionRating">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.ratings }}
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseRating" aria-expanded="true"
+                                                        aria-controls="collapseRating">
+                                                    Rating
+                                                </button>
+                                            </h2>
+                                            <div id="collapseRating" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionRating">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.ratings }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
+
+                                <button type="submit" class="btn custom_btn rounded-pill text-white ">
+                                    Apply &nbsp;<i class="fas fa-long-arrow-alt-right"></i></button>
+
                             </div>
-                            <hr>
-
-                            <button type="button" class="btn custom_btn rounded-pill text-white ">
-                                Apply &nbsp;<i class="fas fa-long-arrow-alt-right"></i></button>
-
-                        </div>
+                        </form>
                     </div>
                     <div class="col-lg-9">
                         <!-- shop list section start -->
                         <section class="shop_list_sec aos-init" data-aos="fade-up" data-aos-duration="2000">
                             <div class="shop_list_wrap">
                                 <div class="container">
-                                    <div class="filter_area d-flex justify-content-between align-items-center mb_30">
-                                        <ul class="nav layout_tab_nav ul_li" role="tablist">
-                                            <li>
-                                                <button class="active" data-bs-toggle="tab"
-                                                        data-bs-target="#grid_layout" type="button" role="tab"
-                                                        aria-selected="true">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
-                                                         viewBox="0 0 12 12">
-                                                        <path id="grid" class="cls-1"
-                                                              d="M1784,905h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Z"
-                                                              transform="translate(-1784 -905)"></path>
-                                                    </svg>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button data-bs-toggle="tab" data-bs-target="#list_layout" type="button"
-                                                        role="tab" aria-selected="false">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17"
-                                                         viewBox="0 0 12 12">
-                                                        <path id="list" class="cls-1"
-                                                              d="M1823,905h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-10,5h2v2h-2v-2Zm5,0h2v2h-2v-2Zm5,0h2v2h-2v-2Zm-5-10h7v2h-7v-2Zm0,5h7v2h-7v-2Zm0,5h7v2h-7v-2Z"
-                                                              transform="translate(-1823 -905)"></path>
-                                                    </svg>
-                                                </button>
-                                            </li>
-                                            <span class="show_result">Showing 1–18 of 24 results</span>
-                                        </ul>
-                                        {#                                        <form action="#">#}
-                                        {#                                            <div class="sorting_from d-flex align-items-center">#}
-                                        {#                                                <span class="sorting_from_title">Default Sorting:</span>#}
-                                        {#                                                <div class=" clearfix">#}
-                                        {#                                                    <select style="display: none;">#}
-                                        {#                                                        <option data-display="Select">Nothing</option>#}
-                                        {#                                                        <option value="1" selected="">Popularity</option>#}
-                                        {#                                                        <option value="2">Organic</option>#}
-                                        {#                                                        <option value="4">Fantastic</option>#}
-                                        {#                                                    </select>#}
-                                        {#                                                    <div class="nice-select" tabindex="0"><span class="current">Popularity</span>#}
-                                        {#                                                        <ul class="list">#}
-                                        {#                                                            <li data-value="Nothing" data-display="Select"#}
-                                        {#                                                                class="option">Nothing#}
-                                        {#                                                            </li>#}
-                                        {#                                                            <li data-value="1" class="option selected">Popularity</li>#}
-                                        {#                                                            <li data-value="2" class="option">Organic</li>#}
-                                        {#                                                            <li data-value="4" class="option">Fantastic</li>#}
-                                        {#                                                        </ul>#}
-                                        {#                                                    </div>#}
-                                        {#                                                </div>#}
-                                        {#                                            </div>#}
-                                        {#                                        </form>#}
-                                    </div>
                                     <div class="shop_product_list">
                                         <div class="tab-content" id="pills-tabContent">
                                             <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
                                                  aria-labelledby="pills-grid_layout-tab">
-                                                <div class="row g-4">
+                                                <div class="row g-4" id="shop_list">
+                                                {% if object_list %}
                                                     {% for object in object_list %}
-                                                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                                                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 card-length">
                                                             <div class="product_layout_1 overflow-hidden position-relative">
 
                                                                 <div class="product_layout_content bg-white position-relative">
@@ -342,99 +294,63 @@
                                                             </div>
                                                         </div>
                                                     {% endfor %}
+                                                {% else %}
+                                                    <div class="col-12">
+                                                    <h3 class="text-center">Products Not Found</h3>
+                                                    </div>
+                                                {% endif  %}
                                                 </div>
                                             </div>
-                                            <!-- list layout start  -->
-                                            {% for object in object_list %}
-                                                <div class="tab-pane fade show aos-init aos-animate" id="list_layout"
-                                                     role="tabpanel" aria-labelledby="pills-list_layout-tab"
-                                                     data-aos="fade-up" data-aos-duration="2000">
-                                                    <div class="row g-3">
-                                                        <div class="col p-0">
-                                                            <div class="list_layout_wrap overflow-hidden">
-                                                                <div class="list_layout_content bg-white d-flex justify-content-between align-items-center">
-                                                                    <div class="col-lg-5">
-                                                                        <a class="list_layout_thumb d-flex justify-content-start"
-                                                                           href="#!">
-                                                                            <img src="{{ object.thumbnail_image.url|image_or_placeholder }}"
-                                                                                 alt="image_not_found">
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="col-lg-7">
-                                                                        <ul class="list_layout_bade list-unstyled d-flex">
-                                                                            <li><span
-                                                                                    class="badge_meats rounded-pill text-uppercase">{{ object.category }}</span>
-                                                                            </li>
-                                                                            <li><span
-                                                                                    class="badge_discount text-white rounded-pill">-{{ object.discount }}%</span>
-                                                                            </li>
-                                                                        </ul>
-                                                                        <div class="rating_wrap d-flex">
-                                                                            <ul class="rating_star ul_li">
-                                                                                <li class="active"><i
-                                                                                        class="fas fa-star"></i>
-                                                                                </li>
-                                                                                <li class="active"><i
-                                                                                        class="fas fa-star"></i>
-                                                                                </li>
-                                                                                <li class="active"><i
-                                                                                        class="fas fa-star"></i>
-                                                                                </li>
-                                                                                <li class="active"><i
-                                                                                        class="fas fa-star"></i>
-                                                                                </li>
-                                                                                <li><i class="far fa-star"></i></li>
-                                                                            </ul>
-                                                                            <span class="shop_review_text">( 4.0
-                                                               )</span>
-                                                                        </div>
-                                                                        <div class="product_content">
-                                                                            <h3 class="product_title py-2">
-                                                                                <a href="{% url 'website:product-detail' 0 %}"
-                                                                                   target="_blank">{{ object.title }}</a>
-                                                                            </h3>
-                                                                            <div class="product_price">
-                                                                                <span class="sale_price pe-1">{{ object.get_price }}</span>
-                                                                                {% if object.discount %}
-                                                                                    <del>{{ object.price }}</del>
-                                                                                {% endif %}
-                                                                            </div>
-                                                                            <p class="list_layout_desc">Apparently
-                                                                                we had reached a great height in the
-                                                                                atmosphere, for the sky was a dead
-                                                                                black, and the stars had ceased to
-                                                                                twinkle.</p>
-                                                                            <ul class="product_action_btns ul_li_block d-flex">
-                                                                                <li><a class="tooltips"
-                                                                                       data-placement="top"
-                                                                                       title="Search Product" href="#!"><i
-                                                                                        class="fas fa-search"></i></a>
-                                                                                </li>
-                                                                                <li><a class="tooltips"
-                                                                                       data-placement="top"
-                                                                                       title="Add To Cart"
-                                                                                       href="#product_quick_view"
-                                                                                       data-bs-toggle="modal"><i
-                                                                                        class="fas fa-shopping-bag"></i></a>
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
+
                                         </div>
                                     </div>
                                     <ul class="pagination_nav mt-5 list-unstyled d-flex justify-content-center text-uppercase clearfix">
-                                        <li><a href="#!">1</a></li>
-                                        <li><a href="#!">2</a></li>
-                                        <li><a href="#!">3</a></li>
-                                        <li class="active"><a href="#!"><i class="fas fa-arrow-right"></i></a>
-                                        </li>
+                                        <div class="align-items-center mb-4 mt-3 mt-sm-0"
+                                             id="loading-spinner"
+                                             style="display:none;">
+
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+
+                                        </div>
+                                        <button id="load-more-btn" class="btn custom_btn rounded-pill text-white ">
+                                            Load More
+                                        </button>
+
                                     </ul>
+
+                                    <div class="row align-items-center mb-4 text-center text-sm-start"
+                                         id="pagination-element">
+                                        <div class="col-sm-5">
+                                            <div class="text-muted" id="pagination-info">
+                                                Showing {{ object_list.start_index }}
+                                                to {{ object_list.end_index }}
+                                                of {{ object_list.paginator.count }} entries
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -444,4 +360,70 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var page = {% if object_list.has_next %}{{ object_list.next_page_number }}{% else %}null{% endif %};
+            var maxPages = {{ object_list.paginator.num_pages }};
+            var loading = false;
+
+            function loadMore() {
+                if (loading || page === null || page > maxPages) {
+                    return;
+                }
+                loading = true;
+                $('#load-more-btn').hide();
+                $('#loading-spinner').show();
+                var searchQuery = window.location.search;
+
+                var filter_queryset = null
+                if (searchQuery) {
+                    filter_queryset = searchQuery + '&page=' + page
+                } else {
+                    filter_queryset = '?page=' + page
+                }
+
+                $.ajax({
+                    url: filter_queryset,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        var $data = $(data);
+                        var $shopList = $data.find('#shop_list');
+
+                        if ($shopList.find('.card-length').length > 0) {
+                            $('#shop_list').append($shopList.html());
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').show();
+                            page++;
+                            loading = false;
+
+                            updatePaginationInfo();
+                        } else {
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').hide();
+                        }
+                    },
+                    error: function () {
+                        loading = false;
+                    }
+                });
+            }
+
+            function updatePaginationInfo() {
+                $('#pagination-info').text('Showing 1 to ' + $('#shop_list .card-length').length + ' of {{ object_list.paginator.count }} entries');
+
+                if (page === null || page > maxPages) {
+                    $('#load-more-btn').hide();
+                }
+            }
+
+            if (page === null || page > maxPages) {
+                $('#load-more-btn').hide();
+            }
+
+            $('#load-more-btn').on('click', loadMore);
+        });
+    </script>
+
 {% endblock content %}

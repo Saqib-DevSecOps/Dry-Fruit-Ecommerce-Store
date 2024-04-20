@@ -7,7 +7,7 @@
     {{ object.name }} Details
 {% endblock %}
 
-{% block base_subhead_heading %} {{ object.name }}{% endblock %}
+{% block base_subhead_heading %} Product &rAarr; Management{% endblock %}
 {% block base_subhead_paragraph %}Details description of product{% endblock %}
 
 {% block base_subhead_button %}
@@ -23,6 +23,10 @@
     <button class="btn btn-outline-success float-end pr-4-3" data-bs-target="#modal-image-add"
             data-bs-toggle="modal" type="button">
         <i class="fa fa-image"></i>&nbsp;Add Image
+    </button>
+    <button class="btn btn-outline-success float-end pr-4-3" data-bs-target="#modal-weight-add"
+            data-bs-toggle="modal" type="button">
+        <i class="fa fa-image"></i>&nbsp;Add Weight
     </button>
 {% endblock %}
 
@@ -180,10 +184,7 @@
                                                     <th scope="row">Brand</th>
                                                     <td>{{ object.manufacturer_brand }}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th scope="row">Weight</th>
-                                                    <td>{{ object.weight }}</td>
-                                                </tr>
+
                                                 <tr>
                                                     <th scope="row">Average Review</th>
                                                     <td>{{ object.average_review|safe }}
@@ -192,6 +193,20 @@
                                                 <tr>
                                                     <th scope="row">Total Reviews</th>
                                                     <td>{{ object.total_reviews }}</td>
+                                                </tr>
+                                                                         <tr>
+                                                    <th scope="row">Weight</th>
+                                                    <td>{% if object.productweight_set.all %}{% for object in object.productweight_set.all %}
+
+                                                        <a href="{% url 'admins:product-weight-delete' object.product.id object.id %}" class="btn btn-transparent">
+                                                            {{ object.weight }}&nbsp;&nbsp;
+                                                            <br>{{ object.price }} &nbsp;&nbsp;
+                                                            <span>❌</span>
+                                                        </a>{% endfor %}
+                                                    {% else %}
+                                                        <b class="text-danger">Weights Are not Added yet</b>
+                                                    {% endif %}
+                                                    </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -211,6 +226,29 @@
 
 
 
+    <div class="modal modal-blur fade hide" id="modal-weight-add" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <form action="{% url 'admins:product-weight-add' object.pk %}"
+                  method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Product Weight</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        {% csrf_token %}
+                        {{ product_weight_add_form|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ms-auto" type="submit">
+                            <i class="fa fa-check"></i>&nbsp;Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="modal modal-blur fade hide" id="modal-image-add" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <form action="{% url 'admins:product-image-add' object.pk %}" enctype="multipart/form-data"
