@@ -11,7 +11,7 @@ class ProductFilter(FilterSet):
 
     class Meta:
         model = Product
-        fields = ['search', 'price_min', 'price_max']
+        fields = ['search', 'price_min', 'price_max', 'category', 'discount', 'average_review']
 
 
 class BlogFilter(django_filters.FilterSet):
