@@ -1,75 +1,53 @@
-  {% load static %}
-    <section class="sidebar_section">
-        <div class="sidebar_content_wrap">
-            <div class="container">
-                <div class="row">
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
-                         aria-labelledby="offcanvasRightLabel">
-                        <div class="offcanvas-header align-items-center">
-                            <h5 class="mb-0">Organic Products</h5>
-                            <button type="button" class="btn-close text-reset text-end" data-bs-dismiss="offcanvas"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <div class="prdc_ctg_product_content mt-1 d-flex align-items-center">
-                                <div class="prdc_ctg_product_img d-flex justify-content-center align-items-center me-3">
-                                    <img src="{% static 'website/images/category/cat6.png' %}" alt="image_not_found">
-                                </div>
-                                <div class="prdc_ctg_product_text">
-                                    <div class="prdc_ctg_product_title my-2">
-                                        <a href="shop-list.html" target="_blank"><h5>Organic Cabbage</h5></a>
+{% load custom_tags %}
+{% load static %}
+<section class="sidebar_section">
+    <div class="sidebar_content_wrap">
+        <div class="container">
+            <div class="row">
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                     aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header align-items-center">
+                        <h5 class="mb-0">Your Cart</h5>
+                        <button type="button" class="btn-close text-reset text-end" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        {% if cart %}
+                            {% for object in cart %}
+                                <div class="prdc_ctg_product_content mt-1 d-flex align-items-center">
+                                    <div class="prdc_ctg_product_img d-flex justify-content-center align-items-center me-3">
+                                        <img src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                             alt="image_not_found">
                                     </div>
-                                    <div class="prdc_ctg_product_price mt-1 product_price">
-                                        <span class="sale_price pe-1">$50.00</span>
-                                        <del>$70.00</del>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="prdc_ctg_product_content mt-1 d-flex align-items-center">
-                                <div class="prdc_ctg_product_img d-flex justify-content-center align-items-center me-3">
-                                    <img src="{% static 'website/images/category/cat7.png' %}" alt="image_not_found">
-                                </div>
-                                <div class="prdc_ctg_product_text">
-                                    <div class="prdc_ctg_product_title my-2">
-                                        <a href="shop-list.html" target="_blank"><h5>Organic Cabbage</h5></a>
-                                    </div>
-                                    <div class="prdc_ctg_product_price mt-1 product_price">
-                                        <span class="sale_price pe-1">$40.00</span>
-                                        <del>$60.00</del>
+                                    <div class="prdc_ctg_product_text">
+                                        <div class="prdc_ctg_product_title my-2">
+                                            <a href="{% url 'website:product-detail' object.product.id %}" target="_blank"><h5>
+                                                {{ object.product.title}}</h5></a>
+                                        </div>
+                                        <div class="prdc_ctg_product_price mt-1 product_price">
+                                            <span class="sale_price pe-1">{% if object.product_weight %}{{ object.product_weight.get_product_weight_discounted_price }}{% else %}{{ object.product.get_price }}{% endif %}</span>
+                                            <del>{% if object.product_weight %}{{ object.product_weight.price }}{% else %}{{ object.product.price }}{% endif %}</del>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="prdc_ctg_product_content mt-1 d-flex align-items-center">
-                                <div class="prdc_ctg_product_img d-flex justify-content-center align-items-center me-3">
-                                    <img src="{% static 'website/images/category/cat8.png' %}" alt="image_not_found">
-                                </div>
-                                <div class="prdc_ctg_product_text">
-                                    <div class="prdc_ctg_product_title my-2">
-                                        <a href="shop-list.html" target="_blank"><h5>Organic Cabbage</h5></a>
-                                    </div>
-                                    <div class="prdc_ctg_product_price mt-1 product_price">
-                                        <span class="sale_price pe-1">$70.00</span>
-                                        <del>$90.00</del>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                             <div class="total_price">
                                 <ul class="ul_li_block mb_30 clearfix">
                                     <li>
-                                        <span>Subtotal:</span>
-                                        <span>$215</span>
+                                        <span>Total Amount :</span>
+                                        <span>{{total_amount|floatformat:"2" }}</span>
                                     </li>
                                     <li>
-                                        <span>Vat 5%:</span>
-                                        <span>$10.75</span>
+                                        <span>Discounted Amount:</span>
+                                        <span>{{ discounted_amount|floatformat:"2"  }}</span>
                                     </li>
                                     <li>
-                                        <span>Discount 15%:</span>
-                                        <span>- $32.25</span>
+                                        <span>Shipping Charged :</span>
+                                        <span> {{sipping_charges|floatformat:"2" }}</span>
                                     </li>
                                     <li>
-                                        <span>Total:</span>
-                                        <span>$191.8875</span>
+                                        <span>Sub Total:</span>
+                                        <span>{{sub_total|floatformat:"2" }}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -79,9 +57,12 @@
                                     <li><a href="{% url 'website:order' %}">Checkout</a></li>
                                 </ul>
                             </div>
-                        </div>
+                        {% else %}
+                            <span class="text-danger">Cart is Empty</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>

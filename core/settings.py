@@ -111,6 +111,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'src.website.context_processor.get_total_counts_context_processor',
+
             ],
         },
     },

@@ -78,7 +78,7 @@
                     {% for object in top_categories %}
                         <div class="col item_content slider_item text-center" style="position:relative;"
                              data-aos="fade-up" data-aos-duration="300">
-                            <a href="shop-list.html" target="_blank">
+                            <a href="{% url 'website:shop' %}?category={{ object.id }}">
                                 <img style="height: 80px;margin-bottom: -45px;z-index: 1000;position:relative;"
                                      src="{% static 'website/images/logo/logo.png' %}"
                                      alt="image_not_found">
@@ -91,7 +91,7 @@
                                          alt="Healthy Nut and Dried Fruit Combo Pack">
                                 </div>
                             </div>
-                            <a href="shop-list.html" target="_blank">
+                            <a href="{% url 'website:shop' %}?category={{ object.id }}">
                                 <img style="height: 45px;margin-top: -45px;z-index: 1000;position:relative;"
                                      src="{% static 'website/images/logo/Button.png' %}"
                                      alt="image_not_found">
@@ -152,15 +152,16 @@
                             {% for product in product_category_all %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -172,14 +173,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -187,18 +189,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -210,15 +216,16 @@
                             {% for product in product_category_0 %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -230,14 +237,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -245,18 +253,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -268,15 +280,16 @@
                             {% for product in product_category_1 %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -288,14 +301,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -303,18 +317,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -326,15 +344,16 @@
                             {% for product in product_category_2 %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -346,14 +365,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -361,18 +381,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -384,15 +408,16 @@
                             {% for product in product_category_3 %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -404,14 +429,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -419,18 +445,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -442,15 +472,16 @@
                             {% for product in product_category_4 %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
+
                                         <div class="product_layout_content bg-white position-relative">
                                             <div class="product_image_wrap">
                                                 <a class="product_image d-flex justify-content-center align-items-center"
-                                                   href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                                   href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                                     <img class="pic-1"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                     <img class="pic-2"
-                                                         src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                                         src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                                          alt="image_not_found">
                                                 </a>
                                                 <ul class="product_badge_group ul_li_block">
@@ -462,14 +493,15 @@
                                                     </li>
                                                 </ul>
                                                 <ul class="product_action_btns ul_li_block d-flex">
-                                                    <li><a class="tooltips" data-placement="top" title="Search Product"
-                                                           href="#!">
-                                                        <i class="fas fa-eye"></i></a>
+                                                    <li><a class="tooltips" data-placement="top"
+                                                           title="Search Product"
+                                                           href="{% url 'website:product-detail' product.pk %}"><i
+                                                            class="fas fa-eye"></i></a>
                                                     </li>
-
-                                                    <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                                           href="#product_quick_view" data-bs-toggle="modal"><i
-                                                            class="fas fa-heart"></i></a>
+                                                    <li><a class="tooltips"
+                                                           title="Add To Cart"
+                                                           href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                            class="far fa-heart"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -477,18 +509,22 @@
                                                 <ul class="rating_star ul_li">
                                                     {{ product.average_review|get_html_icons }}
                                                 </ul>
-                                                <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                                <span class="shop_review_text">( {{ product.average_review }})</span>
                                             </div>
                                             <div class="product_content">
                                                 <h3 class="product_title">
-                                                    <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                                    <a href="{% url 'website:product-detail' 0 %}"
+                                                       target="_blank">{{ product.title }}</a>
                                                 </h3>
                                                 <div class="product_price">
                                                     <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                                    <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                                    {% if product.discount %}
+                                                        <del>{{ product.price }}</del>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             {% endfor %}
@@ -509,7 +545,7 @@
                              style="background-image: url('{% static 'website/images/deals/deals1.png' %}');"
                              data-aos="flip-right" data-aos-duration="1000">
                             <div class="deal_item_txt position-absolute">
-                                 <div class="deal_sub_title">
+                                <div class="deal_sub_title">
                                     <h5 class="text-white">FRESH FROM OUR FARM</h5>
                                 </div>
                                 <div class="deal_title aos-init aos-animate " data-aos="flip-left"
@@ -517,7 +553,7 @@
                                     <h3 class="text-white">Get Every Dry Fruit You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="{% url 'website:shop' %}" >
+                                    <a href="{% url 'website:shop' %}">
                                         <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
@@ -540,7 +576,7 @@
                                     <h3 class="text-white">Get Discounts on Dry Fruits You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="{% url 'website:shop' %}" >
+                                    <a href="{% url 'website:shop' %}">
                                         <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
@@ -563,7 +599,7 @@
                                     <h3 class="text-white">First Deal Dry Fruit You Need</h3>
                                 </div>
                                 <div class="deal_btn">
-                                    <a href="{% url 'website:shop' %}" >
+                                    <a href="{% url 'website:shop' %}">
                                         <button type="button" class="btn text-white">SHOP NOW <span><i
                                                 class="fas fa-long-arrow-alt-right"></i></span></button>
                                     </a>
@@ -606,15 +642,16 @@
                 {% for product in popular_discount %}
                     <div class="col-sm-6 col-md-6 col-xl-3">
                         <div class="product_layout_1 overflow-hidden position-relative">
+
                             <div class="product_layout_content bg-white position-relative">
                                 <div class="product_image_wrap">
                                     <a class="product_image d-flex justify-content-center align-items-center"
-                                       href="{% url 'website:product-detail' product.id %}" target="_blank">
+                                       href="{{ product.thumbnail_image.url|image_or_placeholder }}">
                                         <img class="pic-1"
-                                             src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                             src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                              alt="image_not_found">
                                         <img class="pic-2"
-                                             src="{{ product.thumbnail_image|image_or_placeholder }}"
+                                             src="{{ product.thumbnail_image.url|image_or_placeholder }}"
                                              alt="image_not_found">
                                     </a>
                                     <ul class="product_badge_group ul_li_block">
@@ -626,14 +663,15 @@
                                         </li>
                                     </ul>
                                     <ul class="product_action_btns ul_li_block d-flex">
-                                        <li><a class="tooltips" data-placement="top" title="Search Product"
-                                               href="#!">
-                                            <i class="fas fa-eye"></i></a>
+                                        <li><a class="tooltips" data-placement="top"
+                                               title="Search Product"
+                                               href="{% url 'website:product-detail' product.pk %}"><i
+                                                class="fas fa-eye"></i></a>
                                         </li>
-
-                                        <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                               href="#product_quick_view" data-bs-toggle="modal"><i
-                                                class="fas fa-heart"></i></a>
+                                        <li><a class="tooltips"
+                                               title="Add To Cart"
+                                               href="{% url 'website:wishlist-add' product.pk %}"><i
+                                                class="far fa-heart"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -641,18 +679,22 @@
                                     <ul class="rating_star ul_li">
                                         {{ product.average_review|get_html_icons }}
                                     </ul>
-                                    <span class="shop_review_text">( {{ product.average_review }} )</span>
+                                    <span class="shop_review_text">( {{ product.average_review }})</span>
                                 </div>
                                 <div class="product_content">
                                     <h3 class="product_title">
-                                        <a href="{% url 'website:product-detail' product.id %}">{{ product.title }}</a>
+                                        <a href="{% url 'website:product-detail' 0 %}"
+                                           target="_blank">{{ product.title }}</a>
                                     </h3>
                                     <div class="product_price">
                                         <span class="sale_price pe-1">{{ product.get_price }}</span>
-                                        <del>{% if product.discount %}{{ product.price }}{% endif %}</del>
+                                        {% if product.discount %}
+                                            <del>{{ product.price }}</del>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 {% endfor %}
