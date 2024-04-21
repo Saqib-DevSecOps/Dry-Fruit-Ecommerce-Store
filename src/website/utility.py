@@ -8,12 +8,17 @@ def session_id(self):
     return session_key
 
 
-def total_amount(request):
+def get_total_amount(request):
     cart = Cart.objects.filter(user=request.user)
     total_price = 0
+    discount_price = 0
     for cart in cart:
         total_price += float(cart.get_item_price())
-    return total_price
+        discount_price += float(cart.get_discount_price())
+
+    shipping_charges = discount_price * 0.05
+    sub_total = discount_price + shipping_charges
+    return total_price, discount_price , shipping_charges , sub_total
 
 
 def total_quantity(request):
@@ -22,4 +27,3 @@ def total_quantity(request):
     for cart in cart:
         quantity += cart.quantity
     return quantity
-

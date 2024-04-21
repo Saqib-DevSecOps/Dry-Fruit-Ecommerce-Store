@@ -461,7 +461,6 @@ class OrderCreateAPIView(generics.CreateAPIView):
 
         # Create the order
         order = Order.objects.create(
-            user=user,
             name=name,
             street_address=street_address,
             postal_code=postal_code,

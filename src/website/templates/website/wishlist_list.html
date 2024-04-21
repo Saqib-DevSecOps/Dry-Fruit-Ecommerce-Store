@@ -1,4 +1,5 @@
 {% extends  'website/base.html' %}
+{% load custom_tags %}
 {% load static %}
 {% block content %}
 
@@ -12,101 +13,51 @@
 
     <section class=" aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="container">
-            <div class="cart_table card table-responsive position-relative">
-                <table class="table align-middle">
-                    <thead class="text-uppercase">
-                    <tr>
-                        <th>Image</th>
-                        <th>product name</th>
-                        <th>Price</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div class="cart_product position-relative">
-                                <div class="item_image">
-                                    <img src="{% static 'website/images/cart/cart1.png' %}" alt="image_not_found">
-                                </div>
-                                <button type="button" class="remove_btn position-absolute">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="item_content">
-                                <a href="shop-list.html">
-                                    <h4 class="item_title">Curated Products</h4>
-                                </a>
-                                <span class="item_type">Shop groceries</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="price_text">$69.00</span>
-                        </td>
-                        <td>
-                            <a href="#" class="text-danger"><i class="fa fa-trash"></i></a>
-                            <a href="#" class="text-success"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-                        </td>
-                    </tr>
+            <div class="col-12 mb-4" style="overflow-y: hidden">
+                <div class="card " data-aos="fade-up" data-aos-duration="2000">
+                    <form action="#">
+                        <table class="table table-responsive p-0 mb-0">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="padding: 30px">Items</th>
+                                <th scope="col" style="padding: 30px">Description</th>
+                                <th scope="col" style="padding: 30px">Price</th>
+                                <th scope="col" style="padding: 30px">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for object in object_list %}
+                                <tr>
+                                    <th scope="row" style="padding: 30px"><img
+                                            src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                            style="height: 100px" class="rounded  float-left" alt="...">
+                                    </th>
+                                    <td style="padding: 30px">
+                                        <h4>{{ object.product.title }}</h4>
+                                            <p><span>Category : </span><b>{{ object.product.category }}</b>
+                                    </td>
+                                    <td style="padding: 30px">
+                                        <del class="text-secondary">{% if object.product_weight %}
+                                            {{ object.product_weight.price }}{% else %}
+                                            {{ object.product.price }}{% endif %}</del>
+                                        <br>
+                                        <span>{% if object.product_weight %}
+                                            {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
+                                            {{ object.product.get_price }}{% endif %}</span>
+                                    </td>
+                                    <td style="padding: 30px">
 
-                    <tr>
-                        <td>
-                            <div class="cart_product position-relative">
-                                <div class="item_image">
-                                    <img src="{% static 'website/images/cart/cart2.png' %}" alt="image_not_found">
-                                </div>
-                                <button type="button" class="remove_btn position-absolute">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="item_content">
-                                <a href="shop-list.html">
-                                    <h4 class="item_title">Clean Business Card</h4>
-                                </a>
-                                <span class="item_type">Shop groceries</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="price_text">$23.00</span>
-                        </td>
-                        <td>
-                            <a href="#" class="text-danger"><i class="fa fa-trash"></i></a>
-                            <a href="#" class="text-success"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="cart_product position-relative">
-                                <div class="item_image">
-                                    <img src="{% static 'website/images/cart/cart3.png' %}" alt="image_not_found">
-                                </div>
-                                <button type="button" class="remove_btn position-absolute">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="item_content">
-                                <a href="shop-list.html">
-                                    <h4 class="item_title">Sustainable</h4>
-                                </a>
-                                <span class="item_type">Shop groceries</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="price_text">$36.00</span>
-                        </td>
-                        <td>
-                            <a href="#" class="text-danger"><i class="fa fa-trash"></i></a>
-                            <a href="#" class="text-success"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                                        <a href="{% url 'website:wishlist-delete' object.id %}" class="text-danger"><i class="fa fa-trash"></i></a>
+                                        <a href="{% url 'website:product-detail' object.product.id %}" class="text-success"><i class="fa fa-eye"
+                                                                            aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
             </div>
 
         </div>

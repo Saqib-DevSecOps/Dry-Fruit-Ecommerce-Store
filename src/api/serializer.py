@@ -1,8 +1,4 @@
 from rest_framework import serializers
-from src.administration.admins.models import Order, OrderItem
-
-from rest_framework import serializers
-
 from src.administration.admins.models import Product, Cart, BlogCategory, Blog, Order, OrderItem, Wishlist
 
 
@@ -10,7 +6,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'thumbnail_image', 'categories', 'price', 'description']
+        fields = ['id', 'title', 'thumbnail_image', 'category', 'price', 'description']
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -51,8 +47,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'name', 'street_address', 'postal_code', 'city', 'country', 'phone', 'email', 'total',
-                  'paid', 'shipping', 'stripe_payment_id', 'payment_status', 'order_status', 'created_on',
+        fields = ['id', 'total',
+                  'paid', 'shipping', 'payment_status', 'order_status', 'created_on',
                   'updated_on']
         read_only_fields = ['id', 'created_on', 'updated_on', 'order_items']
 

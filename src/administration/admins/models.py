@@ -186,7 +186,10 @@ class ProductWeight(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.product.title
+        return str(self.price)
+
+    def get_product_weight_discounted_price(self):
+        return self.price * self.product.discount / 100
 
 
 class ProductImage(models.Model):
@@ -228,6 +231,7 @@ class ProductRating(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart_set")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_weight = models.ForeignKey(ProductWeight, on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -235,7 +239,14 @@ class Cart(models.Model):
         return self.user.username
 
     def get_item_price(self):
-        return self.quantity * self.product.price
+        if self.product_weight:
+            return self.quantity * self.product_weight.price
+        return self.quantity * self.product.get_price()
+
+    def get_discount_price(self):
+        if self.product_weight:
+            return self.product_weight.get_product_weight_discounted_price() * self.quantity
+        return self.quantity * self.product.get_price()
 
 
 """ ORDERS """

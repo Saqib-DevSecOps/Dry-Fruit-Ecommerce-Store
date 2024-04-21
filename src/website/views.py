@@ -13,11 +13,10 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist
 )
 from src.website.filters import ProductFilter, BlogFilter
-from src.website.models import BackgroundImage, DigitalPlatforms, Banner, ComingSoon, HomeSliderImage
-from src.website.utility import total_amount
+from src.website.utility import get_total_amount
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
 
@@ -48,36 +47,13 @@ class AboutUsTemplateView(TemplateView):
     template_name = 'website/about.html'
 
 
-
-
 class ProductListView(ListView):
     template_name = 'website/product_list.html'
     queryset = Product.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-        sort = self.request.GET.get('sort')
-        if sort == '1':
-            product = Product.objects.order_by('created_on')
-        elif sort == '2':
-            lowest_price_subquery = Product.objects.filter(
-                pk=OuterRef('pk')
-            ).order_by('price').values('price')[:1]
-
-            product = Product.objects.annotate(
-                lowest_price=Subquery(lowest_price_subquery)
-            ).order_by('lowest_price')
-        elif sort == '3':
-            lowest_price_subquery = Product.objects.filter(
-                pk=OuterRef('pk')
-            ).order_by('-price').values('price')[:1]
-
-            product = Product.objects.annotate(
-                lowest_price=Subquery(lowest_price_subquery)
-            ).order_by('-lowest_price')
-        else:
-            product = Product.objects.all().order_by('-created_on')
-        filter_product = ProductFilter(self.request.GET, queryset=product)
+        filter_product = ProductFilter(self.request.GET, queryset=self.queryset)
         pagination = Paginator(filter_product.qs, 50)
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
@@ -95,7 +71,6 @@ class ProductDetailView(DetailView):
         product = Product.objects.get(pk=self.kwargs['pk'])
         context['related_product'] = Product.objects.filter().distinct()[:4]
         return context
-
 
 
 class BlogListView(ListView):
@@ -150,65 +125,86 @@ class CartTemplateView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CartTemplateView, self).get_context_data(**kwargs)
         context['cart'] = Cart.objects.filter(user=self.request.user)
-        context['total_amount'] = total_amount(self.request)
+        total_amount, discount_amount, sipping_charges, sub_total = get_total_amount(self.request)
+        context['total_amount'] = total_amount
+        context['discount_amount'] = discount_amount
+        context['sipping_charges'] = sipping_charges
+        context['sub_total'] = sub_total
         return context
-
-
-class WishListListView(TemplateView):
-    template_name = 'website/wishlist_list.html'
 
 
 @method_decorator(login_required, name='dispatch')
 class AddToCart(View):
     def get(self, request, *args, **kwargs):
-        cart, created = Cart.objects.get_or_create(user=self.request.user, product_id=self.kwargs['product_id'],
-                                                   )
+        product_weight_id = self.kwargs['product_weight_id']
+        if product_weight_id != "0":
+            product_weight = ProductWeight.objects.get(id=product_weight_id)
+            cart, created = Cart.objects.get_or_create(
+                user=self.request.user, product_id=self.kwargs['product_id'],
+                product_weight=product_weight
+            )
+        else:
+            cart, created = Cart.objects.get_or_create(
+                user=self.request.user, product_id=self.kwargs['product_id'],
+            )
+
         if not created:
-            cart.quantity += 1
-            messages.success(request, 'Add to Quantity Increase')
-            cart.save()
-            return redirect('website:cart')
+            messages.warning(request, 'Item Already in cart')
+            return redirect('website:product-detail', pk=self.kwargs['product_id'])
         cart.quantity = 1
         cart.save()
-        messages.success(request, 'Add to Cart Sucsessfully')
-        return redirect('website:cart')
+        messages.success(request, 'Add to Cart Successfully')
+        return redirect('website:product-detail', pk=self.kwargs['product_id'])
 
 
 @method_decorator(login_required, name='dispatch')
-class IncrementCart(View):
+class UpdateCart(View):
     def get(self, request, *args, **kwargs):
-        product_id = request.GET.get('product_id')
-        version = request.GET.get('version_id')
-        cart = get_object_or_404(Cart, product_id=product_id, user=self.request.user)
-        cart.quantity += 1
+        id = self.kwargs.get('id')
+        quantity = int(self.kwargs.get('quantity'))
+        cart = get_object_or_404(Cart, id=id, )
+        cart.quantity += quantity
         cart.save()
-        messages.success(request, 'Item Quantity Increase')
+        messages.success(request, 'Cart Item Successfully Updated ')
         return redirect('website:cart')
 
 
-@method_decorator(login_required, name='dispatch')
-class DecrementCart(View):
-    def get(self, request, *args, **kwargs):
-        product_id = request.GET.get('product_id')
-        version = request.GET.get('version_id')
-        cart = get_object_or_404(Cart, product_id=product_id, user=self.request.user)
-        if str(cart.quantity) == "1":
-            cart.delete()
-            return request.META.get("HTTP_REFERER")
-        cart.quantity -= 1
-        cart.save()
-        messages.success(request, 'Item Quantity Decrease')
-        return redirect('website:cart')
+class WishListListView(ListView):
+    template_name = 'website/wishlist_list.html'
+    model = Wishlist
 
 
 @method_decorator(login_required, name='dispatch')
 class RemoveFromCartView(View):
     def get(self, request, *args, **kwargs):
-        product_id = request.GET.get('product_id')
-        version = request.GET.get('version_id')
-        cart = get_object_or_404(Cart, product_id=product_id, user=self.request.user)
+        id = self.kwargs.get('pk')
+        cart = get_object_or_404(Cart, id=id, user=self.request.user)
         cart.delete()
+        messages.warning(request, 'Item Removed From  Cart')
         return redirect('website:cart')
+
+
+# @method_decorator(login_required, name='dispatch')
+class AddToWishlist(View):
+    def get(self, request, *args, **kwargs):
+        product = self.kwargs.get('pk')
+        product = get_object_or_404(Product, id=product)
+        wishlist, created = Wishlist.objects.get_or_create(product=product, user=request.user)
+        wishlist.save()
+        if created:
+            messages.success(request, 'Item Add cart Successfully ')
+        messages.success(request, 'Item already in Wishlist')
+        return redirect('website:wishlist_list')
+
+
+# @method_decorator(login_required, name='dispatch')
+class DeleteFromWishlist(View):
+    def get(self, request, *args, **kwargs):
+        id = self.kwargs.get('pk')
+        wishlist = get_object_or_404(Wishlist, id=id, user=request.user)
+        wishlist.delete()
+        messages.warning(request, 'Item Removed From  Wishlist')
+        return redirect('website:wishlist_list')
 
 
 stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGTyLBfXhbdORJybRfmzVm2cjPBTkkuGyAjVfP00cf3sDcP9'

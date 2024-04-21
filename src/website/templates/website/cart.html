@@ -1,4 +1,5 @@
 {% extends  'website/base.html' %}
+{% load custom_tags %}
 {% load static %}
 {% block content %}
     <style>
@@ -30,65 +31,77 @@
 
     <section class=" clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="container-lg">
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-lg-8" style="overflow-y: hidden">
-                    <div class="card cart_table " data-aos="fade-up" data-aos-duration="2000">
+                    <div class="card " data-aos="fade-up" data-aos-duration="2000">
                         <form action="#">
-                            <div class="form_wrap">
-                                <div class="checkout_table table-responsive">
-                                    <table class="table text-center mb-0">
-                                        <thead class="text-uppercase text-uppercase">
-                                        <tr class="mt-4 mb-4">
-                                            <th>Item</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for object in '1234' %}
-                                            <tr>
-                                                <td>
-                                                    <div class="cart_product position-relative">
-                                                        <div>
-                                                            <img style="height: 80px"
-                                                                 src="{% static 'website/images/cart/cart2.png' %}"
-                                                                 alt="image_not_found">
-                                                        </div>
-                                                        <button type="button" class="remove_btn position-absolute">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="item_content">
-                                                        <a href="shop-list.html">
-                                                            <h4 class="item_title">Curated Products</h4>
-                                                        </a>
-                                                        <span class="item_type">Shop groceries</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <del class="price_text">$69.00</del>
-                                                    <br>
-                                                    <span class="price_text">$69.00</span>
-                                                </td>
-                                                <td>
-                                                    <div class="quantity_input">
-                                                        <form action="#">
-                                                            <span class="input_number_decrement">–</span>
-                                                            <input class="input_number" value="1">
-                                                            <span class="input_number_increment">+</span>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
+                            <table class="table table-responsive p-0 mb-0">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="padding: 30px">Items</th>
+                                    <th scope="col" style="padding: 30px">Description</th>
+                                    <th scope="col" style="padding: 30px">Price</th>
+                                    <th scope="col" style="padding: 30px">Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for object in cart %}
+                                    <tr>
+                                        <th scope="row" style="padding: 30px"><img
+                                                src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                                style="height: 100px" class="rounded  float-left" alt="...">
+                                        </th>
+                                        <td style="padding: 30px">
+                                            <h4>{{ object.product.title }}</h4>
+                                            {% if object.product_weight %}
+                                                <p><span>SIZE : </span><b>{{ object.product_weight.weight }}</b>
+                                                </p>{% endif %}
+                                        </td>
+                                        <td style="padding: 30px">
+                                            <del class="text-secondary">{% if object.product_weight %}
+                                                {{ object.product_weight.price }}{% else %}
+                                                {{ object.product.price }}{% endif %}</del>
+                                            <br>
+                                            <span>{% if object.product_weight %}
+                                                {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                {{ object.product.get_price }}{% endif %}</span>
+                                        </td>
+                                        <td style="padding: 30px">
+                                            <select class="form-select quantitySelect"
+                                                    id="quantitySelect{{ object.id }}" style="border:1px solid black"
+                                                    aria-label="Default select example">
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                                aria-label="Default select example">
+                                                <option selected>&nbsp;&nbsp;&nbsp;{{ object.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                                {% for obj in '123456789' %}
+                                                    <option data-object-id="{{ object.id }}" id="cart-quantity"
+                                                            value="{{ forloop.counter }}">
+                                                        &nbsp;&nbsp;&nbsp;{{ forloop.counter }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </option>
+                                                {% endfor %}
+
+                                            </select>
+                                            <br><br><br>
+                                            <a href="{% url 'website:remove-cart' object.id %}"
+                                               class="text-decoration-none link-secondary">
+                                                <small>
+                                                    <i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;
+                                                    Remove
+                                                </small>
+                                            </a><br>
+                                            <a href="{% url 'website:wishlist-add' object.product.id %}"
+                                               class="link-secondary">
+                                                <small>
+                                                    <i class="far fa-heart"></i>&nbsp;&nbsp;&nbsp;
+                                                    Add to Wishlist
+                                                </small>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
                         </form>
                     </div>
                 </div>
@@ -120,32 +133,33 @@
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <p class="mb-1">Subtotal</p>
+                                                    <p class="mb-1">Total Price</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-1">23</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p class="mb-1">Discount</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-1">23</p>
+                                                    <p class="mb-1">{{ total_amount|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p class="mb-1">Delivery Charges</p>
+                                                    <p class="mb-1">Discount Price</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-1">34</p>
+                                                    <p class="mb-1">{{ discount_amount|floatformat:"2" }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Shipping Charges</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">{{ sipping_charges|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
 
-                                    </div><hr>
+                                    </div>
+                                    <hr>
                                     <div class="table-responsive">
                                         <table class="table table-borderless bsb-table-xl text-nowrap align-middle m-0">
                                             <tbody>
@@ -154,17 +168,17 @@
 
                                             <tr>
                                                 <td>
-                                                    <p class="mb-1">Delivery Charges</p>
+                                                    <p class="mb-1">Sub Total</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-1">34</p>
+                                                    <p class="mb-1">{{ sub_total|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
 
                                     </div>
-                                                <button class="btn custom_btn btn-lg mt-4">Continue To Checkout -323 $</button>
+                                    <a href="{% url 'website:order' %}" class="btn custom_btn  mt-4">Continue To Checkout -{{ sub_total|floatformat:"2" }}</a>
 
                                 </div>
 
@@ -176,4 +190,18 @@
         </div>
     </section>
 
+
+    <script>
+        // Add event listener to handle select element changes dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+        var selectElement = document.querySelector('.quantitySelect');console.log(selectElement)
+        selectElement.addEventListener('change', function(event) {
+            var objectId = this.options[this.selectedIndex].getAttribute('data-object-id');
+            var quantity = this.value;
+
+            // Redirect to update cart page
+            window.location = `/increment/cart/item/${objectId}/${quantity}/`;
+        });
+    });
+    </script>
 {% endblock content %}

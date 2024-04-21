@@ -5078,10 +5078,7 @@ input[type=text]:focus {
     margin-right: 15px;
 }
 
-.nice-select {
-    background-color: transparent;
-    border: none !important;
-}
+
 
 .nice-select:after {
     width: 10px;
@@ -7609,7 +7606,7 @@ input[type=text]:focus {
 
 .slider-banner-image {
     width: 400px;
-    height: 550px;
+    height: 500px;
     border-radius: 30px;
     margin-right: 30px;
     -webkit-transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -7621,12 +7618,23 @@ input[type=text]:focus {
 }
 
 .slider-banner-image img {
-    height: 85%;
     width: 100%;
+    margin-top: 100px;
+    margin-left: 30px;
     -o-object-fit: cover;
     object-fit: cover;
 }
+@media screen and (max-width: 575px) {
+    .slider-banner-image {
+        width: 90%; /* Adjusted width for smaller screens */
+        max-width: none; /* Remove maximum width restriction */
+        border-radius: 0; /* Remove border-radius to fit smaller screens */
+    }
 
+    .slider-banner-image img {
+        border-radius: 0; /* Remove border-radius to fit smaller screens */
+    }
+}
 .banner-slider .slider.slider-for {
     max-width: 73%;
     padding-right: 35px;

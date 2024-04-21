@@ -1,4 +1,5 @@
 {% extends  'website/base.html' %}
+{% load custom_tags %}
 {% load static %}
 {% block content %}
     <style>
@@ -45,50 +46,35 @@
                                             <div class="thumbnail-image">
                                                 <div class="thumbImg bg-white">
                                                     <a href="#!"><img
-                                                            src="{% static 'website/images/product/product1.png' %}"
+                                                            style="border:1px solid #f5b23c;width: 100px;height: 100px"
+                                                            src="{{ object.thumbnail_image|image_or_placeholder }}"
                                                             alt="image_not_found"></a>
                                                 </div>
                                             </div>
-                                            <div class="thumbnail-image">
-                                                <div class="thumbImg bg-white">
-                                                    <a href="#!"><img
-                                                            src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found"></a>
+                                            {% for image in object.get_images %}
+                                                <div class="thumbnail-image">
+                                                    <div class="thumbImg bg-white">
+                                                        <a href="#!"><img
+                                                                style="border:1px solid #f5b23c;width: 100px;height: 100px"
+                                                                src="{{ image.image|image_or_placeholder }}"
+                                                                alt="image_not_found"></a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="thumbnail-image">
-                                                <div class="thumbImg bg-white">
-                                                    <a href="#!"><img
-                                                            src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found"></a>
-                                                </div>
-                                            </div>
-                                            <div class="thumbnail-image">
-                                                <div class="thumbImg bg-white">
-                                                    <a href="#!"><img
-                                                            src="{% static 'website/images/product/product1.png' %}"
-                                                            alt="image_not_found"></a>
-                                                </div>
-                                            </div>
+                                            {% endfor %}
                                         </div>
 
                                         <div class="slider slider-for card">
                                             <div class="slider-banner-image img_moving_anim1 text-center bg-white">
-                                                <img src="{% static 'website/images/product/product1.png' %}"
+                                                <img src="{{ object.thumbnail_image|image_or_placeholder }}"
                                                      alt="image_not_found">
                                             </div>
-                                            <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                <img src="{% static 'website/images/product/product1.png' %}"
-                                                     alt="image_not_found">
-                                            </div>
-                                            <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                <img src="{% static 'website/images/product/product1.png' %}"
-                                                     alt="image_not_found">
-                                            </div>
-                                            <div class="slider-banner-image img_moving_anim1 bg-white">
-                                                <img src="{% static 'website/images/product/product1.png' %}"
-                                                     alt="image_not_found">
-                                            </div>
+                                            {% for image in object.get_images %}
+
+                                                <div class="slider-banner-image img_moving_anim1 bg-white">
+                                                    <img src="{{ image.image|image_or_placeholder }}"
+                                                         alt="image_not_found">
+                                                </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -147,10 +133,10 @@
                             {% if object.productweight_set.all %}
                                 <h4 class="value_title mb-3" style="padding-left: 40px">Available In</h4>
                                 {% for object in object.productweight_set.all %}
-
                                     <div class="col-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            <input class="form-check-input" data-object-id="{{ object.id }}"
+                                                   type="radio" name="flexRadioDefault"
                                                    id="{{ object.id }}">
                                             <label class="form-check-label" for="{{ object.id }}">
                                                 {{ object.weight }}<br>
@@ -163,17 +149,25 @@
 
                         </div>
                         <div class="product10_quantity_btn_wrap d-flex align-items-center">
-                            <div class="quantity_input bg-white">
-                                <form action="#">
-                                    <span class="input_number_decrement">–</span>
-                                    <input class="input_number" value="1">
-                                    <span class="input_number_increment">+</span>
-                                </form>
-                            </div>
-                            <a href="{% url 'website:add-to-cart' object.id %}">
-                                <button type="button" class="btn custom_btn rounded-pill ms-3 px-5 py-3 text-white">
-                                    Add to Cart <i class="fas fa-long-arrow-alt-right"></i></button>
-                            </a>&nbsp;&nbsp;
+{#                            <div class="quantity_input bg-white">#}
+{#                                <form action="#">#}
+{#                                    <span class="input_number_decrement">–</span>#}
+{#                                    <input class="input_number" value="1">#}
+{#                                    <span class="input_number_increment">+</span>#}
+{#                                </form>#}
+{#                            </div>#}
+                            <a href="#">
+                                <button type="button" id="buy-now-btn" disabled
+                                        class="btn custom_btn rounded-pill ms-3 px-5 py-3 text-white">
+                                    Buy Now <i class="fas fa-coffee"></i>
+                                </button>
+                            </a>
+                            <a href="#">
+                                <button type="button" id="add-to-cart-btn" disabled
+                                        class="btn custom_btn rounded-pill ms-3 px-5 py-3 text-white">
+                                    Add to Cart <i class="fas fa-long-arrow-alt-right"></i>
+                                </button>
+                            </a>
                             <ul class="product_action_btns ul_li_block d-flex">
                                 <li><a class="tooltips" data-placement="top"
                                        title="Search Product"
@@ -185,20 +179,10 @@
                         <div class="product_tags_wrap d-flex align-items-center mt-5">
                             <h6 class="product_tags_title text-uppercase">tags:</h6>
                             <div class="tags_item d-flex align-items-center">
-                                <a href="#!">T-shirt,</a>
-                                <a class="ms-1" href="#!">Clothes,</a>
-                                <a class="ms-1" href="#!">Fashion,</a>
-                                <a class="ms-1" href="#!">Shop</a>
+                                {% for tag in object.tags.all %}
+                                    <a href="#!">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="product_social_links d-flex align-items-center">
-                            <h6 class="product_social_title text-uppercase">share:</h6>
-                            <ul class="list-unstyled d-flex mb-0">
-                                <li><a href="#!"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="#!"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#!"><i class="fab fa-google-plus-g"></i></a></li>
-                                <li><a href="#!"><i class="fab fa-pinterest-p"></i></a></li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -343,68 +327,68 @@
                             <i class="far fa-circle"></i>
                             <span>FRESH FROM OUR FARM</span>
                         </div>
-                        <h2 class="product_sec_title pb-3">Popular Organic Discount</h2>
+                        <h2 class="product_sec_title pb-3">Related Products</h2>
                     </div>
-                </div>
-                <div class="col-lg-6 ul_li_right">
-                    <ul class="countdown_timer ul_li" data-countdown="2023/3/24">
-                        <li class="days_count"><strong>00</strong><span>Days</span></li>
-                        <li class="hours_count"><strong>00</strong><span>Hours</span></li>
-                        <li class="minutes_count"><strong>00</strong><span>Mins</span></li>
-                        <li class="seconds_count"><strong>00</strong><span>Secs</span></li>
-                    </ul>
                 </div>
             </div>
 
             <div class="row g-4">
-                {% for object in '123456' %}
+                {% for object in related_product %}
                     <div class="col-sm-4 col-lg-3">
                         <div class="product_layout_1 overflow-hidden position-relative">
+
                             <div class="product_layout_content bg-white position-relative">
                                 <div class="product_image_wrap">
                                     <a class="product_image d-flex justify-content-center align-items-center"
-                                       href="product-detail.html">
-                                        <img class="pic-1" src="{% static 'website/images/product/product9.png' %}"
+                                       href="{{ object.thumbnail_image.url|image_or_placeholder }}">
+                                        <img class="pic-1"
+                                             src="{{ object.thumbnail_image.url|image_or_placeholder }}"
                                              alt="image_not_found">
-                                        <img class="pic-2" src="{% static 'website/images/product/product4.png' %}"
+                                        <img class="pic-2"
+                                             src="{{ object.thumbnail_image.url|image_or_placeholder }}"
                                              alt="image_not_found">
                                     </a>
                                     <ul class="product_badge_group ul_li_block">
                                         <li><span
-                                                class="product_badge badge_meats position-absolute rounded-pill text-uppercase">Meats</span>
+                                                class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
                                         </li>
                                         <li><span
-                                                class="product_badge badge_discount position-absolute rounded-pill">-27%</span>
+                                                class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
                                         </li>
                                     </ul>
                                     <ul class="product_action_btns ul_li_block d-flex">
-                                        <li><a class="tooltips" data-placement="top" title="Search Product" href="#!"><i
-                                                class="fas fa-search"></i></a></li>
-                                        <li><a class="tooltips" data-placement="top" title="Add To Cart"
-                                               href="#product_quick_view" data-bs-toggle="modal"><i
-                                                class="fas fa-shopping-bag"></i></a></li>
+                                        <li><a class="tooltips" data-placement="top"
+                                               title="Search Product"
+                                               href="{% url 'website:product-detail' object.pk %}"><i
+                                                class="fas fa-eye"></i></a>
+                                        </li>
+                                        <li><a class="tooltips"
+                                               title="Add To Cart"
+                                               href="{% url 'website:wishlist-add' object.pk %}"><i
+                                                class="far fa-heart"></i></a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="rating_wrap d-flex">
                                     <ul class="rating_star ul_li">
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li><i class="far fa-star"></i></li>
+                                        {{ object.average_review|get_html_icons }}
                                     </ul>
-                                    <span class="shop_review_text">( 4.0 )</span>
+                                    <span class="shop_review_text">( {{ object.average_review }})</span>
                                 </div>
                                 <div class="product_content">
                                     <h3 class="product_title">
-                                        <a href="product-detail.html">Organic Cabbage</a>
+                                        <a href="{% url 'website:product-detail' object.id %}"
+                                           target="_blank">{{ object.title }}</a>
                                     </h3>
                                     <div class="product_price">
-                                        <span class="sale_price pe-1">$50.00</span>
-                                        <del>$65.00</del>
+                                        <span class="sale_price pe-1">{{ object.get_price }}</span>
+                                        {% if object.discount %}
+                                            <del>{{ object.price }}</del>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 {% endfor %}
@@ -412,4 +396,50 @@
         </div>
     </section>
 
+    <script>
+        let objectId = null;
+
+        function check_button_checkboxes_are_selected() {
+            if (document.querySelector('input[type="radio"]') == null) {
+                return true
+            }
+            return !!document.querySelector('input[type="radio"]:checked');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const buyNowBtn = document.getElementById('buy-now-btn');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            if (check_button_checkboxes_are_selected()) {
+                addToCartBtn.removeAttribute('disabled');
+                buyNowBtn.removeAttribute('disabled');
+            }
+
+            function updateAddToCartButton() {
+                if (check_button_checkboxes_are_selected()) {
+                    const checkedRadioButton = document.querySelector('input[type="radio"]:checked');
+                    addToCartBtn.removeAttribute('disabled');
+                    buyNowBtn.removeAttribute('disabled');
+                    objectId = checkedRadioButton.dataset.objectId;
+                } else {
+                    addToCartBtn.setAttribute('disabled', 'disabled');
+                    buyNowBtn.setAttribute('disabled', 'disabled');
+                }
+            }
+
+            addToCartBtn.addEventListener('click', function () {
+                if (objectId) {
+                    window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + objectId + '/';
+                } else {
+                    window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + 0 + '/';                }
+            });
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(function (radioButton) {
+                radioButton.addEventListener('click', updateAddToCartButton);
+            });
+
+
+        });
+    </script>
+
 {% endblock content %}
+
