@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from phonenumber_field.formfields import PhoneNumberField
 from tinymce.models import HTMLField
 
 from src.accounts.models import User
@@ -250,6 +251,34 @@ class Cart(models.Model):
 
 
 """ ORDERS """
+
+""" ORDER """
+ORDER_STATUS_CHOICE = (
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('cancelled', 'cancelled'),
+    ('delivery', 'Delivery'),
+    ('completed', 'Completed'),
+)
+PAYMENT_STATUS_CHOICE = (
+    ('unpaid', 'Un Paid'),
+    ('pending', 'Pending'),
+    ('cancel', 'Cancelled'),
+    ('paid', 'Paid'),
+    ('refunded', 'Refunded')
+)
+PAYMENT_TYPE_CHOICE = (
+    ('online', 'Online'),
+    ('cod', 'Cash on Delivery'),
+)
+SHIPMENT_STATUS_CHOICE = (
+    ('initialized', 'Initialized'),
+    ('pending', 'Pending'),
+    ('cancelled', 'cancelled'),
+    ('delivery', 'Delivery'),
+    ('completed', 'Completed'),
+)
+
 Country = (
     ('USA', 'USA'),
     ('Canada', 'Canada'),
@@ -257,75 +286,42 @@ Country = (
 )
 
 
-class BaseAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    address_line1 = models.CharField(max_length=255)
-    address_line2 = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50)
-    postal_code = models.CharField(max_length=20)
-    country = models.CharField(max_length=255, choices=Country)
-    phone_number = models.CharField(max_length=100,default=0)
-    email_address = models.EmailField(max_length=100,null=True,blank=True)
+class Order(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return f'Address of {self.user.username}'
-
-
-class BuyerAddress(BaseAddress):
-    ADDRESS_CHOICES = (
-        ('1', 'Billing Address'),
-        ('2', 'Shipping Address'),
-        ('3', 'Both'),
-    )
-    type = models.CharField(max_length=200, choices=ADDRESS_CHOICES, null=True, blank=False)
-
-    class Meta:
-        verbose_name = "Order Address"
-        verbose_name_plural = "Order Addresses"
-
-
-class Order(BaseAddress):
-    PAYMENT_STATUS_CHOICE = (
-        ('pending', 'Pending'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-    )
-    ORDER_STATUS_CHOICE = (
-        ('pending', 'Pending'),
-        ('shipping', 'Shipping'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-    )
-    SHIPPING_STATUS_CHOICE = (
-        ('Free', 'Free'),
-        ('Normal', 'Normal'),
-        ('Premium', 'Premium'),
-    )
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    contact = models.CharField(max_length=100, null=True, blank=False)
+    postal_code = models.CharField(max_length=50, null=True, blank=False)
+    address = models.CharField(max_length=1000, null=True, blank=False)
+    city = models.CharField(max_length=1000, null=True, blank=False)
+    state = models.CharField(max_length=1000, null=True, blank=False)
+    country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
 
     total = models.FloatField(default=0)
-    paid = models.FloatField(default=0)
+    service_charges = models.FloatField(default=0)
+    shipping_charges = models.FloatField(default=0)
+    sub_total = models.FloatField(default=0)
 
-    shipping = models.CharField(max_length=15, choices=SHIPPING_STATUS_CHOICE, default='Free')
-    payment_status = models.CharField(max_length=15, choices=PAYMENT_STATUS_CHOICE, default='pending')
-    order_status = models.CharField(max_length=15, choices=ORDER_STATUS_CHOICE, default='pending')
+    payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICE, default=PAYMENT_TYPE_CHOICE[0][0])
+    order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
+    payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
+    stripe_id = models.CharField(max_length=1000, null=True, blank=True)
 
+    is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_on']
+        verbose_name_plural = "Orders"
 
     def __str__(self):
-        return f"{self.user.name_or_username()} ordered."
+        return str(self.pk)
 
-    def order_items(self):
+    def get_cart(self):
         return OrderItem.objects.filter(order=self)
+
+    def is_online(self):
+        return True if self.payment_type == 'online' else False
 
 
 class OrderItem(models.Model):

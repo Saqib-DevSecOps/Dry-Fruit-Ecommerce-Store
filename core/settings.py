@@ -30,7 +30,9 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+DOMAIN = env('DOMAIN')
+PROTOCOL = env('PROTOCOL')
+BASE_URL = f"{PROTOCOL}://{DOMAIN}"
 SECRET_KEY = env('SECRET_KEY')
 ENVIRONMENT = env('ENVIRONMENT')
 ALLOWED_HOSTS = ["*"]
@@ -75,7 +77,9 @@ INSTALLED_APPS = [
     'src.api.apps.ApiConfig',
     'src.accounts.apps.AccountsConfig',
     'src.administration.admins.apps.AdministrationAdminConfig',
-    'src.administration.client.apps.ClientConfig'
+    'src.administration.client.apps.ClientConfig',
+    'src.apps.stripe.apps.StripeConfig',
+    'src.apps.whisper.apps.WhisperConfig',
 ]
 
 MIDDLEWARE = [

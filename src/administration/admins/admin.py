@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
-    OrderItem, BlogCategory, Blog, Wishlist, BuyerAddress, \
+    OrderItem, BlogCategory, Blog, Wishlist, \
     ProductWeight, Weight
 
 # Register your models here.
@@ -33,7 +33,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                'sku', 'thumbnail_image', 'title', 'manufacturer_brand', 'slug', 'category', 'description', 'content',
+                'sku', 'thumbnail_image', 'title', 'manufacturer_brand', 'slug', 'category', 'description',
                 'video_link')
         }),
         ('Price & Inventory', {
@@ -53,20 +53,16 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 
-@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'total', 'paid', 'shipping', 'payment_status', 'order_status', 'created_on', 'updated_on')
-    list_filter = ('user', 'payment_status', 'order_status', 'created_on', 'updated_on')
-    search_fields = ('user__username',)
-    inlines = [OrderItemInline]
+    list_display = ['client', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
+                    'service_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status', 'stripe_id',
+                    'created_on']
+    list_filter = ['order_status', 'payment_status', 'created_on']
+    search_fields = ['client__username', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country',
+                     'stripe_id']
 
 
-@admin.register(BuyerAddress)
-class OrderBillingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country', 'type')
-    list_filter = ('user', 'country')
-    search_fields = ('user__username',)
-
+admin.site.register(Order, OrderAdmin)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Blog)

@@ -59,6 +59,7 @@ urlpatterns += [
     path('', include('src.api.urls', namespace='api')),
     path('c/', include('src.administration.client.urls', namespace='client')),
     path('accounts/', include('allauth.urls')),
+    path('payments/', include('src.apps.stripe.urls', namespace='stripe')),
 
 ]
 

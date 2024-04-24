@@ -1,0 +1,8 @@
+<!-- payment/process.html -->
+
+<h2>Payment Details</h2>
+<form method="post" action="{% url 'payments:process' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Pay Now</button>
+</form>

@@ -1,3 +1,5 @@
+from django.contrib import messages
+
 from src.administration.admins.models import Cart
 
 
@@ -18,7 +20,7 @@ def get_total_amount(request):
 
     shipping_charges = discount_price * 0.05
     sub_total = discount_price + shipping_charges
-    return total_price, discount_price , shipping_charges , sub_total
+    return total_price, discount_price, shipping_charges, sub_total
 
 
 def total_quantity(request):
@@ -27,3 +29,16 @@ def total_quantity(request):
     for cart in cart:
         quantity += cart.quantity
     return quantity
+
+
+# VERIFIED
+def validate_product_quantity(request):
+    error_message = False
+    cart_item = Cart.objects.filter(user=request.user)
+    for _cart_item in cart_item:
+        if _cart_item.quantity > _cart_item.product.quantity:
+            error_message = True
+            messages.error(request, f"Insufficient quantity of {_cart_item.product.title} "
+                                    f"in stock , Available Quantity is {_cart_item.product.quantity}")
+    if error_message:
+        return error_message

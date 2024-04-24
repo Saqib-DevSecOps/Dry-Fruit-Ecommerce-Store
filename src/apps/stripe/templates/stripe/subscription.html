@@ -1,0 +1,45 @@
+{% extends 'stripe/base.html' %}
+{% load static %}
+
+{% block subtitle %}
+    Subscription
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 mb-5">
+
+            <div class="card">
+                <div class="card-body border-bottom text-center">
+                    {% if customer.stripe_price.product.image %}
+                        <img alt="package-img" src="{{ customer.stripe_price.product.image }}" height="150">
+                    {% else %}
+                        <img alt="package-img" src="{% static 'logo.png' %}" height="150">
+                    {% endif %}
+                </div>
+
+                <div class="card-body text-center py-5">
+                    <h4>{{ customer.stripe_price.product.name }}</h4>
+                    <p>{{ customer.stripe_price.product.description }}</p>
+                    <p>
+                        <b class="h1" style="font-size: xxx-large;">
+                            {{ customer.stripe_price.get_real_price }}
+                        </b>
+                        /{{ customer.stripe_price.currency }}
+                    </p>
+                    <p><b>Started On: </b> {{ customer.subscription_start }}</p>
+                    <p><b>Expires On: </b> {{ customer.subscription_end }}</p>
+                </div>
+
+                <div class="card-body text-center border-top">
+                    <a href="{% url 'stripe:subscription-portal-link' %}">
+                        <b>Visit Subscription management</b>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

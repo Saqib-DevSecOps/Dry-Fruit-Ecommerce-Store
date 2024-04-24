@@ -13,11 +13,12 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, BuyerAddress
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist
 )
+from src.apps.stripe.views import create_stripe_checkout_session
 from src.website.filters import ProductFilter, BlogFilter
-from src.website.forms import OrderForm
-from src.website.utility import get_total_amount
+from src.website.forms import OrderCheckoutForm
+from src.website.utility import get_total_amount, validate_product_quantity
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
 
@@ -212,90 +213,85 @@ stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGT
 
 
 # @method_decorator(login_required, name='dispatch')
+
+
+@method_decorator(login_required, name='dispatch')
 class OrderCreate(View):
+    template_name = 'website/order.html'
+    cart = None
+    total = 0
+    service_charges = 0
+    shipping_charges = 0
+    sub_total = 0
+
+    def dispatch(self, request, *args, **kwargs):
+        self.cart = Cart.objects.filter(user=request.user)
+        self.total, self.service_charges, self.shipping_charges, self.sub_total = get_total_amount(self.request)
+
+        # 1: CHECK IF THE CART IS EMPTY
+        if not self.cart:
+            messages.error(
+                request, "No items available in cart, to proceed to checkout add some items to cart first."
+            )
+            return redirect('website:shop')
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        cart = Cart.objects.filter(user=self.request.user)
-        buyer_address = BuyerAddress.objects.filter(user=self.request.user)
-        total_amount, discount_amount, sipping_charges, sub_total = get_total_amount(self.request)
-        context = {'cart': cart, 'sub_total': sub_total, 'shipping_charges': sipping_charges,
-                   'buyer_address': buyer_address, 'order_form': OrderForm}
-        return render(request, 'website/order.html', context)
+        form = OrderCheckoutForm()
+        context = {
+            'form': form,
+            'user_cart': self.cart,
+            'total': self.total,
+            'service_charges': self.service_charges,
+            'shipping_charges': self.shipping_charges,
+            'sub_total': self.sub_total,
+        }
+        return render(request, self.template_name, context)
 
-    # def post(self, request):
-    #     form = OrderForm(request.POST)
-    #     if form.is_valid():
-    #         shipping = self.request.POST.get('shipping')
-    #         if shipping == "normal":
-    #             shipping_charges = 6
-    #         else:
-    #             shipping_charges = 10
-    #         price = int(total_amount(request)) + shipping_charges
-    #         line_items = []
-    #         cart = Cart.objects.filter(user=self.request.user)
-    #         qty = 0
-    #         for product in cart:
-    #             line_items.append({
-    #                 'price_data': {
-    #                     'currency': 'usd',
-    #                     'unit_amount': int(product.product.price * 100),
-    #                     'product_data': {
-    #                         'name': product.product.name,
-    #                     },
-    #                 },
-    #                 "quantity": product.quantity
-    #             })
-    #         for shipping in cart:
-    #             line_items.append({
-    #                 'price_data': {
-    #                     'currency': 'usd',
-    #                     'unit_amount': int(shipping_charges * 100),
-    #                     'product_data': {
-    #                         'name': 'Tax'
-    #                     },
-    #                 },
-    #                 "quantity": '1'
-    #             })
-    #             break
-    #         host = self.request.get_host()
-    #         customer = stripe.Customer.create(
-    #             name=self.request.user.username,
-    #             email=self.request.user.email
-    #         )
-    #         checkout_session = stripe.checkout.Session.create(
-    #             payment_method_types=['card'],
-    #             customer=customer,
-    #             submit_type='pay',
-    #             line_items=line_items,
-    #             mode='payment',
-    #             success_url='http://' + host + reverse('website:success') \
-    #                         + '?session_id={CHECKOUT_SESSION_ID}',
-    #             cancel_url='http://' + host + reverse('website:cancel') \
-    #                        + '?session_id={CHECKOUT_SESSION_ID}',
-    #
-    #         )
-    #         stripe_id = checkout_session['id']
-    #         order = form.save(commit=False)
-    #         order.user = self.request.user
-    #         order.total = total_amount(request)
-    #         order.stripe_payment_id = stripe_id
-    #         if shipping == "normal":
-    #             order.shipping = "Normal"
-    #         elif shipping == "premium":
-    #             order.shipping = "Premium"
-    #         else:
-    #             pass
-    #         order.save()
-    #         cart = Cart.objects.filter(user=self.request.user)
-    #         for cart in cart:
-    #             cart_item = OrderItem(product=cart.product, order=order,
-    #                                   qty=cart.quantity)
-    #             cart_item.save()
-    #         return redirect(checkout_session.url, code=303)
-    #     else:
-    #         form = OrderForm()
-    #     return render(request, 'website/order.html', context={'form': OrderForm()})
+    def post(self, request):
+        """
+        1: check if cart is empty (in dispatch)
+        2: validate form
+        3: validate product quantity
+        4: save the order
+        5: checkout for online pay
+        6: redirect to order confirmation page or any other page
+        """
 
+        # 2: VALIDATE FORM
+        form = OrderCheckoutForm(request.POST)
+        if form.is_valid():
+
+            # 3: VALIDATE PRODUCT QUANTITY
+            error = validate_product_quantity(request)
+            if error:
+                return redirect("website:order")
+
+            # 4: SAVE THE ORDER
+            order = form.save(commit=False)
+            order.client = request.user
+            order.save()
+
+            # 5: CHECKOUT FOR ONLINE PAY
+            if order.is_online():
+                session_url = create_stripe_checkout_session(request, order)
+                return redirect(session_url)
+
+            # 6: REDIRECT TO ORDER CONFIRMATION PAGE OR ANY OTHER PAGE
+            messages.success(request, "Your order placed successfully")
+            return redirect('website:order_detail', order.pk)
+
+        messages.error(request, "There are some issues in your order, kindly review your order once again.")
+        context = {
+            'form': form,
+            'user_cart': self.cart,
+            'total': self.total,
+            'service_charges': self.service_charges,
+            'shipping_charges': self.shipping_charges,
+            'sub_total': self.sub_total,
+        }
+        return render(request, self.template_name, context)
 
 @method_decorator(login_required, name='dispatch')
 class SuccessPayment(View):

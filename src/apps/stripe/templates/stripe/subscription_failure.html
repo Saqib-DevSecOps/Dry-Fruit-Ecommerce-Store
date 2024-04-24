@@ -1,0 +1,19 @@
+{% extends 'stripe/base.html' %}
+{% load static %}
+
+{% block subtitle %}
+	Subscription Failed
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="text-center mb-5">
+        <div>
+            <img class="my-5" src="{% static 'cross.png' %}" height="100">
+            <h3>Payment Failed</h3>
+            <p>Your payments are failed, kindly go back and try again</p>
+        </div>
+    </div>
+
+{% endblock %}
