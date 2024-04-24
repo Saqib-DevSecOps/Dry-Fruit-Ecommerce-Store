@@ -13,9 +13,10 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, BuyerAddress
 )
 from src.website.filters import ProductFilter, BlogFilter
+from src.website.forms import OrderForm
 from src.website.utility import get_total_amount
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
@@ -214,10 +215,12 @@ stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGT
 class OrderCreate(View):
 
     def get(self, request):
-        # cart = Cart.objects.filter(user=self.request.user)
-        # amount = total_amount(self.request)
-        # context = {'form': OrderForm, 'cart': cart, 'total_amount': amount}
-        return render(request, 'website/order.html')
+        cart = Cart.objects.filter(user=self.request.user)
+        buyer_address = BuyerAddress.objects.filter(user=self.request.user)
+        total_amount, discount_amount, sipping_charges, sub_total = get_total_amount(self.request)
+        context = {'cart': cart, 'sub_total': sub_total, 'shipping_charges': sipping_charges,
+                   'buyer_address': buyer_address, 'order_form': OrderForm}
+        return render(request, 'website/order.html', context)
 
     # def post(self, request):
     #     form = OrderForm(request.POST)

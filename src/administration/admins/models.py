@@ -259,12 +259,16 @@ Country = (
 
 class BaseAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    address_line1 = models.CharField(max_length=100)
-    address_line2 = models.CharField(max_length=100, blank=True, null=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    address_line1 = models.CharField(max_length=255)
+    address_line2 = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=255, choices=Country)
+    phone_number = models.CharField(max_length=100,default=0)
+    email_address = models.EmailField(max_length=100,null=True,blank=True)
 
     class Meta:
         abstract = True
@@ -273,19 +277,20 @@ class BaseAddress(models.Model):
         return f'Address of {self.user.username}'
 
 
-class BillingAddress(BaseAddress):
+class BuyerAddress(BaseAddress):
+    ADDRESS_CHOICES = (
+        ('1', 'Billing Address'),
+        ('2', 'Shipping Address'),
+        ('3', 'Both'),
+    )
+    type = models.CharField(max_length=200, choices=ADDRESS_CHOICES, null=True, blank=False)
+
     class Meta:
-        verbose_name = "Billing Address"
-        verbose_name_plural = "Billing Addresses"
+        verbose_name = "Order Address"
+        verbose_name_plural = "Order Addresses"
 
 
-class ShippingAddress(BaseAddress):
-    class Meta:
-        verbose_name = "Delivery Address"
-        verbose_name_plural = "Delivery Addresses"
-
-
-class Order(models.Model):
+class Order(BaseAddress):
     PAYMENT_STATUS_CHOICE = (
         ('pending', 'Pending'),
         ('completed', 'Completed'),
@@ -302,8 +307,6 @@ class Order(models.Model):
         ('Normal', 'Normal'),
         ('Premium', 'Premium'),
     )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     total = models.FloatField(default=0)
     paid = models.FloatField(default=0)
@@ -323,22 +326,6 @@ class Order(models.Model):
 
     def order_items(self):
         return OrderItem.objects.filter(order=self)
-
-
-class OrderBillingAddress(BaseAddress):
-    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Order Billing Address"
-        verbose_name_plural = "Order Billing Addresses"
-
-
-class OrderShippingAddress(BaseAddress):
-    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Order Shipping Address"
-        verbose_name_plural = "Order Shipping Addresses"
 
 
 class OrderItem(models.Model):

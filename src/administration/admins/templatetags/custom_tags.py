@@ -119,3 +119,8 @@ def image_or_placeholder(image, placeholder=None):
     if placeholder:
         return f"https://placehold.co/{placeholder}"
     return "https://placehold.co/100"
+
+
+@register.filter
+def multiply(value, arg):
+    return value * arg

@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
-    OrderItem, BlogCategory, Blog, Wishlist, BillingAddress, ShippingAddress, OrderBillingAddress, OrderShippingAddress, \
+    OrderItem, BlogCategory, Blog, Wishlist, BuyerAddress, \
     ProductWeight, Weight
 
 # Register your models here.
@@ -53,18 +53,6 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 
-@admin.register(BillingAddress)
-class BillingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country')
-    list_filter = ('user', 'country')
-
-
-@admin.register(ShippingAddress)
-class ShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country')
-    list_filter = ('user', 'country')
-
-
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('user', 'total', 'paid', 'shipping', 'payment_status', 'order_status', 'created_on', 'updated_on')
@@ -73,17 +61,10 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
 
 
-@admin.register(OrderBillingAddress)
+@admin.register(BuyerAddress)
 class OrderBillingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'order', 'address_line1', 'city', 'state', 'postal_code', 'country')
-    list_filter = ('user', 'order__created_on', 'country')
-    search_fields = ('user__username',)
-
-
-@admin.register(OrderShippingAddress)
-class OrderShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'order', 'address_line1', 'city', 'state', 'postal_code', 'country')
-    list_filter = ('user', 'order__created_on', 'country')
+    list_display = ('user', 'address_line1', 'city', 'state', 'postal_code', 'country', 'type')
+    list_filter = ('user', 'country')
     search_fields = ('user__username',)
 
 
