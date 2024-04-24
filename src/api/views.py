@@ -1,213 +1,197 @@
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, serializers, status
-from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import permission_classes
+from rest_framework.generics import (
+    CreateAPIView, ListAPIView, get_object_or_404,
+    ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, DestroyAPIView
+)
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
+from rest_framework.response import Response
 
-from src.administration.admins.models import OrderItem, Order, Cart, Product, Wishlist, Blog, ProductCategory
-from src.api.filter import ProductFilter, BlogFilter
-from src.api.serializer import OrderItemSerializer, OrderSerializer, ProductCategorySerializer, ProductListSerializer, \
-    ProductDetailSerializer, CartListSerializer, CartUpdateSerializer, WishlistSerializer, CartAddSerializer
+from src.administration.admins.bll import get_cart_calculations
+from src.administration.admins.filters import OrderFilter
+from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist
+from src.api.filter import ProductFilter
+from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
+    ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
+    WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
+    ProductRatingSerializer, OrderDetailSerializer
 
-
-class HomeAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        try:
-            product_categories = ProductCategory.objects.filter(is_active=True)
-            products_new = Product.objects.filter(is_active=True)[0:10]
-            products_feature = Product.objects.filter(is_active=True)[0:6]
-            products_top_order = Product.objects.filter(is_active=True).order_by(
-                '-created_on')[0:10]
-            products_top_rated = Product.objects.filter(is_active=True).order_by(
-                '-average_review')[
-                                 0:10]
-            products_top_discount = Product.objects.filter(is_active=True).order_by('-discount')[0:10]
-
-            # Serialize data
-            product_category_serializer = ProductCategorySerializer(product_categories, many=True)
-            product_serializer = ProductListSerializer(products_new, many=True)
-            products_feature_serializer = ProductListSerializer(products_feature, many=True)
-            products_top_order_serializer = ProductListSerializer(products_top_order, many=True)
-            products_top_rated_serializer = ProductListSerializer(products_top_rated, many=True)
-            products_top_discount_serializer = ProductListSerializer(products_top_discount, many=True)
-
-            # Return response
-            return Response({
-                'product_categories': product_category_serializer.data,
-                'products_new': product_serializer.data,
-                'products_feature': products_feature_serializer.data,
-                'products_top_order': products_top_order_serializer.data,
-                'products_top_rated': products_top_rated_serializer.data,
-                'products_top_discount': products_top_discount_serializer.data,
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({
-                'error': f"An error occurred: {str(e)}"
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+from src.apps.stripe.views import create_stripe_checkout_session
 
 
-class ProductListAPIView(generics.ListAPIView):
+"""Product Apis"""
+
+
+class ProductListAPIView(ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
     queryset = Product.objects.all()
-    serializer_class = ProductListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProductFilter
-    search_fields = ['name', 'category']
 
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
-    queryset = Product.objects.all()
+class ProductDetailAPIView(RetrieveAPIView):
     serializer_class = ProductDetailSerializer
+    permission_classes = [AllowAny]
+    queryset = Product.objects.all()
 
 
-class CartItemListAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CartListSerializer
-    queryset = Cart.objects.all()
+""" HOME """
 
+
+class HomeProductsListAPIView(ListAPIView):
+    serializer_class = HomeProductsListSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        user = self.request.user
-        return Cart.objects.filter(user=user)
+        all_products = Product.objects.all()[:5]
+        new_products = Product.objects.all().order_by('-created_on')[:5]
+        most_sales = Product.objects.order_by('-quantity')[:5]
+        categories = ProductCategory.objects.all()[:12]
+
+        return {
+            'all_products': all_products,
+            'new_products': new_products,
+            'most_sales': most_sales,
+            'categories': categories,
+        }
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset)
+        return Response(serializer.data)
 
 
-class CartItemAddAPIView(generics.CreateAPIView):
+"""Cart Apis"""
+
+
+class CartListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = CartAddSerializer
 
-    def perform_create(self, serializer):
-        user = self.request.user
-        product_id = self.request.data.get('product')
-        product_weight = self.request.data.get('product_weight')
-        if Cart.objects.filter(user=user, product_id=product_id, product_weight_id=product_weight):
-            raise ValidationError("Product already exists in the Cart.")
-        serializer.save(user=user)
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return CartListSerializer
+        return CartCreateSerializer
 
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
 
-
-class CartItemUpdateAPIView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CartUpdateSerializer
-
-    def get_queryset(self):
-        return Cart.objects.filter(id=self.kwargs.get('id'), user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
-class DeleteCartItemAPIView(generics.DestroyAPIView):
+class CartRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return Cart.objects.filter(id=self.kwargs.get('id'), user=self.request.user)
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return CartListSerializer
+        return CartUpdateSerializer
 
-    def perform_destroy(self, instance):
-        instance.delete()
-        return Response({'message': 'Cart item deleted successfully.'})
+    def get_object(self):
+        return get_object_or_404(Cart, id=self.kwargs['pk'], user=self.request.user)
 
 
-class WishlistListAPIView(generics.ListAPIView):
+"""Wishlist Apis"""
+
+
+class WishlistListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = WishlistSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        return Wishlist.objects.filter(user=user)
-
-
-class WishlistCreateAPIView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = WishlistSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return WishlistListSerializer
+        return WishlistCreateSerializer
 
     def perform_create(self, serializer):
-        user = self.request.user
-        product_id = self.request.data.get('product')
-        if Wishlist.objects.filter(user=user, product_id=product_id):
-            raise ValidationError("Product already exists in the wishlist.")
-        serializer.save(user=user)
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         return Wishlist.objects.filter(user=self.request.user)
 
 
-class WishlistDeleteAPIView(generics.DestroyAPIView):
+class WishlistDeleteAPIView(DestroyAPIView):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistDeleteSerializer
     permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = 'wishlist_item_id'
-    http_method_names = ['delete']
 
-    def get_queryset(self):
+    def get_object(self):
         user = self.request.user
-        return Wishlist.objects.filter(user=user)
-
-    def perform_destroy(self, instance):
-        instance.delete()
-        return Response({'message': 'Product removed from the wishlist.'})
+        return get_object_or_404(Wishlist, user=user, id=self.kwargs['pk'])
 
 
-# Create your views here.
-class PurchasedItemListAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = OrderItemSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        order_items = OrderItem.objects.filter(order__user=user)
-        return order_items
+"""Buyer Apis"""
 
 
-class OrderCreateAPIView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+@permission_classes([IsAuthenticated])
+class BuyerDashboardAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        sum_of_sub_total = Order.objects.filter(client=self.request.user, order_status='completed') \
+                               .aggregate(Sum('sub_total'))['sub_total__sum'] or 0
+        order_purchases = sum_of_sub_total
+        orders_total = Order.objects.filter(client=self.request.user).count()
+        orders_active = Order.objects.filter(client=self.request.user,
+                                             order_status__in=['pending', 'approved', 'delivery']).count()
+        response_data = {
+            'order_purchases': order_purchases,
+            'orders_total': orders_total,
+            'orders_active': orders_active,
+        }
+
+        return Response(response_data)
+
+
+class OrderListAPIView(ListAPIView):
     serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
+
+    def get_queryset(self):
+        return Order.objects.filter(client=self.request.user)
+
+
+class OrderDetailAPIView(ListAPIView):
+    serializer_class = OrderDetailSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Order.objects.none()
+
+        order_id = self.kwargs.get('pk')
+        return Order.objects.filter(client=self.request.user, id=order_id)
+
+
+class ProductRatingAddAPIView(CreateAPIView):
+    serializer_class = ProductRatingSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        user = self.request.user
-
-        # Get billing information from request data
-        name = self.request.data.get('name')
-        street_address = self.request.data.get('street_address')
-        postal_code = self.request.data.get('postal_code')
-        city = self.request.data.get('city')
-        country = self.request.data.get('country')
-        phone = self.request.data.get('phone')
-        email = self.request.data.get('email')
-
-        # Calculate total amount
-        total = 0
-        cart_items = Cart.objects.filter(user=user)
-        for cart_item in cart_items:
-            total += cart_item.product.price * cart_item.quantity
-
-        # Create the order
-        order = Order.objects.create(
-            name=name,
-            street_address=street_address,
-            postal_code=postal_code,
-            city=city,
-            country=country,
-            phone=phone,
-            email=email,
-            total=total
-        )
-
-        # Create order items from cart items
-        for cart_item in cart_items:
-            OrderItem.objects.create(
-                order=order,
-                product=cart_item.product,
-                qty=cart_item.quantity
-            )
-
-        # Clear the cart
-        cart_items.delete()
-
-        serializer.instance = order
+        serializer.save(client=self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class OrderDetailAPIView(generics.RetrieveAPIView):
+"""Order Apis"""
+
+
+class OrderCreateApiView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = OrderSerializer
+    serializer_class = OrderCreateSerializer
+    queryset = Order.objects.all()
 
-    def get_queryset(self):
+    def create(self, request, *args, **kwargs):
+        session_url = None
         user = self.request.user
-        return Order.objects.filter(user=user)
+        total, service_charges, shipping_charges, sub_total = get_cart_calculations(user)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save(client=user, total=total, service_charges=service_charges)
+        if order.is_online():
+            session_url = create_stripe_checkout_session(self.request, order)
+        return Response({'session_url': session_url, 'data': serializer.data}, status=status.HTTP_201_CREATED)

@@ -1,37 +1,38 @@
 from django.urls import path
-from src.api.views import OrderDetailAPIView, ProductListAPIView, ProductDetailAPIView, CartItemListAPIView, \
-    CartItemUpdateAPIView, DeleteCartItemAPIView, WishlistListAPIView, WishlistCreateAPIView, WishlistDeleteAPIView, \
-    PurchasedItemListAPIView, OrderCreateAPIView, CartItemAddAPIView, HomeAPIView
+from .views import (
+    WishlistListCreateAPIView, WishlistDeleteAPIView,
+    BuyerDashboardAPIView,
+    OrderListAPIView, OrderDetailAPIView, ProductRatingAddAPIView, OrderCreateApiView,
+
+    CartRetrieveUpdateDestroyAPIView, CartListCreateAPIView, HomeProductsListAPIView,
+    ProductListAPIView, ProductDetailAPIView
+)
 
 app_name = 'api'
-
 urlpatterns = [
-
-
-    path('home/', HomeAPIView.as_view(), name='home'),
-
-
-    path('products/', ProductListAPIView.as_view(), name='product-list'),
-    path('product/<str:pk>/', ProductDetailAPIView.as_view(), name='product-detail'),
-
-
-    path('cart/list/', CartItemListAPIView.as_view(), name='cart-list'),
-    path('cart/add/', CartItemAddAPIView.as_view(), name='cart-add'),
-    path('cart/<str:pk>/update/', CartItemUpdateAPIView.as_view(),
-         name='cart-update'),
-    path('cart/<str:pk>/delete/', DeleteCartItemAPIView.as_view(), name='cart-delete'),
-
-
-    path('wishlist/list/', WishlistListAPIView.as_view(), name='wishlist_list'),
-    path('wishlist/add/', WishlistCreateAPIView.as_view(), name='wishlist_add'),
-    path('wishlist/<int:wishlist_item_id>/remove/', WishlistDeleteAPIView.as_view(), name='wishlist_remove'),
-
-
-
+    path('home/', HomeProductsListAPIView.as_view(), name='home'),
 ]
 
 urlpatterns += [
-    path('api/purchased-items/', PurchasedItemListAPIView.as_view(), name='purchased_items'),
-    path('orders/create/', OrderCreateAPIView.as_view(), name='order_create'),
-    path('orders/detail/', OrderDetailAPIView.as_view(), name='order_detail'),
+    path('cart/items/', CartListCreateAPIView.as_view(), name='cart'),
+    path('cart/<int:pk>/', CartRetrieveUpdateDestroyAPIView.as_view(), name='cart-retrieve-update-destroy'),
+]
+
+urlpatterns += [
+    path('product/', ProductListAPIView.as_view(), name='product-list'),
+    path('product/<str:pk>/', ProductDetailAPIView.as_view(), name='product-detail'),
+]
+
+urlpatterns += [
+    path('wish-list/', WishlistListCreateAPIView.as_view(), name='wishlist'),
+    path('wish-list/<str:pk>/delete/', WishlistDeleteAPIView.as_view(), name='remove-from-wishlist'),
+]
+
+urlpatterns += [
+    path('dashboard/', BuyerDashboardAPIView.as_view(), name='dashboard'),
+    path('order/', OrderListAPIView.as_view(), name='order-list'),
+    path('order/<str:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
+
+    path('checkout/', OrderCreateApiView.as_view(), name='checkout'),
+    path('order/add/rating/', ProductRatingAddAPIView.as_view(), name='product-rating-add'),
 ]

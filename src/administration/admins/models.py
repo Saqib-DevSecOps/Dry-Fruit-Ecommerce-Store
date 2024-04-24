@@ -165,6 +165,9 @@ class Product(models.Model):
     def get_images(self):
         return ProductImage.objects.filter(product=self)
 
+    def get_product_weight(self):
+        return ProductWeight.objects.filter(product=self)
+
     def get_price(self):
         if self.discount > 0:
             return self.price - (self.price * self.discount / 100)
