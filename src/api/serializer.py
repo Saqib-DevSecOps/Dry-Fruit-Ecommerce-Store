@@ -84,7 +84,7 @@ class CartUpdateSerializer(serializers.ModelSerializer):
         if not instance:
             raise serializers.ValidationError('Product not found in the cart')
 
-        if not  product.is_active:
+        if not product.is_active:
             raise serializers.ValidationError('Product not available')
 
         if quantity <= 0:
