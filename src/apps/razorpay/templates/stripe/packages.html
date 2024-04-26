@@ -1,0 +1,12 @@
+{% extends 'stripe/base.html' %}
+
+{% block subtitle %}
+    Packages
+{% endblock %}
+
+{% block content %}
+    <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+    <stripe-pricing-table pricing-table-id="prctbl_1NeJR9GWh1G1v77h6Kn39acI"
+                          publishable-key="pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE">
+    </stripe-pricing-table>
+{% endblock %}

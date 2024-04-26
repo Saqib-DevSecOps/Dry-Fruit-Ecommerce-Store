@@ -13,24 +13,24 @@
                               <div class="col col-lg-4">
                                  <div class="funfact_item aos-init aos-animate" style="background-image: url('{% static 'website/images/funfact/funfact_bg_1.png' %}');" data-aos="fade-up" data-aos-duration="1000">
                                     <div class="item_content">
-                                       <h3>Total Products</h3>
-                                       <span>2,450</span>
+                                       <h3>Total Orders</h3>
+                                       <span>{{ total_orders }}</span>
                                     </div>
                                  </div>
                               </div>
                               <div class="col col-lg-4">
                                  <div class="funfact_item aos-init aos-animate" style="background-image: url('{% static 'website/images/funfact/funfact_bg_2.png' %}');" data-aos="fade-up" data-aos-duration="1500">
                                     <div class="item_content">
-                                       <h3>Total Sales</h3>
-                                       <span>3,460</span>
+                                       <h3>Pending Orders</h3>
+                                       <span>{{ pending_orders }}</span>
                                     </div>
                                  </div>
                               </div>
                               <div class="col col-lg-4">
                                  <div class="funfact_item aos-init aos-animate" style="background-image: url('{% static 'website/images/funfact/funfact_bg_3.png' %}');" data-aos="fade-up" data-aos-duration="2000">
                                     <div class="item_content">
-                                       <h3>Order Pending</h3>
-                                       <span>$10,250</span>
+                                       <h3>Completed Orders</h3>
+                                       <span>{{ completed_orders }}</span>
                                     </div>
                                  </div>
                               </div>
@@ -44,30 +44,30 @@
                                   <div class="row">
                                       <div class="col-4 mt-4">
                                           <label>Full Name</label><br>
-                                          <label>Saqib Ahmad</label>
+                                          <label>{% if request.user.name_or_username %}{{ request.user.name_or_username }}{% else %}None{% endif %}</label>
                                       </div>
                                       <div class="col-4 mt-4">
                                           <label>Email Address &nbsp;|&nbsp;<small class="text-warning">Change</small></label><br>
-                                          <label>saqib@gmail.com</label>
+                                          <label>{{ request.user.email }}</label>
                                       </div>
                                       <div class="col-4 mt-4">
                                           <label>Mobile Number &nbsp;|&nbsp;<small class="text-warning">Change</small></label><br>
-                                          <label>+9212376289123</label>
+                                          <label>{{ request.user.phone_number }}</label>
                                       </div>
                                        <div class="col-4 mt-4">
                                           <label>BirthDay </label><br>
-                                          <label>12/12/1212</label>
+                                          <label>{{ request.user.date_of_birth}}</label>
                                       </div>
                                        <div class="col-4 mt-4">
                                           <label> Gender</label><br>
-                                          <label>please enter your gender</label>
+                                          <label>{{ request.user.gender }}</label>
                                       </div>
 
                                   </div>
                                   <div class="row mt-4">
                                      <div class="col-12">
                                         <label class="text-warning">Subscribe to our NewLetter</label><br>
-                                         <button type="button" class="btn custom_btn text-white mt-2">Edit Profile</button><br>
+                                         <a href="{% url 'client:user-change' %}" class="btn custom_btn text-white mt-2">Edit Profile</a><br>
                                          <button type="button" class="btn custom_btn text-white mt-2">Change Password</button>
                                      </div>
                                   </div>

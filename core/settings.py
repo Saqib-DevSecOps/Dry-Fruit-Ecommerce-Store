@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # STARTER APPS
+    "payments",
     'crispy_forms',
     "crispy_bootstrap5",
     'django_filters',
@@ -80,6 +81,7 @@ INSTALLED_APPS = [
     'src.administration.client.apps.ClientConfig',
     'src.apps.stripe.apps.StripeConfig',
     'src.apps.whisper.apps.WhisperConfig',
+    'src.apps.payment.apps.PaymentsConfig',
 ]
 
 MIDDLEWARE = [
@@ -256,3 +258,7 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+RAZOR_KEY_ID = YOUR_KEY_ID
+RAZOR_KEY_SECRET = YOUR_KEY_SECRET

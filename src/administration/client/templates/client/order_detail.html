@@ -1,4 +1,5 @@
 {% extends  'website/base.html' %}
+{% load custom_tags %}
 {% load static %}
 
 {% block content %}
@@ -486,19 +487,19 @@
                                     <div class="col-sm-12 m-2">
                                         <div class="card">
                                             <div class="card-body">
-                                                <label style="font-size: 22px"><b>Order # 123455657</b></label>
-                                                <p class="float-end text-warning  fs-11">Total 320</p>
-                                                <p class="  fs-11">Placed on 17 mar 2024 14.18.13</p>
+                                                <label style="font-size: 22px"><b>Order # {{ object.id }}</b></label>
+                                                <p class="float-end text-warning  fs-11">Total {{ object.sub_total|floatformat:"2" }}</p>
+                                                <p class="  fs-11">Placed on {{ object.created_on}}</p>
                                             </div>
                                         </div>
                                         <div class="card mt-4">
                                             <div class="card-body">
-                                                <label style="font-size: 22px"><b>Packing 1</b></label>
-                                                <a href="{% url 'client:order_detail' %}"
+                                                <label style="font-size: 22px"><b>Packing {{ object.id }}</b></label>
+                                                <a href="{% url 'client:order_detail' 1 %}"
                                                    style="background-color: #f5b23c"
                                                    class="p-1 float-end px-2 text-white">Chat With Seller
                                                 </a>
-                                                <p class=" fs-11">Placed on 17 mar 2024 14.18.13</p>
+                                                <p class=" fs-11">Placed on {{ object.created_on}}</p>
                                                 <hr>
                                                 <p class=" float-end text-warning">Stander delivery</p>
                                                 <p class="text-warning">Get by fri 22 mar - fri 29 mar</p>
@@ -509,16 +510,16 @@
                                                         <li class="current"><em>Delivery</em></li>
                                                     </ol>
                                                 </nav>
+                                                {% for obj in object.get_cart %}
                                                 <div class="row align-items-end mt-3 mb-3">
                                                     <div class="col-sm-4">
                                                         <div class="d-flex position-relative">
-                                                            <img src="{% static 'website/images/meta/meta1.png' %}"
+                                                            <img src="{{ obj.product.thumbnail_image|image_or_placeholder }}"
                                                                  style="height: 70px;"
                                                                  class="flex-shrink-0 me-3 avatar-xl rounded"
                                                                  alt="...">
                                                             <div>
-                                                                <p class="mt-0">dryfruit of mix fresh of new and
-                                                                    organic</p>
+                                                                <p class="mt-0">{{ obj.product.title }}</p>
                                                             </div>
                                                             <div>
                                                             </div>
@@ -526,21 +527,22 @@
                                                     </div>
                                                     <div class="col-sm-2 mt-2 text-center">
                                                         <div>
-                                                            <p class="mt-2 text-warning ">Total:1 </p>
+                                                            <p class="mt-2 text-warning ">Total:{{ obj.get_total_price }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-2 text-center">
                                                         <div>
-                                                            <p class="mt- text-warning ">Qty:1 </p>
+                                                            <p class="mt- text-warning ">Qty:{{ obj.qty }} </p>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 text-end">
-                                                        <a href="{% url 'client:order_detail' %}"
+                                                        <a href=#"
                                                            style="background-color: #f5b23c"
                                                            class="p-1 px-2 text-white">Cancel
                                                         </a>
                                                     </div>
                                                 </div>
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </div>
@@ -552,9 +554,9 @@
                                                 <label style="font-size: 20px" class="my-3">Shipping Address</label>
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p class=" m-0">Rayees khan</p>
-                                                        <p class=" m-0">(+12345667</p>
-                                                        <p class="  m-0">Gilgit baltistan main chowk danyore </p>
+                                                        <p class=" m-0">{{ object.full_name}}</p>
+                                                        <p class=" m-0">{{ object.contact }}</p>
+                                                        <p class="  m-0">{{ object.address }} &nbsp;{{ object.city }} &nbsp;{{ object.state }} &nbsp;{{ object.country }} </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -562,9 +564,9 @@
                                                 <label style="font-size: 20px" class="my-3">Billing address</label>
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <p class=" m-0">Rayees khan</p>
-                                                        <p class=" m-0">(+12345667</p>
-                                                        <p class="  m-0">Gilgit baltistan main chowk danyore </p>
+                                                            <p class=" m-0">{{ object.full_name}}</p>
+                                                        <p class=" m-0">{{ object.contact }}</p>
+                                                        <p class="  m-0">{{ object.address }} &nbsp;{{ object.city }} &nbsp;{{ object.state }} &nbsp;{{ object.country }} </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -578,21 +580,21 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <div>
-                                                            <p class="float-end  mt-1 m-0">12324$</p>
-                                                            <p class="  mt-1 m-0">Subtotal</p>
+                                                            <p class="float-end  mt-1 m-0">{{ object.total }}</p>
+                                                            <p class="  mt-1 m-0">Total</p>
                                                         </div>
                                                         <div>
-                                                            <p class="float-end  mt-1 m-0">12324$</p>
-                                                            <p class="  mt-1 m-0">Delivery Fee</p>
+                                                            <p class="float-end  mt-1 m-0">{{ object.service_charges }}</p>
+                                                            <p class="  mt-1 m-0">Service Charges</p>
                                                         </div>
                                                         <div>
-                                                            <p class="float-end  mt-1 m-0">12324$</p>
-                                                            <p class="  mt-1 m-0">Cash Payment</p>
+                                                            <p class="float-end  mt-1 m-0">{{ object.shipping_charges }}</p>
+                                                            <p class="  mt-1 m-0">Shipping Charges</p>
                                                         </div>
                                                         <hr>
                                                         <div>
-                                                            <p class="float-end  mt-1 m-0">12324$</p>
-                                                            <p class="  mt-1 m-0">Total</p>
+                                                            <p class="float-end  mt-1 m-0">{{ object.sub_total }}</p>
+                                                            <p class="  mt-1 m-0">Sub Total</p>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -19,6 +19,11 @@ STEP: 2 py manage.py migrate
 Then do next ...
 
 """
+GENDER_CHOICES = (
+    ('1', 'Male'),
+    ('2', 'FeMale'),
+    ('3', 'Custom'),
+)
 
 
 class User(AbstractUser):
@@ -28,6 +33,8 @@ class User(AbstractUser):
         help_text='size of logo must be 250*250 and format must be png image file', crop=['middle', 'center']
     )
     phone_number = models.CharField(max_length=30, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=False)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=False)
     is_client = models.BooleanField(default=True)
 
     REQUIRED_FIELDS = ["username"]
@@ -84,12 +91,12 @@ def on_user_registration(sender, instance, created, **kwargs):
 
 
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="address_set")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="address_set")
     country = models.CharField(max_length=200)
     Province = models.CharField(max_length=250)
     City = models.CharField(max_length=250)
     street_address_1 = models.CharField(max_length=250)
-    street_address_2 = models.CharField(max_length=250,null=True,blank=True)
+    street_address_2 = models.CharField(max_length=250, null=True, blank=True)
     postal_code = models.CharField(max_length=250)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

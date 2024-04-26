@@ -53,16 +53,35 @@ class AddressUpdate(UpdateView):
         return reverse('client:dashboard')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ClientDashboard(TemplateView):
     template_name = 'client/client_dashboard.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(ClientDashboard, self).get_context_data(**kwargs)
-    #     context['total_orders'] = Order.objects.filter(user=self.request.user).count()
-    #     context['pending_orders'] = Order.objects.filter(user=self.request.user, order_status="pending").count()
-    #     context['wishlist'] = Wishlist.objects.filter(user=self.request.user).count()
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(ClientDashboard, self).get_context_data(**kwargs)
+        context['total_orders'] = Order.objects.filter(client=self.request.user).count()
+        context['pending_orders'] = Order.objects.filter(client=self.request.user, order_status="pending").count()
+        context['completed_orders'] = Order.objects.filter(client=self.request.user, order_status="completed").count()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class OrderListView(ListView):
+    model = Order
+    template_name = 'client/order_list.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(client=self.request.user)
+
+
+class OrderCancelListView(ListView):
+    model = OrderItem
+    template_name = 'client/order_cancel_list.html'
+
+
+class OrderDetailView(DetailView):
+    model = Order
+    template_name = 'client/order_detail.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -97,26 +116,6 @@ class WishListDelete(View):
         wishlist.delete()
         messages.success(request, 'Wishlist Item Deleted Success Fully')
         return redirect("client:wishlist")
-
-
-# @method_decorator(login_required, name='dispatch')
-class OrderListView(TemplateView):
-    # model = OrderItem
-    template_name = 'client/order_list.html'
-    # context_object_name = 'objects'
-    #
-    # def get_queryset(self):
-    #     return self.model.objects.filter(order__user=self.request.user)
-
-
-class OrderCancelListView(TemplateView):
-    # model = OrderItem
-    template_name = 'client/order_cancel_list.html'
-
-
-class OrderDetailView(TemplateView):
-    # model = OrderItem
-    template_name = 'client/order_detail.html'
 
 
 # @method_decorator(login_required, name='dispatch')

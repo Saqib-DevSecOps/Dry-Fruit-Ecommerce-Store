@@ -1,0 +1,19 @@
+{% extends 'stripe/base.html' %}
+{% load static %}
+
+{% block subtitle %}
+	Subscription Successful
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="text-center mb-5">
+        <div>
+            <img class="my-5" src="{% static 'cechk.png' %}" height="100">
+            <h3>Payment Successful</h3>
+            <p>Your payments are successful, you can go back to and visit your subscription portal</p>
+        </div>
+    </div>
+	
+{% endblock %}

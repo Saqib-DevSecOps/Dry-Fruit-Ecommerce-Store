@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('my-orders/', OrderListView.as_view(), name='order_list'),
     path('cancel-orders/', OrderCancelListView.as_view(), name='cancel_order'),
-    path('order-detail/', OrderDetailView.as_view(), name='order_detail'),
+    path('order-detail/<str:pk>/', OrderDetailView.as_view(), name='order_detail'),
 
     path('my-address/', AddressList.as_view(), name='address'),
 

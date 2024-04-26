@@ -1,0 +1,24 @@
+{% extends 'whisper/base.html' %}
+
+{% block content %}
+
+    <tr>
+        <td style="padding: 10px 10px;color: #888;">
+            Hi <b>{{ user }}</b>.
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 10px;">
+            You request of <b>{{ obj.amount }} {{ obj.currency }}</b> added successfully.
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 10px;">
+            Your withdrawals are seamlessly automated when you transfer funds to your connected wallet. The
+            processing time for withdrawals depends on your bank or card account and your country. It may be
+            completed instantly or within 1-3 days. If your bank or card supports instant processing, your
+            withdrawal will be completed within minutes
+        </td>
+    </tr>
+
+{% endblock %}

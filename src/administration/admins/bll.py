@@ -63,7 +63,8 @@ def create_order_items(order, user_request):
     total, service_charges, shipping_charges, sub_total = get_cart_calculations(user_request)
     # 2: Create Order Items
     order_items = [
-        OrderItem(order=order, product=cart_item.product, qty=cart_item.quantity) for cart_item in cart
+        OrderItem(order=order, product=cart_item.product, product_weight=cart_item.product_weight,
+                  qty=cart_item.quantity) for cart_item in cart
     ]
     OrderItem.objects.bulk_create(order_items)
 

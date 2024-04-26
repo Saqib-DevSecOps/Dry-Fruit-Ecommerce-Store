@@ -1,0 +1,22 @@
+{% extends 'whisper/base.html' %}
+
+{% block content %}
+
+    <tr>
+        <td style="padding: 10px 10px;color: #888;">
+            Hi <b>{{ user }}</b>.
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 10px;">
+            You request of <b>{{ obj.amount }} {{ obj.currency }}</b> has {{ obj.status }}.
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px 10px;">
+            You can conveniently view your
+            withdrawal history in the <b>payments > Withdrawal tab</b> on your vendor portal.
+        </td>
+    </tr>
+
+{% endblock %}
