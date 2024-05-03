@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "website/base.html" %}
 
 {% load i18n %}
 {% load crispy_forms_tags %}
@@ -6,95 +6,128 @@
 {% block title %}Email Accounts{% endblock %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-sm-8 col-12">
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <p class="card-title mb-0">{% trans "Related email addresses" %}</p>
-                </div>
-                <div class="card-body">
 
-                    {% if user.emailaddress_set.all %}
-                        <p class="card-text">{% trans 'The following e-mail addresses are associated with your account:' %}</p>
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
 
-                        <form action="{% url 'account_email' %}" class="email_list" method="post">
-                            {% csrf_token %}
-                            <fieldset class="blockLabels">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Password Change</h3>
+                                </div>
+                                <div class="vd_shadow">
+                                    <div class="row">
+                                        <div class="card">
+                                            <div class="card-body border-bottom">
+                                                <p class="card-title mb-0">{% trans "Related email addresses" %}</p>
+                                            </div>
+                                            <div class="card-body">
 
-                                {% for emailaddress in user.emailaddress_set.all %}
-                                    <div class="ctrlHolder">
-                                        <label for="email_radio_{{ forloop.counter }}"
-                                               class="{% if emailaddress.primary %}primary_email{% endif %}">
+                                                {% if user.emailaddress_set.all %}
+                                                    <p class="card-text">{% trans 'The following e-mail addresses are associated with your account:' %}</p>
 
-                                            <input id="email_radio_{{ forloop.counter }}" type="radio" name="email"
-                                                   {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
-                                                   value="{{ emailaddress.email }}"/>
+                                                    <form action="{% url 'account_email' %}" class="email_list"
+                                                          method="post">
+                                                        {% csrf_token %}
+                                                        <fieldset class="blockLabels">
 
-                                            {{ emailaddress.email }}
-                                            {% if emailaddress.verified %}
-                                                <b class="text-success">
+                                                            {% for emailaddress in user.emailaddress_set.all %}
+                                                                <div class="ctrlHolder">
+                                                                    <label for="email_radio_{{ forloop.counter }}"
+                                                                           class="{% if emailaddress.primary %}primary_email{% endif %}">
+
+                                                                        <input id="email_radio_{{ forloop.counter }}"
+                                                                               type="radio"
+                                                                               name="email"
+                                                                               {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
+                                                                               value="{{ emailaddress.email }}"/>
+
+                                                                        {{ emailaddress.email }}
+                                                                        {% if emailaddress.verified %}
+                                                                            <b class="text-success">
                                                 <span class="verified">
                                                     <i class="fa fa-check-circle"></i> {% trans "Verified" %}
                                                 </span>
-                                                </b>
-                                            {% else %}
-                                                <b class="text-danger">
+                                                                            </b>
+                                                                        {% else %}
+                                                                            <b class="text-danger">
                                                     <span class="unverified"><i
                                                             class="fa fa-times-circle"></i> {% trans "Unverified" %}
                                                     </span>
-                                                </b>
-                                            {% endif %}
-                                            {% if emailaddress.primary %}
-                                                <b class="text-success"><i class="fa fa-check-circle"></i>
-                                                    <span class="primary">{% trans "Primary" %}</span>
-                                                </b>
-                                            {% endif %}
-                                        </label>
+                                                                            </b>
+                                                                        {% endif %}
+                                                                        {% if emailaddress.primary %}
+                                                                            <b class="text-success"><i
+                                                                                    class="fa fa-check-circle"></i>
+                                                                                <span class="primary">{% trans "Primary" %}</span>
+                                                                            </b>
+                                                                        {% endif %}
+                                                                    </label>
+                                                                </div>
+                                                            {% endfor %}
+                                                            <hr>
+                                                            <div class="buttonHolder">
+                                                                <button class="secondaryAction btn text-white" style="background-color: #f7b33c"
+                                                                        type="submit"
+                                                                        name="action_primary">{% trans 'Make Primary' %}</button>
+                                                                <button class="secondaryAction btn text-white"
+                                                                        type="submit" style="background-color: #f7b33c"
+                                                                        name="action_send">{% trans 'Re-send Verification' %}</button>
+                                                                <button class="primaryAction btn btn-danger"
+                                                                        type="submit"
+                                                                        name="action_remove">{% trans 'Remove' %}</button>
+                                                            </div>
+
+                                                        </fieldset>
+                                                    </form>
+
+                                                {% else %}
+                                                    <p class="card-text">
+                                                        You currently do not have any e-mail address set up You should
+                                                        really add an e-mail
+                                                        address
+                                                        so you
+                                                        can receive notifications, reset your password etc.
+                                                    </p>
+
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {% if can_add_email %}
+                                            <div class="card">
+                                                <div class="card-body border-bottom">
+                                                    <p class="card-title mb-0">{% trans "Add email address" %}</p>
+                                                </div>
+                                                <div class="card-body">
+
+                                                    <form method="post" action="{% url 'account_email' %}"
+                                                          class="add_email">
+                                                        {% csrf_token %}
+                                                        {{ form|crispy }}
+                                                        <button class="btn btn text-white"  style="background-color: #f7b33c" name="action_add"
+                                                                type="submit">{% trans "Add E-mail" %}
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endfor %}
-                                <hr>
-                                <div class="buttonHolder">
-                                    <button class="secondaryAction btn btn-primary" type="submit"
-                                            name="action_primary">{% trans 'Make Primary' %}</button>
-                                    <button class="secondaryAction btn btn-primary" type="submit"
-                                            name="action_send">{% trans 'Re-send Verification' %}</button>
-                                    <button class="primaryAction btn btn-danger" type="submit"
-                                            name="action_remove">{% trans 'Remove' %}</button>
                                 </div>
-
-                            </fieldset>
-                        </form>
-
-                    {% else %}
-                        <p class="card-text">
-                            You currently do not have any e-mail address set up You should really add an e-mail address
-                            so you
-                            can receive notifications, reset your password etc.
-                        </p>
-
-                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-
-            {% if can_add_email %}
-                <div class="card">
-                    <div class="card-body border-bottom">
-                        <p class="card-title mb-0">{% trans "Add email address" %}</p>
-                    </div>
-                    <div class="card-body">
-
-                        <form method="post" action="{% url 'account_email' %}" class="add_email">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button class="btn btn-primary" name="action_add"
-                                    type="submit">{% trans "Add E-mail" %}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            {% endif %}
         </div>
-    </div>
+    </section>
+
+
 
 {% endblock %}
 

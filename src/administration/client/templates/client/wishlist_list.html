@@ -62,15 +62,12 @@
 
                                         {% endfor %}
                                     {% else %}
-                                        <div class="col-sm-12 m-2">
-                                            <div class="card p-4">
-                                                <div class="card-body">
-                                                    <div class="text-center">
-                                                        <h4 class="text-danger ">Wishlist is Empty</h4>
-                                                        <a href="{% url 'website:shop' %}" class="btn btn-secondary  btn-sm">Back to Shopping
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                        <div class="col-sm-12 mt-4">
+                                            <div class="text-center mt-4">
+                                                <h4 class="text-danger ">Wishlist is Empty</h4>
+                                                <a href="{% url 'website:shop' %}" class="btn btn-secondary  btn-sm">Back
+                                                    to Shopping
+                                                </a>
                                             </div>
                                         </div>
                                     {% endif %}
