@@ -126,6 +126,12 @@ class CartTemplateView(ListView):
 class AddToCart(View):
     def get(self, request, *args, **kwargs):
         product_weight_id = self.kwargs['product_weight_id']
+        # check product quantity
+        product = Product.objects.get(id=self.kwargs['product_id'])
+        if str(product.quantity) <= "0":
+            messages.error(request, 'Insufficient quantity')
+            return redirect('website:product-detail', pk=self.kwargs['product_id'])
+
         if product_weight_id != "0":
             product_weight = ProductWeight.objects.get(id=product_weight_id)
             cart, created = Cart.objects.get_or_create(
@@ -152,12 +158,17 @@ class UpdateCart(View):
         id = self.kwargs.get('id')
         quantity = int(self.kwargs.get('quantity'))
         cart = get_object_or_404(Cart, id=id, user=self.request.user)
+        print(cart.product.quantity)
+        if str(cart.product.quantity) <= "0":
+            messages.error(request, 'Insufficient quantity')
+            return redirect('website:cart')
         cart.quantity = quantity
         cart.save()
         messages.success(request, 'Cart Item Successfully Updated ')
         return redirect('website:cart')
 
 
+@method_decorator(login_required, name='dispatch')
 class WishListListView(ListView):
     template_name = 'website/wishlist_list.html'
     model = Wishlist
@@ -176,7 +187,7 @@ class RemoveFromCartView(View):
         return redirect('website:cart')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class AddToWishlist(View):
     def get(self, request, *args, **kwargs):
         product = self.kwargs.get('pk')
@@ -189,7 +200,7 @@ class AddToWishlist(View):
         return redirect('website:wishlist_list')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class DeleteFromWishlist(View):
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('pk')

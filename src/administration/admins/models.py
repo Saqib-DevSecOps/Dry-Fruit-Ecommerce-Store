@@ -303,6 +303,8 @@ class Order(models.Model):
     state = models.CharField(max_length=1000, null=True, blank=False)
     country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
 
+    razorpay_order_id = models.CharField(max_length=1000, null=True, blank=True)
+
     total = models.FloatField(default=0)
     service_charges = models.FloatField(default=0)
     shipping_charges = models.FloatField(default=0)
@@ -311,9 +313,6 @@ class Order(models.Model):
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICE, default=PAYMENT_TYPE_CHOICE[0][0])
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
-    razorpay_payment_id = models.CharField(max_length=1000, null=True, blank=True)
-    razorpay_order_id = models.CharField(max_length=1000, null=True, blank=True)
-    razorpay_signature_id = models.CharField(max_length=1000, null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -330,6 +329,32 @@ class Order(models.Model):
 
     def is_online(self):
         return True if self.payment_type == 'online' else False
+
+
+PAYMENT_STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('completed', 'Completed'),
+    ('failed', 'Failed'),
+    ('refunded', 'Refunded'),
+    ('cancelled', 'Cancelled'),
+]
+
+
+class Payment(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+
+    razorpay_payment_id = models.CharField(max_length=1000, null=True, blank=True)
+    razorpay_order_id = models.CharField(max_length=1000, null=True, blank=True)
+    razorpay_signature_id = models.CharField(max_length=1000, null=True, blank=True)
+
+    amount_paid = models.FloatField(default=0)
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
+
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.order.full_name
 
 
 class OrderItem(models.Model):

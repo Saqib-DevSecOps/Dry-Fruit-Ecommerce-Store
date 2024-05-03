@@ -15,13 +15,14 @@
                                 <div class="vd_title_wrap">
                                     <h3>My Orders</h3>
                                 </div>
-                                <div class="row">
+                                <div class="row" id="blog_list">
                                     {% if object_list %}
                                         {% for object in object_list %}
-                                            <div class="col-sm-12 m-2">
+                                            <div class="col-sm-12 m-2 card-length">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <label style="font-size: 22px"><b>Order on {{ object.created_on.date }}</b></label>
+                                                        <label style="font-size: 22px"><b>Order
+                                                            on {{ object.created_on.date }}</b></label>
                                                         <p class="float-end fs-11">Order#{{ object.id }}</p>
                                                         <div class="row align-items-end mt-3 mb-3">
                                                             <div class="col-sm-4">
@@ -38,14 +39,24 @@
                                                             </div>
                                                             <div class="col-sm-4 text-center">
                                                                 <div>
-                                                                    <p ><b class="text-center">&nbsp;&nbsp;Order Status&nbsp;&nbsp;:</b>&nbsp;&nbsp;<span>{{ object.order_status }}</span> </p>
-                                                                    <p ><b class="text-center">Payment Status&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.payment_status }} </p>
-                                                                    <p ><b class="text-center">Payment Type&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.payment_type }} </p>
+                                                                    <p><b class="text-center">&nbsp;&nbsp;Order Status&nbsp;&nbsp;:</b>&nbsp;&nbsp;<span
+                                                                            class="badge bg-{{ object.order_status|alert_type_class }}">{{ object.order_status }}</span>
+                                                                    </p>
+                                                                    <p><b class="text-center">Payment Status&nbsp;&nbsp;:</b>&nbsp;&nbsp;<span
+                                                                            class="badge bg-{{ object.payment_status|alert_type_class }}">{{ object.payment_status }} </span>
+                                                                    </p>
+                                                                    <p><b class="text-center">Payment
+                                                                        Type&nbsp;&nbsp;:</b>&nbsp;&nbsp;<span
+                                                                            class="badge bg-{{ object.payment_type|alert_type_class }}">{{ object.payment_type }} </span>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4 text-center">
-                                                                    <p ><b class="text-center">Sub Total&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.sub_total|floatformat:"2" }} </p>
-                                                                    <p ><b class="text-center">Shipping Charges&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.shipping_charges|floatformat:"2" }} </p>
+                                                                <p><b class="text-center">Sub Total&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.sub_total|floatformat:"2" }}
+                                                                </p>
+                                                                <p><b class="text-center">Shipping
+                                                                    Charges&nbsp;&nbsp;:</b>&nbsp;&nbsp;{{ object.shipping_charges|floatformat:"2" }}
+                                                                </p>
                                                                 <a href="{% url 'client:order_detail' object.id %}"
                                                                    style="background-color: #f5b23c"
                                                                    class="p-1 px-2 text-white">Order Detail
@@ -60,11 +71,59 @@
                                         <div class="col-sm-12 m-2">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <label style="font-size: 22px" class="text-danger"><b>Orders Not Found</b></label>
+                                                    <label style="font-size: 22px" class="text-danger"><b>Orders Not
+                                                        Found</b></label>
                                                 </div>
                                             </div>
                                         </div>
                                     {% endif %}
+                                </div>
+                                <ul class="pagination_nav mt-5 list-unstyled d-flex justify-content-center text-uppercase clearfix">
+                                    <div class="align-items-center mb-4 mt-3 mt-sm-0"
+                                         id="loading-spinner"
+                                         style="display:none;">
+
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-warning"
+                                             role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+
+                                    </div>
+                                    <button id="load-more-btn" class="btn custom_btn rounded-pill text-white ">
+                                        Load More
+                                    </button>
+
+                                </ul>
+
+                                <div class="row align-items-center mb-4 text-center text-sm-start"
+                                     id="pagination-element">
+                                    <div class="col-sm-5">
+                                        <div class="text-muted" id="pagination-info">
+                                            Showing {{ object_list.start_index }}
+                                            to {{ object_list.end_index }}
+                                            of {{ object_list.paginator.count }} entries
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -73,4 +132,69 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var page = {% if object_list.has_next %}{{ object_list.next_page_number }}{% else %}null{% endif %};
+            var maxPages = {{ object_list.paginator.num_pages }};
+            var loading = false;
+
+            function loadMore() {
+                if (loading || page === null || page > maxPages) {
+                    return;
+                }
+                loading = true;
+                $('#load-more-btn').hide();
+                $('#loading-spinner').show();
+                var searchQuery = window.location.search;
+
+                var filter_queryset = null
+                if (searchQuery) {
+                    filter_queryset = searchQuery + '&page=' + page
+                } else {
+                    filter_queryset = '?page=' + page
+                }
+
+                $.ajax({
+                    url: filter_queryset,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        var $data = $(data);
+                        var $shopList = $data.find('#blog_list');
+
+                        if ($shopList.find('.card-length').length > 0) {
+                            $('#blog_list').append($shopList.html());
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').show();
+                            page++;
+                            loading = false;
+
+                            updatePaginationInfo();
+                        } else {
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').hide();
+                        }
+                    },
+                    error: function () {
+                        loading = false;
+                    }
+                });
+            }
+
+            function updatePaginationInfo() {
+                $('#pagination-info').text('Showing 1 to ' + $('#order_list .card-length').length + ' of {{ object_list.paginator.count }} entries');
+
+                if (page === null || page > maxPages) {
+                    $('#load-more-btn').hide();
+                }
+            }
+
+            if (page === null || page > maxPages) {
+                $('#load-more-btn').hide();
+            }
+
+            $('#load-more-btn').on('click', loadMore);
+        });
+    </script>
 {% endblock %}

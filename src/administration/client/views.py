@@ -1,18 +1,20 @@
 import base64
 
+from allauth.account.views import PasswordSetView, PasswordChangeView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
 from pdf2image import convert_from_bytes, convert_from_path
 
 from src.accounts.models import Address
-from src.administration.admins.models import Wishlist, Order, Product, OrderItem
+from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment
 from src.administration.client.forms import AddressForm, UserProfileForm
 
 import io
@@ -73,15 +75,28 @@ class OrderListView(ListView):
     def get_queryset(self):
         return self.model.objects.filter(client=self.request.user)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(OrderListView, self).get_context_data(**kwargs)
+        pagination = Paginator(self.get_queryset(), 5)
+        page_number = self.request.GET.get('page')
+        page_obj = pagination.get_page(page_number)
+        context['object_list'] = page_obj
+        return context
 
+
+@method_decorator(login_required, name='dispatch')
 class OrderCancelListView(ListView):
     model = OrderItem
     template_name = 'client/order_cancel_list.html'
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'client/order_detail.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(client=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -99,26 +114,31 @@ class WishCreateView(View):
         return redirect('website:product-detail', product.slug)
 
 
-# @method_decorator(login_required, name='dispatch')
-class WishlistView(TemplateView):
-    # model = Wishlist
+@method_decorator(login_required, name='dispatch')
+class WishlistView(ListView):
+    model = Wishlist
     template_name = 'client/wishlist_list.html'
-    # context_object_name = 'objects'
-    #
-    # def get_queryset(self):
-    #     return self.model.objects.filter(user=self.request.user)
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')
 class WishListDelete(View):
     def get(self, request, pk, *args, **kwargs):
-        wishlist = get_object_or_404(Wishlist, product_id=pk, user=self.request.user)
+        wishlist = get_object_or_404(Wishlist, user=self.request.user)
         wishlist.delete()
         messages.success(request, 'Wishlist Item Deleted Success Fully')
         return redirect("client:wishlist")
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class PaymentListView(ListView):
+    model = Payment
+    template_name = 'client/payment_list.html'
+
+
+@method_decorator(login_required, name='dispatch')
 class AddressList(TemplateView):
     # model = Order
     template_name = 'client/address.html'
@@ -126,3 +146,31 @@ class AddressList(TemplateView):
     #
     # def get_queryset(self):
     #     return self.model.objects.filter(user=self.request.user)
+
+
+@method_decorator(login_required, name='dispatch')
+class PasswordCheck(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.has_usable_password():
+            return redirect("client:user-password-change")
+        return redirect('client:user-password-set')
+
+
+@method_decorator(login_required, name='dispatch')
+class PasswordSetView(PasswordSetView):
+    template_name = 'client/password_set_form.html'
+    success_url = reverse_lazy('client:user-password-set')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return response
+
+
+@method_decorator(login_required, name='dispatch')
+class PasswordChangeView(PasswordChangeView):
+    template_name = 'client/password_change_form.html'
+    success_url = reverse_lazy('client:user-password-change')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return response

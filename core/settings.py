@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # STARTER APPS
-    "payments",
     'crispy_forms',
     "crispy_bootstrap5",
     'django_filters',
@@ -81,7 +80,6 @@ INSTALLED_APPS = [
     'src.administration.client.apps.ClientConfig',
     'src.apps.stripe.apps.StripeConfig',
     'src.apps.whisper.apps.WhisperConfig',
-    'src.apps.payment.apps.PaymentsConfig',
     'src.apps.razorpay.apps.RazorpayConfig',
 ]
 

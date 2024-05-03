@@ -1,0 +1,54 @@
+{% extends  'website/base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block content %}
+
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>My Payments</h3>
+                                </div>
+
+                                <div class="recent_orders">
+                                    <div class="vd_shadow p-0">
+                                        <div class="vd_table table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>Order ID</th>
+                                                    <th>Order Date</th>
+                                                    <th>Amount Paid</th>
+                                                    <th>Payment Status</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for object in object_list %}
+                                                    <tr>
+                                                        <td><span>#{{ object.razorpay_order_id }}</span></td>
+                                                        <td><span>{{ object.created_on }}</span></td>
+                                                        <td><span>&nbsp;&nbsp;&nbsp;{{ object.amount_paid }}</span></td>
+                                                        <td><span class="badge bg-{{ object.payment_status|alert_type_class }} text-white">{{ object.payment_status }}</span></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 import razorpay
 from django.conf import settings
 from django.views import View
@@ -19,7 +20,17 @@ class CreateRazorPayCheckout(View):
         # todo: need to validate order here
 
         currency = 'INR'
-        amount = 20000  # Rs. 200
+
+        order_id = self.kwargs.get('pk')
+        order = Order.objects.get(id=order_id)
+        amount = int(order.sub_total)
+        if order.payment_status == "paid":
+            messages.error(request, "Already Paid For this Order")
+            return redirect("client:order_detail", pk=order_id)
+
+        if amount <= 1:
+            messages.error(request, "Amount Should be greater than 1 INR")
+            return redirect("client:order_detail", pk=order_id)
         razorpay_order = razorpay_client.order.create(dict(amount=amount,
                                                            currency=currency,
                                                            payment_capture='0'))

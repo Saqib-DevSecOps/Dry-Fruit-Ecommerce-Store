@@ -3,7 +3,7 @@
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
     OrderItem, BlogCategory, Blog, Wishlist, \
-    ProductWeight, Weight
+    ProductWeight, Weight, Payment
 
 # Register your models here.
 
@@ -61,8 +61,8 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['client__username', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country']
 
 
-admin.site.register(Order, OrderAdmin)
-
+admin.site.register(Order)
+admin.site.register(Payment)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Blog)
 admin.site.register(Wishlist)

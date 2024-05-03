@@ -2,7 +2,7 @@ import razorpay
 from django.shortcuts import get_object_or_404
 
 from core.settings import RAZORPAY_API_KEY, RAZORPAY_API_SECRET
-from src.administration.admins.models import Order, OrderItem
+from src.administration.admins.models import Order, OrderItem, Payment
 
 razorpay_client = razorpay.Client(
     auth=(RAZORPAY_API_KEY, RAZORPAY_API_SECRET))
@@ -31,17 +31,13 @@ def handle_payment(request):
             'razorpay_payment_id': payment_id,
             'razorpay_signature': signature
         }
-        # verify the payment signature.
 
         result = razorpay_client.utility.verify_payment_signature(params_dict)
         if result is not None:
-            amount = 20000  # Rs. 200
             try:
                 order = get_object_or_404(Order, razorpay_order_id=razorpay_order_id)
                 order.payment_status = 'paid'
                 order.order_status = 'approved'
-
-                order.save()
                 order_items = OrderItem.objects.filter(order=order)
                 for order_item in order_items:
                     if order_item.product.quantity >= order_item.qty:
@@ -49,7 +45,14 @@ def handle_payment(request):
                         ordered_quantity = order_item.qty
                         product.quantity -= ordered_quantity
                         product.save()
-                razorpay_client.payment.capture(payment_id, amount)
+                order.save()
+                payment = get_object_or_404(Payment, order=order)
+                payment.razorpay_payment_id = payment_id
+                payment.razorpay_order_id = razorpay_order_id
+                payment.razorpay_signature_id = signature
+                payment.payment_status = "completed"
+                payment.amount_paid = order.sub_total
+                payment.save()
                 return 'success'  # Indicate successful payment
             except:
                 return 'cancelled'  # Indicate payment capture failure

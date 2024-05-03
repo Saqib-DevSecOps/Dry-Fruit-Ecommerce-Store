@@ -124,3 +124,17 @@ def image_or_placeholder(image, placeholder=None):
 @register.filter
 def multiply(value, arg):
     return value * arg
+
+
+@register.filter
+def alert_type_class(value):
+    if value in ['cod', 'delivery', 'in_transit', 'bank_account', 'applied','online']:
+        return 'primary'
+    elif value in ['completed', 'success', 'paid', 'card', 'approved']:
+        return 'success'
+    elif value in ['pending', 'draft']:
+        return 'warning'
+    elif value in ['cancel', 'cancelled', 'unpaid', 'failed', 'banned']:
+        return 'danger'
+    else:
+        return 'secondary'

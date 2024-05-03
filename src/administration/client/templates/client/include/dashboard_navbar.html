@@ -45,7 +45,7 @@
                 </a>
             </li>
             <li>
-                <a {% if request.path == '/c/my_payment/' %}class="active" aria-selected="true"{% endif %}>
+                <a href="{% url 'client:payment-list' %}" {% if request.path == '/c/payment/list/' %}class="active" aria-selected="true"{% endif %}>
                     My Payment
                 </a>
             </li>

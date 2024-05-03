@@ -1,6 +1,6 @@
 from django.contrib import messages
 from core.bll import calculate_shipping_charges, calculate_service_charges
-from src.administration.admins.models import OrderItem, Cart
+from src.administration.admins.models import OrderItem, Cart, Payment
 
 """ HELPERS """
 
@@ -73,9 +73,10 @@ def create_order_items(order, user_request):
 
     # 4: Update Order
     order.total = total
-    order.sub_total = sub_total
+    order.sub_total = int(sub_total)
     order.service_charges = service_charges
-
-    # order.shipping_charges = shipping_charges
+    order.shipping_charges = shipping_charges
     order.save()
+    payment, created = Payment.objects.get_or_create(order=order)
+    payment.save()
     return order
