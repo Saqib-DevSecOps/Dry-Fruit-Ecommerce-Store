@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'src.apps.stripe.apps.StripeConfig',
     'src.apps.whisper.apps.WhisperConfig',
     'src.apps.payment.apps.PaymentsConfig',
+    'src.apps.razorpay.apps.RazorpayConfig',
 ]
 
 MIDDLEWARE = [
@@ -217,7 +218,6 @@ if ENVIRONMENT != 'server':
         'django_browser_reload.middleware.BrowserReloadMiddleware'
     ]
 
-
 """___________________________ Django Jazzmin Integration _______________________________________________"""
 JAZZMIN_SETTINGS = {
     "site_title": "Monogatari Admin",
@@ -259,6 +259,5 @@ JAZZMIN_UI_TWEAKS = {
 }
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-
-RAZOR_KEY_ID = YOUR_KEY_ID
-RAZOR_KEY_SECRET = YOUR_KEY_SECRET
+RAZORPAY_API_KEY = "rzp_test_Jg802qU7X2QjKh"
+RAZORPAY_API_SECRET = "xs5giv3wJeDQR2aqiwr6DDVH"

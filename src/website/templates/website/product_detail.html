@@ -133,7 +133,7 @@
                             {% if object.productweight_set.all %}
                                 <h4 class="value_title mb-3" style="padding-left: 40px">Available In</h4>
                                 {% for object in object.productweight_set.all %}
-                                    <div class="col-2">
+                                    <div class="col-sm-4 col-md-2 col-lg-2">
                                         <div class="form-check">
                                             <input class="form-check-input" data-object-id="{{ object.id }}"
                                                    type="radio" name="flexRadioDefault"

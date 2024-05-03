@@ -55,11 +55,10 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['client', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
-                    'service_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status', 'stripe_id',
+                    'service_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
                     'created_on']
     list_filter = ['order_status', 'payment_status', 'created_on']
-    search_fields = ['client__username', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country',
-                     'stripe_id']
+    search_fields = ['client__username', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country']
 
 
 admin.site.register(Order, OrderAdmin)

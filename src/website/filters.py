@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.forms import TextInput
 from django import forms
 
-from src.administration.admins.models import Product, Blog, ProductCategory, ProductTag
+from src.administration.admins.models import Product, Blog, ProductCategory, ProductTag, BlogCategory
 from src.administration.admins.templatetags.custom_tags import get_html_icons, get_html_icons_for_filter
 
 
@@ -159,11 +159,13 @@ def post_filter(queryset, name, value):
 
 
 class BlogFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr='icontains', label=''
-                                      , widget=TextInput(attrs={'placeholder': 'Search Blogs here',
-                                                                'class': 'form-control rounded-pill'}),
-                                      method='post_filter')
+
+    category = django_filters.ModelMultipleChoiceFilter(
+        queryset=BlogCategory.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'name'}),
+        label="Category"
+    )
 
     class Meta:
         model = Blog
-        fields = ['title', 'author']
+        fields = ['category']

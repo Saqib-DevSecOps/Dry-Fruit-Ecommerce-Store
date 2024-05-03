@@ -21,7 +21,6 @@ from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
 
 from src.apps.stripe.views import create_stripe_checkout_session
 
-
 """Product Apis"""
 
 
@@ -47,14 +46,14 @@ class HomeProductsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        all_products = Product.objects.all()[:5]
         new_products = Product.objects.all().order_by('-created_on')[:5]
         most_sales = Product.objects.order_by('-quantity')[:5]
+        top_discounted_products = Product.objects.order_by('-discount')[:5]
         categories = ProductCategory.objects.all()[:12]
 
         return {
-            'all_products': all_products,
             'new_products': new_products,
+            'top_discounted_products': top_discounted_products,
             'most_sales': most_sales,
             'categories': categories,
         }

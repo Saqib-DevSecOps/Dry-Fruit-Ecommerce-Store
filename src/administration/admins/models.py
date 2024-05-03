@@ -168,6 +168,9 @@ class Product(models.Model):
     def get_product_weight(self):
         return ProductWeight.objects.filter(product=self)
 
+    def require_weight(self):
+        return ProductWeight.objects.filter(product=self).exists()
+
     def get_price(self):
         if self.discount > 0:
             return self.price - (self.price * self.discount / 100)
@@ -308,7 +311,9 @@ class Order(models.Model):
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICE, default=PAYMENT_TYPE_CHOICE[0][0])
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
-    stripe_id = models.CharField(max_length=1000, null=True, blank=True)
+    razorpay_payment_id = models.CharField(max_length=1000, null=True, blank=True)
+    razorpay_order_id = models.CharField(max_length=1000, null=True, blank=True)
+    razorpay_signature_id = models.CharField(max_length=1000, null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)

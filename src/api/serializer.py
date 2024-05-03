@@ -30,7 +30,7 @@ class ProductHomeSerializer(serializers.ModelSerializer):
 
 
 class HomeProductsListSerializer(serializers.Serializer):
-    all_products = ProductHomeSerializer(many=True)
+    top_discounted_products = ProductHomeSerializer(many=True)
     new_products = ProductHomeSerializer(many=True)
     most_sales = ProductHomeSerializer(many=True)
     categories = ProductCategorySerializer(many=True)
@@ -40,9 +40,16 @@ class HomeProductsListSerializer(serializers.Serializer):
 
 
 class CartCreateSerializer(serializers.ModelSerializer):
+    product_weight = serializers.PrimaryKeyRelatedField(
+        queryset=ProductWeight.objects.all(),
+        required=False,
+        allow_null=True,
+        help_text="Product weight ID (optional)"
+    )
+
     class Meta:
         model = Cart
-        fields = ['id', 'product', 'quantity']
+        fields = ['id', 'product', 'quantity', 'product_weight']
 
     def validate(self, data):
         user = self.context['request'].user
@@ -59,16 +66,26 @@ class CartCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Quantity limit exceeded')
         if Cart.objects.filter(user=user, product=product).exists():
             raise serializers.ValidationError('Product already in cart')
-
         return data
 
 
 class CartListSerializer(serializers.ModelSerializer):
     product = ProductHomeSerializer()
+    product_weight = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ['id', 'product', 'quantity']
+        fields = ['id', 'product', 'quantity', 'product_weight']
+
+    def get_product_weight(self, obj):
+        product_weight = obj.product.get_product_weight().first()  # Assuming you want to get the first product weight
+        if product_weight:
+            return {
+                'id': product_weight.id,
+                'name': product_weight.weight.name,
+                'price': product_weight.price
+            }
+        return None
 
 
 class CartUpdateSerializer(serializers.ModelSerializer):
@@ -231,7 +248,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
                   'service_charges', 'shipping_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
-                  'stripe_id', 'is_active', 'created_on', 'order_items']  # Change 'order' to 'order_items'
+                  'is_active', 'created_on', 'order_items']  # Change 'order' to 'order_items'
 
 
 class ProductRatingSerializer(serializers.ModelSerializer):

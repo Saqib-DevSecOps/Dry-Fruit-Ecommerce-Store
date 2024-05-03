@@ -14,50 +14,60 @@
     <section class=" aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="container">
             <div class="col-12 mb-4" style="overflow-y: hidden">
-                <div class="card " data-aos="fade-up" data-aos-duration="2000">
-                    <form action="#">
-                        <table class="table table-responsive p-0 mb-0">
-                            <thead>
-                            <tr>
-                                <th scope="col" style="padding: 30px">Items</th>
-                                <th scope="col" style="padding: 30px">Description</th>
-                                <th scope="col" style="padding: 30px">Price</th>
-                                <th scope="col" style="padding: 30px">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for object in object_list %}
+                {% if object_list %}
+                    <div class="card " data-aos="fade-up" data-aos-duration="2000">
+                        <form action="#">
+                            <table class="table table-responsive p-0 mb-0">
+                                <thead>
                                 <tr>
-                                    <th scope="row" style="padding: 30px"><img
-                                            src="{{ object.product.thumbnail_image|image_or_placeholder }}"
-                                            style="height: 100px" class="rounded  float-left" alt="...">
-                                    </th>
-                                    <td style="padding: 30px">
-                                        <h4>{{ object.product.title }}</h4>
-                                            <p><span>Category : </span><b>{{ object.product.category }}</b>
-                                    </td>
-                                    <td style="padding: 30px">
-                                        <del class="text-secondary">{% if object.product_weight %}
-                                            {{ object.product_weight.price }}{% else %}
-                                            {{ object.product.price }}{% endif %}</del>
-                                        <br>
-                                        <span>{% if object.product_weight %}
-                                            {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
-                                            {{ object.product.get_price }}{% endif %}</span>
-                                    </td>
-                                    <td style="padding: 30px">
-
-                                        <a href="{% url 'website:wishlist-delete' object.id %}" class="text-danger"><i class="fa fa-trash"></i></a>
-                                        <a href="{% url 'website:product-detail' object.product.id %}" class="text-success"><i class="fa fa-eye"
-                                                                            aria-hidden="true"></i></a>
-                                    </td>
+                                    <th scope="col" style="padding: 30px">Items</th>
+                                    <th scope="col" style="padding: 30px">Description</th>
+                                    <th scope="col" style="padding: 30px">Price</th>
+                                    <th scope="col" style="padding: 30px">Action</th>
                                 </tr>
-                            {% endfor %}
+                                </thead>
+                                <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                        <th scope="row" style="padding: 30px"><img
+                                                src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                                style="height: 100px" class="rounded  float-left" alt="...">
+                                        </th>
+                                        <td style="padding: 30px">
+                                            <h4>{{ object.product.title }}</h4>
+                                            <p><span>Category : </span><b>{{ object.product.category }}</b>
+                                        </td>
+                                        <td style="padding: 30px">
+                                            <del class="text-secondary">{% if object.product_weight %}
+                                                {{ object.product_weight.price }}{% else %}
+                                                {{ object.product.price }}{% endif %}</del>
+                                            <br>
+                                            <span>{% if object.product_weight %}
+                                                {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                {{ object.product.get_price }}{% endif %}</span>
+                                        </td>
+                                        <td style="padding: 30px">
 
-                            </tbody>
-                        </table>
-                    </form>
-                </div>
+                                            <a href="{% url 'website:wishlist-delete' object.id %}" class="text-danger"><i
+                                                    class="fa fa-trash"></i></a>
+                                            <a href="{% url 'website:product-detail' object.product.id %}"
+                                               class="text-success"><i class="fa fa-eye"
+                                                                       aria-hidden="true"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="text-center">
+                        <h4 class="text-danger text-center">Wishlist is Empty</h4>
+                        <a href="{% url 'website:shop' %}" class="btn custom_btn text-center mt-4">Back to Shop </a>
+                    </div>
+
+                {% endif %}
             </div>
 
         </div>

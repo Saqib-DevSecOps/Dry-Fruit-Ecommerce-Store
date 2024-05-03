@@ -8,7 +8,7 @@ def notify_payout_created(obj):
     notifier = NotificationService(description, description, obj, [obj.user])
     notifier.send_app_notification(obj.user)
     notifier.send_email_notification(
-        template="stripe/emails/vendor_payout_create.html",
+        template="razorpay/emails/vendor_payout_create.html",
         context={'obj': obj, 'user': obj.user, 'description': description}
     )
 
@@ -20,7 +20,7 @@ def notify_payout_status_changed(obj):
     notifier = NotificationService(description, description, obj, [obj.user])
     notifier.send_app_notification(obj.user)
     notifier.send_email_notification(
-        template="stripe/emails/vendor_payout_status.html",
+        template="razorpay/emails/vendor_payout_status.html",
         context={'obj': obj, 'user': obj.user, 'description': description}
     )
 
@@ -32,7 +32,7 @@ def notify_transfer_created(obj):
     notifier = NotificationService(description, description, obj, [obj.user])
     notifier.send_app_notification(obj.user)
     notifier.send_email_notification(
-        template="stripe/emails/vendor_transfer_create.html",
+        template="razorpay/emails/vendor_transfer_create.html",
         context={'obj': obj, 'user': obj.user, 'description': description}
     )
 
@@ -45,7 +45,7 @@ def notify_subscriptions_created(obj):
     notifier = NotificationService(description, description, obj, [obj.user])
     notifier.send_app_notification(obj.user)
     notifier.send_email_notification(
-        template="stripe/emails/subscription_create.html",
+        template="razorpay/emails/subscription_create.html",
         context={'obj': obj, 'user': obj.user, 'description': description}
     )
 
@@ -58,6 +58,6 @@ def notify_subscriptions_updated(obj):
     notifier = NotificationService(description, description, obj, [obj.user])
     notifier.send_app_notification(obj.user)
     notifier.send_email_notification(
-        template="stripe/emails/subscription_update.html",
+        template="razorpay/emails/subscription_update.html",
         context={'obj': obj, 'user': obj.user, 'description': description}
     )

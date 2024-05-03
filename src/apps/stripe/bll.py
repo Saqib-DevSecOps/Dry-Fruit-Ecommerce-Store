@@ -76,3 +76,10 @@ def checkout_payment_failed(stripe_id):
     # payment = get_object_or_404(Payment, transaction_id=stripe_id)
     # payment.delete()
     order.save()
+
+
+
+
+
+def razorpay_checkout_create():
+   pass

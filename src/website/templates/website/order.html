@@ -16,7 +16,6 @@
                     <h3 class="form_title mb_30">Billing details</h3>
                     <div class="form_wrap card">
                         {{ form|crispy }}
-
                     </div>
 
 
@@ -92,7 +91,8 @@
                                 </div>
 
                                 <div class="billing_payment_mathod">
-                                    <button type="submit" class="custom_btn bg_default_red">PLACE ORDER</button>
+                                    <button type="submit" id="pay-btn" class="custom_btn bg_default_red">PLACE ORDER
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -104,15 +104,18 @@
 
 
     <script>
-        function toggleNewAddressForm() {
-            var checkBox = document.getElementById("ship_address_checkbox");
+        // Wait for the page to load
+        window.addEventListener('load', function () {
+            var selectElement = document.getElementById('id_country');
+            selectElement.style.display = 'block';
+            var customSelect = document.querySelector('.nice-select');
+            customSelect.style.display = 'none';
+        });
 
-            // Add event listener for checkbox click
-            checkBox.addEventListener('click', function () {
-                console.log(checkBox.checked); // Log the checkbox's checked state (true/false)
-            });
-        }
     </script>
+
+
+
     <script>
 
 

@@ -59,6 +59,7 @@ urlpatterns += [
     path('', include('src.api.urls', namespace='api')),
     path('payment/', include('payments.urls')),
     path('payment/', include('src.apps.payment.urls')),
+    path('razorpay/', include('src.apps.razorpay.urls', namespace='razorpay')),
     path('c/', include('src.administration.client.urls', namespace='client')),
     path('accounts/', include('allauth.urls')),
     path('payment/', include('src.apps.stripe.urls', namespace='stripe')),

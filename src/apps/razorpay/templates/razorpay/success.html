@@ -1,0 +1,34 @@
+{% extends  'website/base.html' %}
+{% load crispy_forms_filters %}
+{% load custom_tags %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+
+    <section class=" mt-4 clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container ">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <div class="card p-4">
+                        <div class="card-header">
+                        <h1 class="title text-center">Payment Successful</h1>
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                              <span class="text-success">Your payment has been successfully processed.</span>
+                            </div>
+                        </div>
+                            <!-- Payment Button -->
+                            <a href="{% url 'client:order_list' %}" class="btn btn-secondary mt-4 mb-4" >Go To Orders</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+{% endblock content %}

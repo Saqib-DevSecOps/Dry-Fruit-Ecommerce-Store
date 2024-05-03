@@ -233,7 +233,7 @@
                                                                 <div class="product_layout_content bg-white position-relative">
                                                                     <div class="product_image_wrap">
                                                                         <a class="product_image d-flex justify-content-center align-items-center"
-                                                                           href="{{ object.thumbnail_image.url|image_or_placeholder }}">
+                                                                           href="{% url 'website:product-detail' object.pk %}">
                                                                             <img class="pic-1"
                                                                                  src="{{ object.thumbnail_image.url|image_or_placeholder }}"
                                                                                  alt="image_not_found">

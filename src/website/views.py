@@ -1,21 +1,18 @@
-import base64
-import io
+import razorpay
 from django.contrib import messages
-
 import stripe
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import OuterRef, Subquery, Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
+from core import settings
 from src.administration.admins.models import (
     Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist
 )
-from src.apps.stripe.views import create_stripe_checkout_session
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.forms import OrderCheckoutForm
 from src.website.utility import get_total_amount, validate_product_quantity
@@ -41,14 +38,6 @@ class HomeTemplateView(TemplateView):
         return context
 
 
-class ContactUsTemplateView(TemplateView):
-    template_name = 'website/contact_us.html'
-
-
-class AboutUsTemplateView(TemplateView):
-    template_name = 'website/about.html'
-
-
 class ProductListView(ListView):
     template_name = 'website/product_list.html'
     queryset = Product.objects.all()
@@ -70,7 +59,6 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
-        product = Product.objects.get(pk=self.kwargs['pk'])
         context['related_product'] = Product.objects.filter().distinct()[:4]
         return context
 
@@ -82,47 +70,46 @@ class BlogListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(BlogListView, self).get_context_data(**kwargs)
-        category = self.request.GET.get('category')
-
-        if category and self.request is not None:
-            post = Blog.objects.filter(category__id=category)
-        else:
-            post = Blog.objects.all().order_by('-created_on')
-        context['recent'] = Blog.objects.order_by('-created_on')[:5]
-        context['popular_posts'] = Blog.objects.order_by('-visits', '-read_time')[:5]
-        filter_posts = BlogFilter(self.request.GET, queryset=post)
-        pagination = Paginator(filter_posts.qs, 24)
+        _filter = BlogFilter(self.request.GET, queryset=self.queryset)
+        pagination = Paginator(_filter.qs, 20)
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
-        context['post_category'] = BlogCategory.objects.all()
-        context['posts'] = page_obj
-        context['filter_form'] = filter_posts
-        context['category'] = category
+        context['object_list'] = page_obj
+        context['filter_form'] = _filter.form
+        context['recent'] = Blog.objects.order_by('-created_on')[:5]
         return context
 
 
-class BlogDetailView(TemplateView):
+class BlogDetailView(DetailView):
     template_name = 'website/post_detail.html'
-    # model = Blog
-    # pk_url_kwarg = "post_id"
-    # slug_url_kwarg = 'slug'
-    # query_pk_and_slug = True
-    #
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super(BlogDetailView, self).get_context_data(**kwargs)
-    #     post = Blog.objects.get(slug=self.kwargs['slug'])
-    #     post.visits += 1
-    #     post.save()
-    #     return context
+    model = Blog
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        post = Blog.objects.get(pk=self.kwargs['pk'])
+        post.visits += 1
+        post.save()
+        return context
+
+
+class AboutUsTemplateView(TemplateView):
+    template_name = 'website/about.html'
+
+
+class ContactUsTemplateView(TemplateView):
+    template_name = 'website/contact_us.html'
 
 
 """ ORDER AND CART  ------------------------------------------------------------------------------------------ """
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class CartTemplateView(ListView):
     template_name = 'website/cart.html'
     model = Cart
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super(CartTemplateView, self).get_context_data(**kwargs)
@@ -164,8 +151,8 @@ class UpdateCart(View):
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
         quantity = int(self.kwargs.get('quantity'))
-        cart = get_object_or_404(Cart, id=id, )
-        cart.quantity += quantity
+        cart = get_object_or_404(Cart, id=id, user=self.request.user)
+        cart.quantity = quantity
         cart.save()
         messages.success(request, 'Cart Item Successfully Updated ')
         return redirect('website:cart')
@@ -174,6 +161,9 @@ class UpdateCart(View):
 class WishListListView(ListView):
     template_name = 'website/wishlist_list.html'
     model = Wishlist
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -211,8 +201,9 @@ class DeleteFromWishlist(View):
 
 stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGTyLBfXhbdORJybRfmzVm2cjPBTkkuGyAjVfP00cf3sDcP9'
 
-
 # @method_decorator(login_required, name='dispatch')
+razorpay_client = razorpay.Client(
+    auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -223,6 +214,7 @@ class OrderCreate(View):
     service_charges = 0
     shipping_charges = 0
     sub_total = 0
+    context = {}
 
     def dispatch(self, request, *args, **kwargs):
         self.cart = Cart.objects.filter(user=request.user)
@@ -239,7 +231,17 @@ class OrderCreate(View):
 
     def get(self, request):
         form = OrderCheckoutForm()
-        context = {
+        currency = 'INR'
+        amount = 20000
+        razorpay_order = razorpay_client.order.create(dict(amount=amount,
+                                                           currency=currency,
+                                                           payment_capture='0'))
+        razorpay_order_id = razorpay_order['id']
+        callback_url = "http://" + "127.0.0.1:8000" + "/razorpay/paymenthandler/"
+        payment_context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
+                           'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
+
+        data = {
             'form': form,
             'user_cart': self.cart,
             'total': self.total,
@@ -247,7 +249,8 @@ class OrderCreate(View):
             'shipping_charges': self.shipping_charges,
             'sub_total': self.sub_total,
         }
-        return render(request, self.template_name, context)
+        self.context.update(data)
+        return render(request, self.template_name, self.context)
 
     def post(self, request):
         """
@@ -272,26 +275,12 @@ class OrderCreate(View):
             order = form.save(commit=False)
             order.client = request.user
             order.save()
-
-            # 5: CHECKOUT FOR ONLINE PAY
-            if order.is_online():
-                session_url = create_stripe_checkout_session(request, order)
-                return redirect(session_url)
-
-            # 6: REDIRECT TO ORDER CONFIRMATION PAGE OR ANY OTHER PAGE
-            messages.success(request, "Your order placed successfully")
-            return redirect('website:order_detail', order.pk)
+            return redirect('razorpay:pay', order.pk)
 
         messages.error(request, "There are some issues in your order, kindly review your order once again.")
-        context = {
-            'form': form,
-            'user_cart': self.cart,
-            'total': self.total,
-            'service_charges': self.service_charges,
-            'shipping_charges': self.shipping_charges,
-            'sub_total': self.sub_total,
-        }
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, self.context)
+    #
+
 
 @method_decorator(login_required, name='dispatch')
 class SuccessPayment(View):

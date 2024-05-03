@@ -1,3 +1,4 @@
+{% load custom_tags %}
 {% load static %}
 <div class="col-lg-3">
     <div class="">
@@ -5,11 +6,11 @@
             <div class="vd_info_wrap text-center">
                 <div class="vd_image">
                     <div class="image_wrap">
-                        <img src="{% static 'website/images/meta/meta1.png' %}" alt="image_not_found">
+                        <img src="{{ request.user.profile_image|image_or_placeholder }}" alt="image_not_found">
                     </div>
                 </div>
-                <h2 class="vd_mane">Vicent George</h2>
-                <span class="vd_mail"><a href="#!">vicentgeorg@gmail.com</a></span>
+                <h2 class="vd_mane">{{ request.user.get_full_name}}</h2>
+                <span class="vd_mail"><a href="#!">{{ request.user.email}}</a></span>
             </div>
         </div>
 

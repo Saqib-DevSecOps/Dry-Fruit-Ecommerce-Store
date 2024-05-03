@@ -1,0 +1,49 @@
+{% extends  'website/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Edit Profile</h3>
+                                </div>
+                                <div class="vd_shadow">
+                                    <div class="row">
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            {{ form|crispy }}
+                                            <button class="btn text-white" style="background-color: #f7b33c"
+                                                    type="submit">Update
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Wait for the page to load
+        window.addEventListener('load', function () {
+            var selectElement = document.getElementById('id_gender');
+            selectElement.style.display = 'block';
+            var customSelect = document.querySelector('.nice-select');
+            customSelect.style.display = 'none';
+            var dateOfBirthInput = document.getElementById('id_date_of_birth');
+            dateOfBirthInput.type = 'date';
+
+        });
+
+    </script>
+{% endblock %}

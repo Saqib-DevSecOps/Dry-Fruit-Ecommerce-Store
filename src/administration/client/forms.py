@@ -7,8 +7,12 @@ class UserProfileForm(ModelForm):
         model = User
         fields = [
             'profile_image', 'first_name', 'last_name',
-            'phone_number'
+            'phone_number', 'date_of_birth', 'gender'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['gender'].widget.attrs.update({'class': 'form-control'})
 
 
 class AddressForm(ModelForm):

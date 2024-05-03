@@ -33,77 +33,83 @@
         <div class="container-lg">
             <div class="row mb-4">
                 <div class="col-lg-8" style="overflow-y: hidden">
-                    <div class="card " data-aos="fade-up" data-aos-duration="2000">
-                        <form action="#">
-                            <table class="table table-responsive p-0 mb-0">
-                                <thead>
-                                <tr>
-                                    <th scope="col" style="padding: 30px">Items</th>
-                                    <th scope="col" style="padding: 30px">Description</th>
-                                    <th scope="col" style="padding: 30px">Price</th>
-                                    <th scope="col" style="padding: 30px">Quantity</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for object in cart %}
+                    {% if cart %}
+                        <div class="card " data-aos="fade-up" data-aos-duration="2000">
+                            <form action="#">
+                                <table class="table table-responsive p-0 mb-0">
+                                    <thead>
                                     <tr>
-                                        <th scope="row" style="padding: 30px"><img
-                                                src="{{ object.product.thumbnail_image|image_or_placeholder }}"
-                                                style="height: 100px" class="rounded  float-left" alt="...">
-                                        </th>
-                                        <td style="padding: 30px">
-                                            <h4>{{ object.product.title }}</h4>
-                                            {% if object.product_weight %}
-                                                <p><span>SIZE : </span><b>{{ object.product_weight.weight }}</b>
-                                                </p>{% endif %}
-                                        </td>
-                                        <td style="padding: 30px">
-                                            <del class="text-secondary">{% if object.product_weight %}
-                                                {{ object.product_weight.price }}{% else %}
-                                                {{ object.product.price }}{% endif %}</del>
-                                            <br>
-                                            <span>{% if object.product_weight %}
-                                                {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
-                                                {{ object.product.get_price }}{% endif %}</span>
-                                        </td>
-                                        <td style="padding: 30px">
-                                            <select class="form-select quantitySelect"
-                                                    id="quantitySelect{{ object.id }}" style="border:1px solid black"
-                                                    aria-label="Default select example">
-
-                                                aria-label="Default select example">
-                                                <option selected>&nbsp;&nbsp;&nbsp;{{ object.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
-                                                {% for obj in '123456789' %}
-                                                    <option data-object-id="{{ object.id }}" id="cart-quantity"
-                                                            value="{{ forloop.counter }}">
-                                                        &nbsp;&nbsp;&nbsp;{{ forloop.counter }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    </option>
-                                                {% endfor %}
-
-                                            </select>
-                                            <br><br><br>
-                                            <a href="{% url 'website:remove-cart' object.id %}"
-                                               class="text-decoration-none link-secondary">
-                                                <small>
-                                                    <i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;
-                                                    Remove
-                                                </small>
-                                            </a><br>
-                                            <a href="{% url 'website:wishlist-add' object.product.id %}"
-                                               class="link-secondary">
-                                                <small>
-                                                    <i class="far fa-heart"></i>&nbsp;&nbsp;&nbsp;
-                                                    Add to Wishlist
-                                                </small>
-                                            </a>
-                                        </td>
+                                        <th scope="col" style="padding: 30px">Items</th>
+                                        <th scope="col" style="padding: 30px">Description</th>
+                                        <th scope="col" style="padding: 30px">Price</th>
+                                        <th scope="col" style="padding: 30px">Quantity</th>
                                     </tr>
-                                {% endfor %}
+                                    </thead>
+                                    <tbody>
+                                    {% for object in cart %}
+                                        <tr>
+                                            <th scope="row" style="padding: 30px"><img
+                                                    src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                                    style="height: 100px" class="rounded  float-left" alt="...">
+                                            </th>
+                                            <td style="padding: 30px">
+                                                <h4>{{ object.product.title }}</h4>
+                                                {% if object.product_weight %}
+                                                    <p><span>SIZE : </span><b>{{ object.product_weight.weight }}</b>
+                                                    </p>{% endif %}
+                                            </td>
+                                            <td style="padding: 30px">
+                                                <del class="text-secondary">{% if object.product_weight %}
+                                                    {{ object.product_weight.price }}{% else %}
+                                                    {{ object.product.price }}{% endif %}</del>
+                                                <br>
+                                                <span>{% if object.product_weight %}
+                                                    {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                    {{ object.product.get_price }}{% endif %}</span>
+                                            </td>
+                                            <td style="padding: 30px">
+                                                <div class="nice-select form-select" tabindex="0"><span
+                                                        class="current">&nbsp;&nbsp;&nbsp;{{ object.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                    <ul class="list">
+                                                        {% for obj in '123456789' %}
+                                                            <li onclick="window.location='{% url 'website:update-cart' object.id forloop.counter %}'"
+                                                                data-value="&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                                                                class="option selected focus"
+                                                                style="z-index: 9999;">
+                                                                &nbsp;&nbsp;&nbsp;{{ forloop.counter }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <br><br><br>
+                                                <a href="{% url 'website:remove-cart' object.id %}"
+                                                   class="text-decoration-none link-secondary">
+                                                    <small>
+                                                        <i class="fa fa-trash"></i>&nbsp;&nbsp;&nbsp;
+                                                        Remove
+                                                    </small>
+                                                </a><br>
+                                                <a href="{% url 'website:wishlist-add' object.product.id %}"
+                                                   class="link-secondary">
+                                                    <small>
+                                                        <i class="far fa-heart"></i>&nbsp;&nbsp;&nbsp;
+                                                        Add to Wishlist
+                                                    </small>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    {% else %}
+                       <div class="text-center">
+                        <h4 class="text-danger text-center">Cart is Empty</h4>
+                        <a href="{% url 'website:shop' %}" class="btn custom_btn text-center mt-4">Back to Shop </a>
+                       </div>
 
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                    {% endif %}
                 </div>
                 <div class="col-lg-4">
                     <div class="row">
@@ -119,10 +125,7 @@
                                         <button class="btn custom_btn mt-4">Apply</button>
                                     </div>
                                 </div>
-
                             </div>
-
-
                         </div>
                         <div class="col-12 mt-4">
                             <div class="card widget-card border-light shadow-sm">
@@ -157,7 +160,6 @@
                                             </tr>
                                             </tbody>
                                         </table>
-
                                     </div>
                                     <hr>
                                     <div class="table-responsive">
@@ -165,7 +167,6 @@
                                             <tbody>
                                             <tr>
                                             </tr>
-
                                             <tr>
                                                 <td>
                                                     <p class="mb-1">Sub Total</p>
@@ -176,12 +177,10 @@
                                             </tr>
                                             </tbody>
                                         </table>
-
                                     </div>
-                                    <a href="{% url 'website:order' %}" class="btn custom_btn  mt-4">Continue To Checkout -{{ sub_total|floatformat:"2" }}</a>
-
+                                    <a href="{% url 'website:order' %}" class="btn custom_btn  mt-4">Continue To
+                                        Checkout -{{ sub_total|floatformat:"2" }}</a>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -190,18 +189,17 @@
         </div>
     </section>
 
-
     <script>
-        // Add event listener to handle select element changes dynamically
-        document.addEventListener('DOMContentLoaded', function() {
-        var selectElement = document.querySelector('.quantitySelect');console.log(selectElement)
-        selectElement.addEventListener('change', function(event) {
-            var objectId = this.options[this.selectedIndex].getAttribute('data-object-id');
-            var quantity = this.value;
-
-            // Redirect to update cart page
-            window.location = `/increment/cart/item/${objectId}/${quantity}/`;
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var dropdown = document.getElementById("dropdown");
+            dropdown.classList.remove("open");
         });
-    });
+
+        function changeLocation(element) {
+            var value = element.getAttribute('data-value'); // Get the value attribute
+            // Assuming value is the URL you want to redirect to
+            window.location.href = value;
+        }
     </script>
+
 {% endblock content %}
