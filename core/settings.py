@@ -225,9 +225,9 @@ if ENVIRONMENT != 'server':
 
 """___________________________ Django Jazzmin Integration _______________________________________________"""
 JAZZMIN_SETTINGS = {
-    "site_title": "Monogatari Admin",
-    "site_header": "Monogatari",
-    "site_brand": "Monogatari",
+    "site_title": "Rajasthan Dry Fruit house Admin",
+    "site_header": "Rajasthan Dry Fruit house",
+    "site_brand": "Rajasthan Dry Fruit house",
     "login_logo": None,
 }
 
