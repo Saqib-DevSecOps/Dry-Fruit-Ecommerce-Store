@@ -35,8 +35,10 @@ PROTOCOL = env('PROTOCOL')
 BASE_URL = f"{PROTOCOL}://{DOMAIN}"
 SECRET_KEY = env('SECRET_KEY')
 ENVIRONMENT = env('ENVIRONMENT')
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "2a80-182-180-2-42.ngrok-free.app"]
 GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_URL')
+CSRF_TRUSTED_ORIGINS = ["https://2a80-182-180-2-42.ngrok-free.app"]
+
 SITE_ID = int(env('SITE_ID'))
 
 INSTALLED_APPS = [
@@ -58,6 +60,7 @@ INSTALLED_APPS = [
     'django_filters',
     'widget_tweaks',
     'tinymce',
+    'corsheaders',
 
     # WEB APPS
     'allauth',
@@ -94,9 +97,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'corsheaders.middleware.CorsMiddleware',
+
     # YOUR MIDDLEWARES
 ]
 
+
+CORS_ORIGIN_ALLOW_ALL = True
 AUTHENTICATION_BACKENDS = [
     # DJANGO BACKENDS
     'django.contrib.auth.backends.ModelBackend',

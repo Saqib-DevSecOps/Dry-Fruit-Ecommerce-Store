@@ -951,5 +951,27 @@
         updateCountdown();
     </script>
 
+<script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
 
+    <script>
+    var settings = {
+  "url": "https://apiv2.shiprocket.in/v1/external/auth/login",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({
+    "email": "saqib71501@gmail.com",
+    "password": "saqib71501@gmail.com"
+  }),
+};
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+    </script>
 {% endblock %}

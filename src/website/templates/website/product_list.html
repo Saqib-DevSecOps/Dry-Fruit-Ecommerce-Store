@@ -270,8 +270,8 @@
                                                                     </div>
                                                                     <div class="product_content">
                                                                         <h3 class="product_title">
-                                                                            <a href="{% url 'website:product-detail' 0 %}"
-                                                                               target="_blank">{{ object.title }}</a>
+                                                                            <a href="{% url 'website:product-detail' object.pk %}"
+                                                                               >{{ object.title }}</a>
                                                                         </h3>
                                                                         <div class="product_price">
                                                                             <span class="sale_price pe-1">{{ object.get_price }}</span>
