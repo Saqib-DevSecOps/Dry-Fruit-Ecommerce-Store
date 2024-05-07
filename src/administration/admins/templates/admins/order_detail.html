@@ -154,7 +154,7 @@
                         Postal Code: <strong>{{ object.postal_code }}</strong>
                     </div>
                     <div class="mb-2">
-                    <button class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom Shipment</button>
+    <a href="{% url 'admins:shipment-update' object.shipment.id %}" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom Shipment</a>
                     <button class="btn btn-success"><i class="fa fa-link"></i>&nbsp;&nbsp;Call ShipRocket</button>
                     </div>
                 </div>

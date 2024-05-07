@@ -1,8 +1,9 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 from src.administration.admins.bll import create_order_items
-from src.administration.admins.models import Order, OrderItem
+from src.administration.admins.models import Order, OrderItem, Shipment
 
 """ ORDERS, SUB ORDERS, SHIPMENTS """
 
@@ -18,7 +19,8 @@ def order_save_post(sender, instance, created, **kwargs):
     if created:
         order = create_order_items(order=instance, user_request=instance.client)
         # notify_buyer_on_order_creation(instance)
-
+        shipment = Shipment.objects.create(order=instance)
+        shipment.save()
     # ON ORDER APPROVE
     if instance.order_status == "approved":
 
@@ -37,29 +39,27 @@ def order_save_post(sender, instance, created, **kwargs):
         pass
 
 
+#
+@receiver(pre_save, sender=Shipment)
+def shipment_save_pre(sender, instance, **kwargs):
+    if instance.shipment_status == 'delivery' and not instance.started:
+        instance.started = timezone.now()
 
-#
-# @receiver(pre_save, sender=Shipment)
-# def shipment_save_pre(sender, instance, **kwargs):
-#     if instance.shipment_status == 'delivery' and not instance.started:
-#         instance.started = timezone.now()
-#
-#     elif instance.shipment_status == 'completed' and not instance.reached:
-#         instance.reached = timezone.now()
-#
-#
-# @receiver(post_save, sender=Shipment)
-# def shipment_save_post(sender, instance, created, **kwargs):
-#     if created:
-#         pass
-#
-#     else:
-#
-#         # NOTIFY USER ABOUT SHIPMENT STATUS CHANGED
-#         sub_order = instance.suborder
-#         if instance.shipment_status in ['completed', 'delivery']:
-#             sub_order.order_status = instance.shipment_status
-#             sub_order.save()
+    elif instance.shipment_status == 'completed' and not instance.reached:
+        instance.reached = timezone.now()
+
+
+@receiver(post_save, sender=Shipment)
+def shipment_save_post(sender, instance, created, **kwargs):
+    if created:
+        pass
+
+    else:
+        # NOTIFY USER ABOUT SHIPMENT STATUS CHANGED
+        order = instance.order
+        if instance.shipment_status in ['completed', 'delivery']:
+            order.order_status = instance.shipment_status
+            order.save()
 #
 #
 # """ CHARGES AND TRANSACTIONS """

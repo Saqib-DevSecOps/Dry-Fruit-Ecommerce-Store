@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import (
@@ -15,7 +15,7 @@ from src.accounts.models import User
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight
+    Language, ProductWeight, Weight, Shipment
 
 """ MAIN """
 
@@ -373,6 +373,19 @@ class OrderStatusChangeView(View):
 
     def get(self, request, pk):
         pass
+
+
+@method_decorator(admin_protected, name='dispatch')
+class ShipmentUpdateView(UpdateView):
+    model = Shipment
+    fields = [
+        'provider', 'tracking_id', 'tracking_url',
+        'tracking_number', 'description', 'shipment_status', 'shipment_added', 'is_active'
+    ]
+
+    def get_success_url(self):
+        shipment = get_object_or_404(Shipment, pk=self.kwargs['pk'])
+        return reverse("admins:order-detail", args=[shipment.order.pk])
 
 
 """ BLOG """
