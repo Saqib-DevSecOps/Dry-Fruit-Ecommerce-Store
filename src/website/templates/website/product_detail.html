@@ -432,6 +432,12 @@
                 } else {
                     window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + 0 + '/';                }
             });
+            buyNowBtn.addEventListener('click', function () {
+                if (objectId) {
+                    window.location.href = '/buy-now/' + "{{object.id}}" + '/' + objectId + '/';
+                } else {
+                    window.location.href = '/buy-now/' + "{{object.id}}" + '/' + 0 + '/';                }
+            });
             const radioButtons = document.querySelectorAll('input[type="radio"]');
             radioButtons.forEach(function (radioButton) {
                 radioButton.addEventListener('click', updateAddToCartButton);

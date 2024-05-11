@@ -67,27 +67,44 @@ class ClientDashboard(TemplateView):
         return context
 
 
+def get_paginated_context_data(self, queryset, page_size=5):
+    pagination = Paginator(queryset, page_size)
+    page_number = self.request.GET.get('page')
+    page_obj = pagination.get_page(page_number)
+    return {'object_list': page_obj}
+
+
 @method_decorator(login_required, name='dispatch')
 class OrderListView(ListView):
     model = Order
     template_name = 'client/order_list.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(client=self.request.user)
+        return self.model.objects.filter(
+            ~Q(order_status="cancelled") & ~Q(payment_status="cancelled") & Q(client=self.request.user)
+        )
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(OrderListView, self).get_context_data(**kwargs)
-        pagination = Paginator(self.get_queryset(), 5)
-        page_number = self.request.GET.get('page')
-        page_obj = pagination.get_page(page_number)
-        context['object_list'] = page_obj
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_paginated_context_data(self, self.get_queryset()))
         return context
 
 
 @method_decorator(login_required, name='dispatch')
 class OrderCancelListView(ListView):
-    model = OrderItem
+    model = Order
     template_name = 'client/order_cancel_list.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            Q(order_status="cancelled") | Q(payment_status="cancelled"),
+            client=self.request.user
+        )
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(get_paginated_context_data(self, self.get_queryset()))
+        return context
 
 
 @method_decorator(login_required, name='dispatch')

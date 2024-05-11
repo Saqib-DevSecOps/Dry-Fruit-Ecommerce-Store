@@ -47,11 +47,11 @@
                                           <label>{% if request.user.name_or_username %}{{ request.user.name_or_username }}{% else %}None{% endif %}</label>
                                       </div>
                                       <div class="col-4 mt-4">
-                                          <label>Email Address &nbsp;|&nbsp;<small class="text-warning">Change</small></label><br>
+                                          <label>Email Address &nbsp;|&nbsp;<a href="{% url 'account_email' %}"><small class="text-warning">Change</small></a> </label><br>
                                           <label>{{ request.user.email }}</label>
                                       </div>
                                       <div class="col-4 mt-4">
-                                          <label>Mobile Number &nbsp;|&nbsp;<small class="text-warning">Change</small></label><br>
+                                          <label>Mobile Number </label><br>
                                           <label>{{ request.user.phone_number }}</label>
                                       </div>
                                        <div class="col-4 mt-4">

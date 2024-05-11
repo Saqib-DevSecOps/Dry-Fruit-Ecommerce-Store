@@ -35,8 +35,10 @@ PROTOCOL = env('PROTOCOL')
 BASE_URL = f"{PROTOCOL}://{DOMAIN}"
 SECRET_KEY = env('SECRET_KEY')
 ENVIRONMENT = env('ENVIRONMENT')
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "2a80-182-180-2-42.ngrok-free.app"]
 GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_URL')
+CSRF_TRUSTED_ORIGINS = ["https://2a80-182-180-2-42.ngrok-free.app"]
+
 SITE_ID = int(env('SITE_ID'))
 
 INSTALLED_APPS = [
@@ -85,7 +87,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # DJANGO MIDDLEWARES
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,6 +105,17 @@ AUTHENTICATION_BACKENDS = [
 
     # YOUR BACKENDS
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ],
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+}
 
 TEMPLATES = [
     {
@@ -218,9 +230,9 @@ if ENVIRONMENT != 'server':
 
 """___________________________ Django Jazzmin Integration _______________________________________________"""
 JAZZMIN_SETTINGS = {
-    "site_title": "Monogatari Admin",
-    "site_header": "Monogatari",
-    "site_brand": "Monogatari",
+    "site_title": "Rajasthan Dry Fruit house Admin",
+    "site_header": "Rajasthan Dry Fruit house",
+    "site_brand": "Rajasthan Dry Fruit house",
     "login_logo": None,
 }
 

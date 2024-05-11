@@ -153,6 +153,31 @@ class AddToCart(View):
 
 
 @method_decorator(login_required, name='dispatch')
+class BuyNow(View):
+    def get(self, request, *args, **kwargs):
+        product_weight_id = self.kwargs['product_weight_id']
+        product = Product.objects.get(id=self.kwargs['product_id'])
+        if str(product.quantity) <= "0":
+            messages.error(request, 'Insufficient quantity')
+            return redirect('website:product-detail', pk=self.kwargs['product_id'])
+
+        if product_weight_id != "0":
+            product_weight = ProductWeight.objects.get(id=product_weight_id)
+            cart, created = Cart.objects.get_or_create(
+                user=self.request.user, product_id=self.kwargs['product_id'],
+                product_weight=product_weight
+            )
+        else:
+            cart, created = Cart.objects.get_or_create(
+                user=self.request.user, product_id=self.kwargs['product_id'],
+            )
+        if created:
+            cart.quantity = 1
+        cart.save()
+        return redirect('website:order')
+
+
+@method_decorator(login_required, name='dispatch')
 class UpdateCart(View):
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')

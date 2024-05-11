@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.utils import timezone
 from phonenumber_field.formfields import PhoneNumberField
 from tinymce.models import HTMLField
 
@@ -373,6 +374,41 @@ class OrderItem(models.Model):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.qty
         return self.qty * self.product.get_price()
+
+
+class Shipment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    provider = models.CharField(max_length=250, null=True, blank=False)
+
+    tracking_id = models.CharField(max_length=250, null=True, blank=True)
+    tracking_url = models.URLField(null=True, blank=True)
+    tracking_number = models.CharField(max_length=250, null=True, blank=True)
+    description = models.TextField(default="*", null=True, blank=False)
+    shipment_status = models.CharField(choices=SHIPMENT_STATUS_CHOICE, max_length=20,
+                                       default=SHIPMENT_STATUS_CHOICE[0][0])
+
+    started = models.DateTimeField(null=True, blank=True)
+    reached = models.DateTimeField(null=True, blank=True)
+    shipment_added = models.BooleanField(default=False)
+
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.shipment_status
+
+    def save(self, *args, **kwargs):
+
+        # WHEN ASSIGN DELIVERY STATUS, SET STARTED TIME
+        if self.shipment_status == 'delivery':
+            self.started = timezone.now()
+
+        # WHEN ASSIGN COMPLETED STATUS, SET REACHED TIME
+        elif self.shipment_status == 'completed':
+            self.reached = timezone.now()
+
+        super(Shipment, self).save(*args, **kwargs)
 
 
 class BlogCategory(models.Model):

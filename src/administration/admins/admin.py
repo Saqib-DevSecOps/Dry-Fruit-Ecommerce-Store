@@ -3,7 +3,7 @@
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
     OrderItem, BlogCategory, Blog, Wishlist, \
-    ProductWeight, Weight, Payment
+    ProductWeight, Weight, Payment, Shipment
 
 # Register your models here.
 
@@ -61,6 +61,13 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['client__username', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country']
 
 
+class ShipmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'order', 'provider', 'shipment_status', 'started', 'reached', 'is_active', 'created_on')
+    list_filter = ('shipment_status', 'is_active', 'created_on')
+    search_fields = ('order__id', 'provider', 'tracking_id', 'tracking_number')
+
+
+admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Order)
 admin.site.register(Payment)
 admin.site.register(Product, ProductAdmin)

@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.generics import (
     CreateAPIView, ListAPIView, get_object_or_404,
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, DestroyAPIView
+    ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, DestroyAPIView, GenericAPIView
 )
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
@@ -12,14 +12,13 @@ from rest_framework.response import Response
 
 from src.administration.admins.bll import get_cart_calculations
 from src.administration.admins.filters import OrderFilter
-from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist
+from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment
 from src.api.filter import ProductFilter
 from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
     WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
-    ProductRatingSerializer, OrderDetailSerializer
-
-from src.apps.stripe.views import create_stripe_checkout_session
+    ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer
+from src.apps.razorpay.bll import get_razorpay_order_id
 
 """Product Apis"""
 
@@ -185,12 +184,49 @@ class OrderCreateApiView(CreateAPIView):
     queryset = Order.objects.all()
 
     def create(self, request, *args, **kwargs):
-        session_url = None
+        razorpay_order_id = None
         user = self.request.user
         total, service_charges, shipping_charges, sub_total = get_cart_calculations(user)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save(client=user, total=total, service_charges=service_charges)
         if order.is_online():
-            session_url = create_stripe_checkout_session(self.request, order)
-        return Response({'session_url': session_url, 'data': serializer.data}, status=status.HTTP_201_CREATED)
+            razorpay_order_id = get_razorpay_order_id(self, request, order.id)
+        return Response({'data': serializer.data, 'razorpay_order_id': razorpay_order_id},
+                        status=status.HTTP_201_CREATED)
+
+
+class PaymentSuccessAPIView(GenericAPIView):
+    serializer_class = PaymentSuccessSerializer
+
+    def post(self, request):
+        serializer = PaymentSuccessSerializer(data=request.data)
+        if serializer.is_valid():
+            razorpay_order_id = serializer.validated_data.get('razorpay_order_id')
+            razorpay_payment_id = serializer.validated_data.get('razorpay_payment_id')
+            razorpay_signature = serializer.validated_data.get('razorpay_signature')
+            # Add your validation logic here
+            try:
+                order = get_object_or_404(Order, razorpay_order_id=razorpay_order_id)
+                order.payment_status = 'paid'
+                order.order_status = 'approved'
+
+                order_items = OrderItem.objects.filter(order=order)
+                for order_item in order_items:
+                    if order_item.product.quantity >= order_item.qty:
+                        product = order_item.product
+                        ordered_quantity = order_item.qty
+                        product.quantity -= ordered_quantity
+                        product.save()
+                order.save()
+                payment = get_object_or_404(Payment, order=order)
+                payment.razorpay_payment_id = razorpay_payment_id
+                payment.razorpay_order_id = razorpay_order_id
+                payment.razorpay_signature_id = razorpay_signature
+                payment.payment_status = "completed"
+                payment.amount_paid = order.sub_total
+                payment.save()
+                return Response({'message': 'Payment successful'}, status=status.HTTP_200_OK)
+            except:
+                return Response({'message': 'Payment processing failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
