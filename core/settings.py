@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django_filters',
     'widget_tweaks',
     'tinymce',
-    'corsheaders',
 
     # WEB APPS
     'allauth',
@@ -103,7 +102,6 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ORIGIN_ALLOW_ALL = True
 AUTHENTICATION_BACKENDS = [
     # DJANGO BACKENDS
     'django.contrib.auth.backends.ModelBackend',
@@ -111,6 +109,19 @@ AUTHENTICATION_BACKENDS = [
 
     # YOUR BACKENDS
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
 
 TEMPLATES = [
     {
