@@ -25,3 +25,4 @@ drf-yasg
 django-phonenumber-field
 phonenumbers
 razorpay
+djangorestframework_simplejwt

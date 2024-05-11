@@ -191,7 +191,7 @@ class OrderCreateApiView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         order = serializer.save(client=user, total=total, service_charges=service_charges)
         if order.is_online():
-            razorpay_order_id = get_razorpay_order_id(self, request, order)
+            razorpay_order_id = get_razorpay_order_id(self, request, order.id)
         return Response({'data': serializer.data, 'razorpay_order_id': razorpay_order_id},
                         status=status.HTTP_201_CREATED)
 
@@ -201,7 +201,6 @@ class PaymentSuccessAPIView(GenericAPIView):
 
     def post(self, request):
         serializer = PaymentSuccessSerializer(data=request.data)
-        print(serializer)
         if serializer.is_valid():
             razorpay_order_id = serializer.validated_data.get('razorpay_order_id')
             razorpay_payment_id = serializer.validated_data.get('razorpay_payment_id')
