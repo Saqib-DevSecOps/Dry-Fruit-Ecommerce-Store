@@ -23,6 +23,6 @@ django-jazzmin
 dj-rest-auth
 drf-yasg
 django-phonenumber-field
-phonenumbers
 razorpay
 djangorestframework_simplejwt
+
