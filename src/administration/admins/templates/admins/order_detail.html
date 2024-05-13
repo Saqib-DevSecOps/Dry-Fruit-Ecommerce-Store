@@ -117,7 +117,9 @@
                     <div class="row">
                         <div class="col-6 text-center">
 
-                        <h1 class="text-{{ object.order_status|alert_type_class }}"><i class="fa fa-{% if object.order_status == "pending" %}exclamation{% elif object.order_status == "approved" %}check{% elif object.order_status == "cancelled" %}times{% elif object.order_status == "delivery" %}truck{% elif object.order_status == "completed" %}check-circle{% else %}times-circle{% endif %}"></i></h1>
+                            <h1 class="text-{{ object.order_status|alert_type_class }}"><i
+                                    class="fa fa-{% if object.order_status == "pending" %}exclamation{% elif object.order_status == "approved" %}check{% elif object.order_status == "cancelled" %}times{% elif object.order_status == "delivery" %}truck{% elif object.order_status == "completed" %}check-circle{% else %}times-circle{% endif %}"></i>
+                            </h1>
 
                             <h3><span
                                     class="badge bg-{{ object.order_status|alert_type_class }}-lt">{{ object.get_order_status_display }}</span>
@@ -128,8 +130,12 @@
                         </div>
                         <div class="col-6 text-center">
 
-                            <h1 class="text-{{ object.payment_status }}"><i class="fa fa-{% if object.payment_status == "unpaid" %}exclamation{% elif object.payment_status == "pending"  %}exclamation{% elif object.payment_status == "paid"  %}check{% else %}times{% endif %}"></i></h1>
-                            <h3><span class="badge bg-{{ object.payment_status }}-lt">{{ object.get_payment_status_display }}</span></h3>
+                            <h1 class="text-{{ object.payment_status }}"><i
+                                    class="fa fa-{% if object.payment_status == "unpaid" %}exclamation{% elif object.payment_status == "pending" %}exclamation{% elif object.payment_status == "paid" %}check{% else %}times{% endif %}"></i>
+                            </h1>
+                            <h3><span
+                                    class="badge bg-{{ object.payment_status }}-lt">{{ object.get_payment_status_display }}</span>
+                            </h3>
                             <p class="mb-0"><b>Payment Status</b></p>
 
                         </div>
@@ -154,9 +160,18 @@
                         Postal Code: <strong>{{ object.postal_code }}</strong>
                     </div>
                     <div class="mb-2">
-    <a href="{% url 'admins:shipment-update' object.shipment.id %}" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom Shipment</a>
-                    <button class="btn btn-success"><i class="fa fa-link"></i>&nbsp;&nbsp;Call ShipRocket</button>
+                        <a href="{% url 'admins:shipment-update' object.shipment.id %}"
+                           class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom
+                            Shipment</a>
+                        <form method="POST" action="{% url 'shipment:shipment-create-order' %}"
+                              class="d-inline-block ml-2">
+                            {% csrf_token %}
+                            <button class="btn btn-success" type="submit"><i class="fa fa-link"></i>&nbsp;&nbsp;Call
+                                ShipRocket
+                            </button>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>
