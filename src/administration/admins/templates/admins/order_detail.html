@@ -163,7 +163,7 @@
                         <a href="{% url 'admins:shipment-update' object.shipment.id %}"
                            class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom
                             Shipment</a>
-                        <form method="POST" action="{% url 'shipment:shipment-create-order' %}"
+                        <form method="POST" action="{% url 'shipment:shipment-create-order' object.id %}"
                               class="d-inline-block ml-2">
                             {% csrf_token %}
                             <button class="btn btn-success" type="submit"><i class="fa fa-link"></i>&nbsp;&nbsp;Call
