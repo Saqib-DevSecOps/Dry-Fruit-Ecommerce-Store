@@ -235,10 +235,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductListSerializer()
+    product_weight = ProductWeightSerializer()
 
     class Meta:
         model = OrderItem
-        fields = ['product', 'qty']
+        fields = ['product', 'product_weight', 'qty']
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
@@ -248,7 +249,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
                   'service_charges', 'shipping_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
-                  'is_active', 'created_on', 'order_items']  # Change 'order' to 'order_items'
+                  'is_active', 'created_on', 'order_items']
 
 
 class ProductRatingSerializer(serializers.ModelSerializer):
