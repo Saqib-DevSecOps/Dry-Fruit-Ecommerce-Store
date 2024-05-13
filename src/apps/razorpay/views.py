@@ -23,14 +23,17 @@ class CreateRazorPayCheckout(View):
 
         order_id = self.kwargs.get('pk')
         order = Order.objects.get(id=order_id)
-        amount = int(order.sub_total)
+        print("Debugging 1")
+        amount = int(order.sub_total*100)
+        print(amount)
         if order.payment_status == "paid":
             messages.error(request, "Already Paid For this Order")
             return redirect("client:order_detail", pk=order_id)
 
-        if amount <= 1:
-            messages.error(request, "Amount Should be greater than 1 INR")
+        if amount < 1:
+            messages.error(request, "Amount Should be at least 1 INR")
             return redirect("client:order_detail", pk=order_id)
+
         razorpay_order = razorpay_client.order.create(dict(amount=amount,
                                                            currency=currency,
                                                            payment_capture='0'))

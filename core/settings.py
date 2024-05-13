@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'src.apps.stripe.apps.StripeConfig',
     'src.apps.whisper.apps.WhisperConfig',
     'src.apps.razorpay.apps.RazorpayConfig',
+    'src.apps.shipment',
 ]
 
 MIDDLEWARE = [

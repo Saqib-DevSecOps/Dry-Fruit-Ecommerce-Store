@@ -1,11 +1,11 @@
 six
 Faker
-pillow
+pillow~=10.3.0
 markdown
 python-dateutil
-pdf2image
-stripe
-django
+pdf2image~=1.17.0
+stripe~=9.6.0
+django~=5.0.6
 django-environ
 django-filter
 django-allauth==0.55.0
@@ -16,13 +16,15 @@ django-crispy-forms
 crispy-bootstrap5
 django-tinymce
 django-widget-tweaks
-djangorestframework
+djangorestframework~=3.15.1
 django-browser-reload
 stripe
 django-jazzmin
 dj-rest-auth
 drf-yasg
 django-phonenumber-field
-razorpay
+razorpay~=1.4.2
 djangorestframework_simplejwt
 
+
+requests~=2.31.0
