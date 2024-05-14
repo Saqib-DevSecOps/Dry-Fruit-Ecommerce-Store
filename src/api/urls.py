@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     WishlistListCreateAPIView, WishlistDeleteAPIView,
     BuyerDashboardAPIView,
@@ -37,4 +37,9 @@ urlpatterns += [
     path('order/add/rating/', ProductRatingAddAPIView.as_view(), name='product-rating-add'),
     path('payment/success/', PaymentSuccessAPIView.as_view(), name='payment/success/'),
 
+]
+
+
+urlpatterns +=[
+    path('accounts/', include('src.api.accounts.urls', namespace='accounts')),
 ]
