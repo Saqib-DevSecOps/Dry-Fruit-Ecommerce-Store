@@ -13,6 +13,7 @@ from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView
 from pdf2image import convert_from_bytes, convert_from_path
 
+from src.accounts.decorators import client_protected
 from src.accounts.models import Address
 from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment
 from src.administration.client.forms import AddressForm, UserProfileForm
@@ -23,7 +24,7 @@ from django.shortcuts import get_object_or_404, render
 
 
 # Create your views here.
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class UserUpdateView(View):
 
     def get(self, request):
@@ -41,7 +42,7 @@ class UserUpdateView(View):
         return render(request, template_name='client/user_update_form.html', context=context)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class AddressUpdate(UpdateView):
     form_class = AddressForm
     model = Address
@@ -55,7 +56,7 @@ class AddressUpdate(UpdateView):
         return reverse('client:dashboard')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class ClientDashboard(TemplateView):
     template_name = 'client/client_dashboard.html'
 
@@ -74,7 +75,7 @@ def get_paginated_context_data(self, queryset, page_size=5):
     return {'object_list': page_obj}
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class OrderListView(ListView):
     model = Order
     template_name = 'client/order_list.html'
@@ -90,7 +91,7 @@ class OrderListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class OrderCancelListView(ListView):
     model = Order
     template_name = 'client/order_cancel_list.html'
@@ -107,7 +108,7 @@ class OrderCancelListView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'client/order_detail.html'
@@ -116,7 +117,7 @@ class OrderDetailView(DetailView):
         return self.model.objects.filter(client=self.request.user)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class WishCreateView(View):
     def get(self, request, pk):
         wishlist = Wishlist.objects.filter(user=self.request.user, product_id=pk)
@@ -131,7 +132,7 @@ class WishCreateView(View):
         return redirect('website:product-detail', product.slug)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class WishlistView(ListView):
     model = Wishlist
     template_name = 'client/wishlist_list.html'
@@ -140,7 +141,7 @@ class WishlistView(ListView):
         return self.model.objects.filter(user=self.request.user)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class WishListDelete(View):
     def get(self, request, pk, *args, **kwargs):
         wishlist = get_object_or_404(Wishlist, user=self.request.user)
@@ -149,13 +150,13 @@ class WishListDelete(View):
         return redirect("client:wishlist")
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class PaymentListView(ListView):
     model = Payment
     template_name = 'client/payment_list.html'
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class AddressList(TemplateView):
     # model = Order
     template_name = 'client/address.html'
@@ -165,7 +166,7 @@ class AddressList(TemplateView):
     #     return self.model.objects.filter(user=self.request.user)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class PasswordCheck(View):
     def get(self, request, *args, **kwargs):
         if request.user.has_usable_password():
@@ -173,7 +174,7 @@ class PasswordCheck(View):
         return redirect('client:user-password-set')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class PasswordSetView(PasswordSetView):
     template_name = 'client/password_set_form.html'
     success_url = reverse_lazy('client:user-password-set')
@@ -183,7 +184,7 @@ class PasswordSetView(PasswordSetView):
         return response
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(client_protected, name='dispatch')
 class PasswordChangeView(PasswordChangeView):
     template_name = 'client/password_change_form.html'
     success_url = reverse_lazy('client:user-password-change')

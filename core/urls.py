@@ -8,7 +8,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from core.settings import ENVIRONMENT, MEDIA_ROOT, STATIC_ROOT
+from core.settings import  MEDIA_ROOT, STATIC_ROOT
 schema_view = get_schema_view(
     openapi.Info(
         title="Ecommerce Site",
@@ -61,7 +61,6 @@ urlpatterns += [
     path('c/', include('src.administration.client.urls', namespace='client')),
     path('accounts/', include('allauth.urls')),
     path('payment/', include('src.apps.stripe.urls', namespace='stripe')),
-    path('shipment/', include('src.apps.shipment.urls', namespace='shipment')),
 
 ]
 
@@ -73,8 +72,3 @@ urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),
 ]
-
-if ENVIRONMENT != 'server':
-    urlpatterns += [
-        path("__reload__/", include("django_browser_reload.urls"))
-    ]

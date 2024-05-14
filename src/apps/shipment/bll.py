@@ -1,14 +1,13 @@
+import json
 import os
 
 import requests
 
+from src.administration.admins.models import Order
+
 
 # Getting Token
 def get_or_refresh_token():
-    # TODO """ Later will get Email and Password from .env File"""
-    # email = os.getenv('SHIP_ROCKET_EMAIL')
-    # password = os.getenv('SHIP_ROCKET_PASSWORD')
-
     email = "saqibahmad77866@gmail.com"
     password = "Admin@123"
 
@@ -27,51 +26,111 @@ def get_or_refresh_token():
     return None
 
 
+def add_new_pickup_location(form):
+    token = get_or_refresh_token()
+    url = "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup"
+    payload = {
+        "pickup_location": form.cleaned_data['pickup_location'],
+        "name": form.cleaned_data['name'],
+        "email": form.cleaned_data['email'],
+        "phone": form.cleaned_data['phone'],
+        "address": form.cleaned_data['address'],
+        "address_2": form.cleaned_data['address_2'],
+        "city": form.cleaned_data['city'],
+        "state": form.cleaned_data['state'],
+        "country": form.cleaned_data['country'],
+        "pin_code": form.cleaned_data['pin_code'],
+    }
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    response = requests.post(url, headers=headers, json=payload)
+    return response
+
+
 # Orders Function
-def create_shiprocket_order(token, order_data):
+def create_shiprocket_order(form, order):
+    token = get_or_refresh_token()
     url = "https://apiv2.shiprocket.in/v1/external/orders/create/adhoc"
+    created_on_formatted = order.created_on.strftime("%Y-%m-%d %H:%M")
+    payload = json.dumps({
+        "order_id": order.id,
+        "order_date": created_on_formatted,
+        "pickup_location": str(form.cleaned_data['pickup_location']),
+        "billing_customer_name": str(order.full_name),
+        "billing_last_name": "",
+        "billing_address": str(order.address),
+        "billing_city": str(order.city),
+        "billing_pincode": str(order.postal_code),
+        "billing_state": str(order.state),
+        "billing_country": str(order.country),
+        "billing_email": str(order.client.email),
+        "billing_phone": str(order.contact),
+        "shipping_is_billing": True,
+        "order_items": [
+            {
+                "name": item.product.title,
+                "sku": f"{item.product.sku}_{item.product.pk}_{counter}",
+                "units": item.qty,
+                "selling_price": str(item.product.get_price()),
+            }
+            for counter, item in enumerate(order.get_cart(), start=1)
+        ],
+        "payment_method": "Prepaid",
+        "sub_total": float(order.sub_total),
+        "length": float(form.cleaned_data['length']),
+        "breadth": float(form.cleaned_data['breadth']),
+        "height": float(form.cleaned_data['height']),
+        "weight": float(form.cleaned_data['weight'])
+    })
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.post(url, headers=headers, json=order_data)
-    return response.json() if response.status_code == 200 else None
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    return response
 
 
-def get_all_orders(token):
-    url = "https://apiv2.shiprocket.in/v1/external/orders"
-
+def generate_awb_for_shipment(shipment_id):
+    token = get_or_refresh_token()
+    url = "https://apiv2.shiprocket.in/v1/external/courier/assign/awb"
+    payload = json.dumps({
+        "shipment_id": str(shipment_id),
+    })
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-
-    try:
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            orders = response.json()
-            return orders
-        else:
-            print(f"Failed to fetch orders. Status code: {response.status_code}")
-            return None
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response
 
 
-def get_specific_order(order_id, token):
-    url = f"https://apiv2.shiprocket.in/v1/external/orders/show/{order_id}"
+def request_for_shipment_pickup(shipment_id):
+    token = get_or_refresh_token()
+    url = "https://apiv2.shiprocket.in/v1/external/courier/generate/pickup"
+    payload = json.dumps({
+        "shipment_id": str(shipment_id),
+    })
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {token}'
     }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response
 
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        order_data = response.json()
-        return order_data
-    except requests.RequestException as e:
-        print(f"Request failed: {e}")
-        return None
+
+def get_shipment_detail(shipment_id):
+    token = get_or_refresh_token()
+    print(shipment_id)
+    url = f"https://apiv2.shiprocket.in/v1/external/shipments/{shipment_id}"
+    payload = {}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.text)
+    return response

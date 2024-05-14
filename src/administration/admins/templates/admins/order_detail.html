@@ -145,7 +145,11 @@
                     <div class="card-title">Shipment Details</div>
                     <div class="mb-2">
                         <i class="fa fa-map"></i>
-                        Street: <strong>{{ object.street_address }}</strong>
+                        phone: <strong>{{ object.contact }}</strong>
+                    </div>
+                    <div class="mb-2">
+                        <i class="fa fa-map"></i>
+                        address: <strong>{{ object.address }}</strong>
                     </div>
                     <div class="mb-2">
                         <i class="fa fa-map-pin"></i>
@@ -159,18 +163,27 @@
                         <i class="fa fa-telegram"></i>
                         Postal Code: <strong>{{ object.postal_code }}</strong>
                     </div>
-                    <div class="mb-2">
-                        <a href="{% url 'admins:shipment-update' object.shipment.id %}"
-                           class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Custom
-                            Shipment</a>
-                        <form method="POST" action="{% url 'shipment:shipment-create-order' object.id %}"
-                              class="d-inline-block ml-2">
-                            {% csrf_token %}
-                            <button class="btn btn-success" type="submit"><i class="fa fa-link"></i>&nbsp;&nbsp;Call
-                                ShipRocket
-                            </button>
-                        </form>
-                    </div>
+                    {% if object.shipment_type == "not-selected" %}
+                        {% if object.shipment_type == "custom" or object.shipment_type == "not-selected" %}
+                            <div class="mb-2">
+                                <a href="{% url 'admins:shipment-update' object.shipment.id %}"
+                                   class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Update
+                                    Custom Shipment</a>
+                            </div>
+                        {% endif %}
+                        <div class="mb-2">
+                            <a href="{% url 'admins:shiprocket-shipment-create' object.id %}"
+                               class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add
+                                Shiprocket
+                                Shipment</a>
+                        </div>
+                    {% endif %}
+                    {% if  object.shipment_type == "ship_rocket" %}
+                        <a href="{% url 'admins:shiprocket-shipment-detail' object.get_shipment_id %}"
+                           class="btn btn-primary d-inline-block"><i class="fa fa-eye"></i>&nbsp;&nbsp;
+                            View Shipment Detail
+                        </a>
+                    {% endif %}
 
                 </div>
             </div>
