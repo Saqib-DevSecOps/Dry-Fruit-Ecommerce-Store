@@ -16,7 +16,7 @@ django-crispy-forms
 crispy-bootstrap5
 django-tinymce
 django-widget-tweaks
-djangorestframework~=3.15.1
+djangorestframework
 django-browser-reload
 stripe
 django-jazzmin
@@ -24,7 +24,4 @@ dj-rest-auth
 drf-yasg
 django-phonenumber-field
 razorpay~=1.4.2
-djangorestframework_simplejwt
-
-
 requests~=2.31.0

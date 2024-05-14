@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import (
-    Product, ProductImage, Blog, ProductWeight
+    Product, ProductImage, Blog, ProductWeight, PickupLocation
 )
 from ...accounts.models import User
 
@@ -29,7 +29,7 @@ class ProductWeightForm(forms.ModelForm):
     class Meta:
         model = ProductWeight
         fields = [
-            'weight','price'
+            'weight', 'price'
         ]
 
 
@@ -40,3 +40,17 @@ class MyProfileForm(ModelForm):
             'profile_image', 'first_name', 'last_name',
             'phone_number', 'email'
         ]
+
+
+class ShipRocketShipmentForm(forms.Form):
+    pickup_location = forms.ModelChoiceField(queryset=PickupLocation.objects.all(), required=True,
+                                             help_text="The name of the pickup location added in your Shiprocket "
+                                                       "account. This cannot be a new location.")
+    length = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
+                                help_text="The length of the item in cms. Must be more than 0.5.")
+    breadth = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
+                                 help_text="The breadth of the item in cms. Must be more than 0.5.")
+    height = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
+                                help_text="The height of the item in cms. Must be more than 0.5.")
+    weight = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
+                                help_text="The weight of the item in kgs. Must be more than 0.")

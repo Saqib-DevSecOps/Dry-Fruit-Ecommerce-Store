@@ -1,7 +1,8 @@
 import uuid
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator, MinLengthValidator, \
+    MaxLengthValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
@@ -11,6 +12,7 @@ from tinymce.models import HTMLField
 
 from src.accounts.models import User
 from faker import Faker
+from django.utils.translation import gettext_lazy as _
 
 fake = Faker()
 
@@ -285,6 +287,11 @@ SHIPMENT_STATUS_CHOICE = (
     ('delivery', 'Delivery'),
     ('completed', 'Completed'),
 )
+SHIPMENT_TYPE_CHOICE = (
+    ('not-selected', 'Not Selected'),
+    ('custom', 'Custom'),
+    ('ship_rocket', 'Ship Rocket'),
+)
 
 Country = (
     ('USA', 'USA'),
@@ -293,13 +300,36 @@ Country = (
 )
 
 
+def validate_contact(value):
+    if not value.isdigit() or len(value) != 10 or value[0] not in ['9', '8', '7', '6']:
+        raise ValidationError(
+            _('Invalid contact number. It should be 10 digits and start with 9/8/7/6.'),
+            code='invalid_contact'
+        )
+
+
 class Order(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
 
     full_name = models.CharField(max_length=255, null=True, blank=True)
-    contact = models.CharField(max_length=100, null=True, blank=False)
-    postal_code = models.CharField(max_length=50, null=True, blank=False)
-    address = models.CharField(max_length=1000, null=True, blank=False)
+    contact = models.CharField(max_length=100, null=True, blank=False, validators=[validate_contact])
+    postal_code = models.IntegerField(
+        null=True,
+        blank=False,
+        validators=[
+            MinValueValidator(100000, message='The pin code must be 6 digits.'),
+            MaxValueValidator(999999, message='The pin code must be 6 digits.')
+        ]
+    )
+    address = models.CharField(
+        max_length=300,
+        null=True,
+        blank=False,
+        validators=[
+            MinLengthValidator(10, message='The address must be at least 10 characters long.'),
+            MaxLengthValidator(300, message='The address must be at most 300 characters long.')
+        ]
+    )
     city = models.CharField(max_length=1000, null=True, blank=False)
     state = models.CharField(max_length=1000, null=True, blank=False)
     country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
@@ -315,6 +345,10 @@ class Order(models.Model):
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
 
+    shipment_type = models.CharField(max_length=100, choices=SHIPMENT_TYPE_CHOICE, default=SHIPMENT_STATUS_CHOICE[0][0],
+                                     null=True,
+                                     blank=True)
+
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -327,6 +361,12 @@ class Order(models.Model):
 
     def get_cart(self):
         return OrderItem.objects.filter(order=self)
+
+    def get_shipment_id(self):
+        shipment, created = ShipRocketOrder.objects.get_or_create(order=self)
+        if created:
+            return None
+        return shipment.shipment_id
 
     def is_online(self):
         return True if self.payment_type == 'online' else False
@@ -478,3 +518,34 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"User : {self.user.email} and Product {self.product.title}"
+
+
+class PickupLocation(models.Model):
+    pickup_location = models.CharField(max_length=250, help_text="The nickname of the new pickup location")
+    name = models.CharField(max_length=250, help_text="The shipper's name.")
+    email = models.CharField(max_length=250)
+    phone = models.CharField(max_length=250)
+    address = models.CharField(max_length=250)
+    address_2 = models.CharField(max_length=250)
+    city = models.CharField(max_length=250)
+    state = models.CharField(max_length=250)
+    country = models.CharField(max_length=250)
+    pin_code = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.pickup_location
+
+
+class ShipRocketOrder(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    shiprocket_order_id = models.CharField(max_length=250, null=True, blank=True)
+    shipment_id = models.CharField(max_length=250, null=True, blank=True)
+    status = models.CharField(max_length=250, null=True, blank=True)
+    status_code = models.CharField(max_length=250, null=True, blank=True)
+    onboarding_completed_now = models.CharField(max_length=250, null=True, blank=True)
+    awb_code = models.CharField(max_length=250, null=True, blank=True)
+    courier_company_id = models.CharField(max_length=250, null=True, blank=True)
+    courier_name = models.CharField(max_length=250, null=True, blank=True)
+
+    def __str__(self):
+        return self.order_id

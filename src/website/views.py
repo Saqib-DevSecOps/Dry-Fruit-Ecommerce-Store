@@ -314,7 +314,7 @@ class OrderCreate(View):
             return redirect('razorpay:pay', order.pk)
 
         messages.error(request, "There are some issues in your order, kindly review your order once again.")
-        return render(request, self.template_name, self.context)
+        return render(request, self.template_name, {'form': form})
     #
 
 

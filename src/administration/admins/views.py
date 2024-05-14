@@ -1,5 +1,9 @@
+import json
+
+import requests
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.urls import reverse_lazy, reverse
@@ -7,15 +11,18 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView, DeleteView,
-    CreateView
+    CreateView, FormView
 )
 
 from src.accounts.decorators import admin_protected
 from src.accounts.models import User
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
-from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm
+from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
+    ShipRocketShipmentForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight, Shipment
+    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder
+from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
+    generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail
 
 """ MAIN """
 
@@ -388,6 +395,51 @@ class ShipmentUpdateView(UpdateView):
         return reverse("admins:order-detail", args=[shipment.order.pk])
 
 
+class ShipRocketOrderCreate(FormView):
+    form_class = ShipRocketShipmentForm
+    template_name = 'admins/shiprocketshipment_form.html'
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk')
+        order = Order.objects.get(id=pk)
+        shipment = create_shiprocket_order(form, order)
+        if shipment.status_code == 200:
+            messages.success(self.request, "Order Added To Ship Rocket")
+            shipment_data = json.loads(shipment.text)
+            awb = generate_awb_for_shipment(shipment_data.get("shipment_id"))
+            request_for_shipment_pickup(shipment_data.get("shipment_id"))
+            shiprocket_order, created = ShipRocketOrder.objects.get_or_create(order=order,
+                                                                              shiprocket_order_id=shipment_data.get(
+                                                                                  "order_id"),
+                                                                              shipment_id=shipment_data.get(
+                                                                                  "shipment_id"),
+                                                                              status=shipment_data.get("status"),
+                                                                              status_code=shipment_data.get(
+                                                                                  "status_code"),
+                                                                              onboarding_completed_now=shipment_data.get(
+                                                                                  "onboarding_completed_now"),
+                                                                              awb_code=shipment_data.get("awb_code"),
+                                                                              courier_company_id=shipment_data.get(
+                                                                                  "courier_company_id"),
+                                                                              courier_name=shipment_data.get(
+                                                                                  "courier_name"),
+                                                                              )
+            shiprocket_order.save()
+            order.shipment_type = "ship_rocket"
+            order.save()
+            return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('admins:order-detail', kwargs={'pk': self.kwargs.get('pk')})
+
+
+class ShipRocketShipmentDetail(View):
+    def get(self, request, *args, **kwargs):
+        order_id = self.kwargs.get('pk')
+        order_detail = get_shipment_detail(order_id)
+        return render(request, template_name='admins/get_shipment_detail.html')
+
+
 """ BLOG """
 
 
@@ -440,3 +492,33 @@ class BlogCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super(BlogCreateView, self).form_valid(form)
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PickupLocationList(ListView):
+    model = PickupLocation
+    template_name = 'admins/pickuplocation_list.html'
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PickupLocationCreate(CreateView):
+    model = PickupLocation
+    fields = ['pickup_location', 'name', 'email', 'phone', 'address', 'address_2', 'city', 'state', 'country',
+              'pin_code']
+    template_name = 'admins/pickuplocation_form.html'
+
+    def form_valid(self, form):
+        response = add_new_pickup_location(form)
+        if response.status_code == 200:
+            return super().form_valid(form)
+        else:
+            error_message = response.json()['message']
+            errors = response.json()['errors']
+            messages.error(self.request, f"API error: {error_message}")
+            for field, error_messages in errors.items():
+                for error_message in error_messages:
+                    form.add_error(field, error_message)
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('admins:pickup-location')

@@ -1,0 +1,63 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+{% block base_subtitle %}  PickUp Location{% endblock %}
+{% block base_subhead_heading %}  PickUp Location &rAarr; List{% endblock %}
+{% block base_subhead_paragraph %}List of all available  PickUp Location{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-primary" href="{% url 'admins:pickup-location-add' %}">
+        Add  PickUp Location
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                {% if object_list %}
+
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>pickup_location</th>
+                            <th>name</th>
+                            <th>email</th>
+                            <th>phone</th>
+                            <th>city</th>
+                            <th>state</th>
+                            <th>country</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for object in object_list %}
+                            <tr>
+                                <td>{{ object.pickup_location }}</td>
+                                <td>{{ object.name }}</td>
+                                <td>{{ object.email }}</td>
+                                <td>{{ object.phone }}</td>
+                                <td>{{ object.city }}</td>
+                                <td>{{ object.state }}</td>
+                                <td>{{ object.country }}</td>
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-danger mb-0"><b>No objects available</b></p>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
