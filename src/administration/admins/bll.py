@@ -1,8 +1,37 @@
+from datetime import datetime, timedelta
+
 from django.contrib import messages
+from django.db.models import Sum
+
 from core.bll import calculate_shipping_charges, calculate_service_charges
-from src.administration.admins.models import OrderItem, Cart, Payment
+from src.administration.admins.models import OrderItem, Cart, Payment, Order
 
 """ HELPERS """
+
+
+def get_sales_by_month():
+    current_year = datetime.now().year
+    sales_by_month = []
+    for month in range(1, 13):
+        start_date = datetime(current_year, month, 1)
+        end_date = start_date.replace(day=1, month=month % 12 + 1, year=start_date.year + month // 12) - timedelta(
+            days=1)
+        total_sales = Order.objects.filter(
+            created_on__date__gte=start_date,
+            created_on__date__lte=end_date
+        ).aggregate(total=Sum('total'))['total']
+        sales_by_month.append(total_sales or 0)
+    return sales_by_month
+
+
+def get_orders_by_month():
+    current_year = datetime.now().year
+    orders = Order.objects.filter(created_on__year=current_year)
+    order_counts = [0] * 12
+    for order in orders:
+        month = order.created_on.month
+        order_counts[month - 1] += 1
+    return order_counts
 
 
 # VERIFIED

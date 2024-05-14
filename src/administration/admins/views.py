@@ -16,6 +16,7 @@ from django.views.generic import (
 
 from src.accounts.decorators import admin_protected
 from src.accounts.models import User
+from src.administration.admins.bll import get_sales_by_month, get_orders_by_month
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
     ShipRocketShipmentForm
@@ -37,7 +38,13 @@ class DashboardView(TemplateView):
         context['orders'] = Order.objects.count()
         context['users'] = User.objects.filter(is_staff=False).count()
         context['products'] = Product.objects.count()
-
+        context['total_monthly_sales'] = get_sales_by_month()
+        context['total_monthly_orders'] = get_orders_by_month()
+        context['total_orders'] = Order.objects.all().count()
+        context['completed_orders'] = Order.objects.filter(order_status='completed').count()
+        context['pending_orders'] = Order.objects.filter(order_status='approved').count()
+        context['cancelled_orders'] = Order.objects.filter(order_status='cancelled').count()
+        context['recent_orders'] = Order.objects.order_by('created_on')
         return context
 
 
@@ -395,6 +402,7 @@ class ShipmentUpdateView(UpdateView):
         return reverse("admins:order-detail", args=[shipment.order.pk])
 
 
+@method_decorator(admin_protected, name='dispatch')
 class ShipRocketOrderCreate(FormView):
     form_class = ShipRocketShipmentForm
     template_name = 'admins/shiprocketshipment_form.html'
@@ -433,11 +441,14 @@ class ShipRocketOrderCreate(FormView):
         return reverse('admins:order-detail', kwargs={'pk': self.kwargs.get('pk')})
 
 
+@method_decorator(admin_protected, name='dispatch')
 class ShipRocketShipmentDetail(View):
     def get(self, request, *args, **kwargs):
-        order_id = self.kwargs.get('pk')
-        order_detail = get_shipment_detail(order_id)
-        return render(request, template_name='admins/get_shipment_detail.html')
+        shipment_id = self.kwargs.get('pk')
+        shipment_detail = get_shipment_detail(shipment_id)
+        shipment_data = json.loads(shipment_detail.text)
+        print(shipment_data)
+        return render(request, 'admins/get_shipment_detail.html', {'shipment_data': shipment_data})
 
 
 """ BLOG """

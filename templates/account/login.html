@@ -52,10 +52,17 @@
                             </form>
                             <hr>
                             <div class="row card p-2 mb-4 shadow">
-                                <button type="button" class="btn btn-white "><img
+                                <a href="{% provider_login_url 'google' %}" class="btn btn-white "><img
                                         src="{% static 'website/images/google.png' %}" style="height:25px">&nbsp;&nbsp;Login
                                     with Google
-                                </button>
+                                </a>
+                            </div>
+
+                         <div class="row card p-2 mb-4 shadow">
+                                <a href="{% provider_login_url 'facebook' %}" class="btn btn-white "><img
+                                        src="{% static 'website/images/Facebook_Logo_2023.png' %}" style="height:25px">&nbsp;&nbsp;Login
+                                    with Facebook
+                                </a>
                             </div>
 
                         </div>

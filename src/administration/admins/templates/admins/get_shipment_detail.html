@@ -1,0 +1,47 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block base_subtitle %} Orders Details{% endblock %}
+{% block base_subhead_heading %} Order &rAarr; Detail{% endblock %}
+{% block base_subhead_paragraph %}Order detailed down description{% endblock %}
+
+
+{% block base_subhead_button %}
+    {% with request.META.HTTP_REFERER as referer %}
+        <a class="btn btn-ghost-primary" href="{{ referer }}">
+            <i class="fa fa-arrow-left"></i>&nbsp;Back
+        </a>
+    {% endwith %}
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="shadow-none mb-0 card" style="">
+                <div class="card-body">
+                    <h5 class="mb-0 h4 card-title">Shipment Detail</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-borderless">
+
+                            <tbody>
+                            {% for key, value in shipment_data.data.items %}
+                                <tr class="border-top">
+                                    <th colspan="4"><h2 class="m-0 text-right">{{ key }}</h2></th>
+                                    <td><h2>{{ value }}</h2></td>
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

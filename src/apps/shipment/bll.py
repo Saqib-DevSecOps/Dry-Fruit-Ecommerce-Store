@@ -132,5 +132,4 @@ def get_shipment_detail(shipment_id):
         'Authorization': f'Bearer {token}'
     }
     response = requests.request("GET", url, headers=headers, data=payload)
-    print(response.text)
     return response

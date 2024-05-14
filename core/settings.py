@@ -11,23 +11,28 @@ env = environ.Env(
 )
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-DEBUG = True
-ROOT_URLCONF = 'core.urls'
-AUTH_USER_MODEL = 'accounts.User'
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEBUG = env('DEBUG')
+MAINTENANCE = env('MAINTENANCE')
 DOMAIN = env('DOMAIN')
 PROTOCOL = env('PROTOCOL')
 BASE_URL = f"{PROTOCOL}://{DOMAIN}"
-SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = str(env('ALLOWED_HOSTS')).split(',')
+CSRF_TRUSTED_ORIGINS = [f'{PROTOCOL}://{host}' for host in ALLOWED_HOSTS]
 ENVIRONMENT = env('ENVIRONMENT')
-ALLOWED_HOSTS = ["*"]
-GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_URL')
+ROOT_URLCONF = 'core.urls'
+AUTH_USER_MODEL = 'accounts.User'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+LOGOUT_URL = '/accounts/logout/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SITE_ID = int(env('SITE_ID'))
+SECRET_KEY = env('SECRET_KEY', default='default_secret_key')
+GOOGLE_CALLBACK_ADDRESS = f"{BASE_URL}{env('GOOGLE_CALLBACK_URL')}"
+APPLE_CALLBACK_ADDRESS = ''
+
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -54,6 +59,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 
     # REST APPS
     'rest_framework',
@@ -203,4 +209,3 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 RAZORPAY_API_KEY = "rzp_test_Jg802qU7X2QjKh"
 RAZORPAY_API_SECRET = "xs5giv3wJeDQR2aqiwr6DDVH"
-

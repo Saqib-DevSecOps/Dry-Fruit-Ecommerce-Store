@@ -1,4 +1,5 @@
 {% extends 'admins/base.html' %}
+{% load custom_tags %}
 {% load static %}
 
 {% block base_subtitle %}
@@ -103,7 +104,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text">
-                        <h6 class="mb-0 card-title">{% now 'Y' %} Orders</h6>
+                        <h6 class="mb-0 card-title">{% now 'Y' %} Sales</h6>
                     </div>
                 </div>
                 <div class="card-body">
@@ -120,7 +121,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text">
-                        <h6 class="mb-0 card-title">{% now 'Y' %} Sales</h6>
+                        <h6 class="mb-0 card-title">{% now 'Y' %} Orders</h6>
                     </div>
                 </div>
                 <div class="card-body">
@@ -157,28 +158,33 @@
                             </thead>
                             <tbody>
 
-                            {% for object in '12345' %}
+                            {% for object in recent_orders %}
                                 <tr class="">
                                     <td>
                                         <b>
-                                            <a href="/admins/user/1/">saqib</a>
+                                            <a href="{% url 'admins:user-detail' object.client.id %}">saqib</a>
                                         </b>
                                     </td>
-                                    <td>23.0</td>
-                                    <td>232.0</td>
-                                    <td>April 1, 2024, 1:44 a.m.</td>
+                                    <td>{{ object.sub_total }}</td>
+                                    <td>{{ object.created_on }}</td>
                                     <td>
 
-                                        <span class="badge bg-azure-lt">Shipping</span>
+                                        <span class="badge bg-{{ object.order_status|alert_type_class }}-lt">{{ object.order_status }}</span>
 
                                     </td>
                                     <td>
 
-                                        <span class="badge bg-success-lt">Completed</span>
+                                        <span class="badge bg-{{ object.payment_status|alert_type_class }}-lt">{{ object.payment_status }}</span>
 
                                     </td>
                                     <td>
-                                        <a class="text-primary" href="/admins/order/1/">
+                                        <span class="badge bg-{{ object.payment_type|alert_type_class }}-lt">{{ object.payment_type }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success-lt">{{ object.shipment_type }}</span>
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" href="{% url 'admins:order-detail' object.id %}">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                     </td>
@@ -208,8 +214,9 @@
         </div>
     </div>
 
-    <script src="{% static 'core/libs/apexcharts/apexcharts.min.js' %}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.1/apexcharts.min.js"
+            integrity="sha512-qiVW4rNFHFQm0jHli5vkdEwP4GPSzCSp85J7JRHdgzuuaTg31tTMC8+AHdEC5cmyMFDByX639todnt6cxEc1lQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         function coolNumberFormatter(value) {
             return value.toLocaleString();
@@ -218,7 +225,7 @@
         let options_year_months = {
             series: [{
                 name: 'Orders',
-                data: [12, 34, 65, 7, 2, 3, 4, 5, 6, 3, 2, 4]
+                data: {{ total_monthly_sales }}
             }]
             ,
             chart: {
@@ -252,7 +259,7 @@
         let options_year_months_amounts = {
             series: [{
                 name: 'Total',
-                data: [233, 435, 234, 4563, 234, 654]
+                data: {{ total_monthly_orders }}
             }],
             chart: {
                 height: 225,
@@ -283,7 +290,7 @@
             }
         };
         var id_order_pie_chart = {
-            series: [44, 55, 41, 17],
+            series: [{{total_orders}}, {{pending_orders}}, {{completed_orders}}, {{ cancelled_orders }}],
             chart: {
                 width: 380,
                 type: 'donut',
