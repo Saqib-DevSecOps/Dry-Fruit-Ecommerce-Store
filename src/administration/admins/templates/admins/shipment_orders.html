@@ -2,8 +2,8 @@
 {% load static %}
 {% load custom_tags %}
 
-{% block base_subtitle %} Orders Shipped{% endblock %}
-{% block base_subhead_heading %}SHIPPED &rAarr; ORDERS{% endblock %}
+{% block base_subtitle %} Orders Management{% endblock %}
+{% block base_subhead_heading %} Orders &rAarr; Management{% endblock %}
 {% block base_subhead_paragraph %}All available orders{% endblock %}
 
 {% block base_subhead_button %}
@@ -27,9 +27,6 @@
                                 <a href="{% url 'admins:order-list' %}" class="btn btn-danger">
                                     <i class="fa fa-paint-brush"></i>&nbsp;Clear
                                 </a>
-                                <a href="{% url 'shipment:reload-orders' %}" class="btn btn-success">
-                                    <i class="fa fa-refresh"></i>&nbsp;Reload
-                                </a>
                             </div>
                         </div>
                     </form>
@@ -40,14 +37,13 @@
                         <table class="table table-hover card-table table-vcenter text-nowrap datatable">
                             <thead class="thead-light">
                             <tr>
-                                <th>Email</th>
-                                <th>Customer Address</th>
+                                <th>User</th>
                                 <th>Total</th>
-                                <th>Status</th>
-                                <th>Shipping Method</th>
-                                <th>Tax</th>
-                                <th>SLA</th>
-                                <th>Created At</th>
+                                <th>Paid</th>
+                                <th>Created On</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
+                                <th>-</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,23 +52,24 @@
                                 <tr class="">
                                     <td>
                                         <b>
-                                            <a href="{% url 'admins:user-detail' object.client.pk %}">{{ object.customer_email }}</a>
+                                            <a href="{% url 'admins:user-detail' object.client.pk %}">{{ object.client.name_or_username }}</a>
                                         </b>
                                     </td>
-                                    <td>{{ object.customer_address }}</td>
                                     <td>{{ object.total }}</td>
-                                    <td>{{ object.status }}</td>
-                                    <td>{{ object.shipping_method }}</td>
-                                    <td>{{ object.tax }}</td>
-                                    <td>{{ object.sla }}</td>
-                                    <td>{{ object.created_at }}</td>
+                                    <td>{{ object.paid }}</td>
+                                    <td>{{ object.created_on }}</td>
                                     <td>
-                                        <a class="text-primary" href="{% url 'shipment:get-specific-order' object.id %}">
+                                        <span class="badge bg-{{ object.order_status|alert_type_class }}-lt">{{ object.get_order_status_display }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ object.order_status|alert_type_class }}-lt">{{ object.get_payment_status_display }}</span>
+                                    </td>
+                                    <td>
+                                        <a class="text-primary" href="{% url 'admins:order-detail' object.pk %}">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                     </td>
-                                </tr>clear
-
+                                </tr>
                             {% endfor %}
 
                             </tbody>
@@ -113,7 +110,6 @@
             </div>
         </div>
     </div>
-
 
 
 {% endblock %}
