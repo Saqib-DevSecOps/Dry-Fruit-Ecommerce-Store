@@ -402,6 +402,16 @@ class ShipmentUpdateView(UpdateView):
         return reverse("admins:order-detail", args=[shipment.order.pk])
 
 
+class OrderCompleteView(View):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        order = Order.objects.get(id=pk)
+        order.order_status = "completed"
+        order.save()
+        messages.success(request,'Order Has Been Completed Successfully')
+        return redirect('admins:order-detail',pk = pk)
+
+
 @method_decorator(admin_protected, name='dispatch')
 class ShipRocketOrderCreate(FormView):
     form_class = ShipRocketShipmentForm
