@@ -8,8 +8,8 @@ from src.administration.admins.models import Order
 
 # Getting Token
 def get_or_refresh_token():
-    email = "saqibahmad77866@gmail.com"
-    password = "Admin@123"
+    email = "hiren9016573094@gmail.com"
+    password = "Hiren@007"
 
     if email and password:
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"
@@ -20,14 +20,20 @@ def get_or_refresh_token():
         headers = {
             'Content-Type': 'application/json'
         }
-        response = requests.post(url, headers=headers, json=payload)
-        if response.status_code == 200:
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()
             return response.json().get('token')
+        except requests.exceptions.RequestException as e:
+            print(f"Error occurred while fetching or refreshing token: {e}")
     return None
 
 
 def add_new_pickup_location(form):
     token = get_or_refresh_token()
+    if not token:
+        return None
+
     url = "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup"
     payload = {
         "pickup_location": form.cleaned_data['pickup_location'],
@@ -41,13 +47,23 @@ def add_new_pickup_location(form):
         "country": form.cleaned_data['country'],
         "pin_code": form.cleaned_data['pin_code'],
     }
-
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.post(url, headers=headers, json=payload)
-    return response
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            print("error_details", error_details)
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500
 
 
 # Orders Function
@@ -89,9 +105,20 @@ def create_shiprocket_order(form, order):
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)
 
-    return response
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            print("error_details", error_details)
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500
 
 
 def generate_awb_for_shipment(shipment_id):
@@ -104,8 +131,19 @@ def generate_awb_for_shipment(shipment_id):
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    return response
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            print("error_details", error_details)
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500
 
 
 def request_for_shipment_pickup(shipment_id):
@@ -118,18 +156,61 @@ def request_for_shipment_pickup(shipment_id):
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    return response
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500
 
 
 def get_shipment_detail(shipment_id):
     token = get_or_refresh_token()
-    print(shipment_id)
     url = f"https://apiv2.shiprocket.in/v1/external/shipments/{shipment_id}"
     payload = {}
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
     }
-    response = requests.request("GET", url, headers=headers, data=payload)
-    return response
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            print("error_details", error_details)
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500
+
+
+def track_shipping(shipment_id):
+    token = get_or_refresh_token()
+    url = f"https://apiv2.shiprocket.in/v1/external/courier/track/shipment/{shipment_id}"
+    payload = {}
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    try:
+        response = requests.request("GET", url, headers=headers, data=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors (status code 4xx or 5xx)
+        return response, response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"Error occurred while adding new pickup location: {e}")
+        try:
+            error_details = response.json()  # Try to parse response content as JSON
+            print("error_details", error_details)
+            return error_details, 422
+        except json.JSONDecodeError:
+            print("response.text", response.text)
+            return response.text, 500

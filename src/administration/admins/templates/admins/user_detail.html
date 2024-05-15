@@ -139,74 +139,74 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Orders</h3>
-        </div>
-        {% if orders %}
-            <div class="card-body p-0">
-
-                <div class="table-responsive">
-                    <table class="table table-hover card-table table-vcenter text-nowrap datatable">
-                        <thead class="thead-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>total</th>
-                            <th>payment status</th>
-                            <th>order status</th>
-                            <th>created on</th>
-                            <th>-</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for order in orders %}
-                            <tr class="">
-                                <td>
-                                    <a href="{% url 'admins:order-detail' order.pk %}"># {{ order.id }}</a>
-                                </td>
-                                <td>{{ order.total }}</td>
-                                <td>
-                                    {% if order.payment_status == 'pending' %}
-                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>
-                                    {% elif order.payment_status == 'completed' %}
-                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>
-                                    {% elif order.payment_status == 'cancelled' %}
-                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary-lt">unknown</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if order.payment_status == 'pending' %}
-                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>
-                                    {% elif order.payment_status == 'completed' %}
-                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>
-                                    {% elif order.payment_status == 'cancelled' %}
-                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>
-                                    {% elif order.payment_status == 'shipping' %}
-                                        <span class="badge bg-primary-lt">{{ order.payment_status.display }}</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary-lt">unknown</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ order.created_on }}</td>
-                                <td>
-                                    <a href="{% url 'admins:order-detail' order.pk %}"><i class="fa fa-eye"></i></a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-        {% else %}
-            <div class="card-body">
-                <b class="text-danger">No orders available for this user</b>
-            </div>
-        {% endif %}
-    </div>
+{#    <div class="card">#}
+{#        <div class="card-header">#}
+{#            <h3 class="card-title">Orders</h3>#}
+{#        </div>#}
+{#        {% if orders %}#}
+{#            <div class="card-body p-0">#}
+{##}
+{#                <div class="table-responsive">#}
+{#                    <table class="table table-hover card-table table-vcenter text-nowrap datatable">#}
+{#                        <thead class="thead-light">#}
+{#                        <tr>#}
+{#                            <th>ID</th>#}
+{#                            <th>total</th>#}
+{#                            <th>payment status</th>#}
+{#                            <th>order status</th>#}
+{#                            <th>created on</th>#}
+{#                            <th>-</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <tbody>#}
+{##}
+{#                        {% for order in orders %}#}
+{#                            <tr class="">#}
+{#                                <td>#}
+{#                                    <a href="{% url 'admins:order-detail' order.pk %}"># {{ order.id }}</a>#}
+{#                                </td>#}
+{#                                <td>{{ order.total }}</td>#}
+{#                                <td>#}
+{#                                    {% if order.payment_status == 'pending' %}#}
+{#                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% elif order.payment_status == 'completed' %}#}
+{#                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% elif order.payment_status == 'cancelled' %}#}
+{#                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% else %}#}
+{#                                        <span class="badge bg-secondary-lt">unknown</span>#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    {% if order.payment_status == 'pending' %}#}
+{#                                        <span class="badge bg-warning-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% elif order.payment_status == 'completed' %}#}
+{#                                        <span class="badge bg-success-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% elif order.payment_status == 'cancelled' %}#}
+{#                                        <span class="badge bg-danger-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% elif order.payment_status == 'shipping' %}#}
+{#                                        <span class="badge bg-primary-lt">{{ order.payment_status.display }}</span>#}
+{#                                    {% else %}#}
+{#                                        <span class="badge bg-secondary-lt">unknown</span>#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                                <td>{{ order.created_on }}</td>#}
+{#                                <td>#}
+{#                                    <a href="{% url 'admins:order-detail' order.pk %}"><i class="fa fa-eye"></i></a>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{##}
+{#                        </tbody>#}
+{#                    </table>#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#        {% else %}#}
+{#            <div class="card-body">#}
+{#                <b class="text-danger">No orders available for this user</b>#}
+{#            </div>#}
+{#        {% endif %}#}
+{#    </div>#}
 
 {% endblock %}

@@ -11,7 +11,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 
 from core import settings
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, ProductRating
 )
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.forms import OrderCheckoutForm
@@ -60,6 +60,7 @@ class ProductDetailView(DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['related_product'] = Product.objects.filter().distinct()[:4]
+        context['reviews'] = ProductRating.objects.filter(product_id=self.kwargs.get('pk'))
         return context
 
 

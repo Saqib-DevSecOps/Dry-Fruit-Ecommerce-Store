@@ -1,0 +1,78 @@
+{% extends  'website/base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block content %}
+
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Pending Reviews</h3>
+                                </div>
+                                <div class="row">
+                                    {% if object_list %}
+                                        {% for object in object_list %}
+                                            <div class="col-sm-12 m-2">
+                                                <div class="card">
+                                                    <div class="card-body">
+
+                                                        <label style="font-size: 22px"><b>{{ object.product.category }}</b></label>
+                                                        <p>{{ object.product.created_on }}</p>
+                                                        <div class="row align-items-end">
+                                                            <div class="col-sm-4">
+                                                                <div class="d-flex position-relative">
+                                                                    <img src="{{ object.product.thumbnail_image|image_or_placeholder }}"
+                                                                         style="height: 70px;"
+                                                                         class="flex-shrink-0 me-3 avatar-xl rounded"
+                                                                         alt="...">
+                                                                    <div>
+                                                                        <p class="mt-0">{{ object.product.title }}</p>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-sm-4 text-center">
+                                                                <div>
+                                                                    <p class="mt- text-warning ">
+                                                                        Qty:{{ object.qty }} </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4 text-end">
+                                                                <a
+                                                                        href="{% url 'client:add-review' object.product.id object.order.id %}"
+                                                                        style="background-color: #fdc315"
+                                                                        class="p-1 px-4 text-white"><i
+                                                                        class="fa fa-write" aria-hidden="true"></i>Add
+                                                                    Review
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col-sm-12 mt-4">
+                                            <div class="text-center mt-4">
+                                                <h4 class="text-danger ">No Pending ReviewFound</h4>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

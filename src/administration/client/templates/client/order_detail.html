@@ -493,7 +493,8 @@
                                                 <p class="  fs-11">Placed on {{ object.created_on }}</p>
                                                 {% if object.payment_status == "unpaid" %}
                                                     <p class=" float-end fs-11">
-                                                        <a href="{% url 'razorpay:pay' object.id %}"><i class=" float-end fa fa-credit-card-alt text-success">&nbsp;&nbsp;repay</i></a><br>
+                                                        <a href="{% url 'razorpay:pay' object.id %}"><i
+                                                                class=" float-end fa fa-credit-card-alt text-success">&nbsp;&nbsp;repay</i></a><br>
                                                         <a href="#"><i class="fa fa-times text-danger">&nbsp;&nbsp;Cancel</i></a>
                                                     </p>
                                                 {% else %}
@@ -504,19 +505,33 @@
                                         <div class="card mt-4">
                                             <div class="card-body">
                                                 <label style="font-size: 22px"><b>Packing {{ object.id }}</b></label>
-{#                                                <a href="{% url 'client:order_detail' 1 %}"#}
-{#                                                   style="background-color: #f5b23c"#}
-{#                                                   class="p-1 float-end px-2 text-white">Chat With Seller#}
-{#                                                </a>#}
+                                                {% if order.order_status == "approved" %}
+                                                    {% if order.shipment_type == "custom" %}
+                                                        <a href="{% url 'client:shipment_detail' object.get_shipment_id %}"
+                                                           style="background-color: #f5b23c"
+                                                           class="p-1 px-2 float-end text-white">View Shipment
+                                                        </a>
+                                                    {% elif order.shipment_type == "ship_rocket" %}
+                                                        <a href="{% url 'client:shiprocket_shipment_detail' object.get_shiprocket_shipment_id %}"
+                                                           style="background-color: #f5b23c"
+                                                           class="p-1 px-2 float-end text-white">View Shipment
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+
                                                 <p class=" fs-11">Placed on {{ object.created_on }}</p>
+                                                <p>
+
+                                                </p>
+
                                                 <hr>
                                                 <p class=" float-end text-warning">Stander delivery</p>
                                                 <p class="text-warning">Get by fri 22 mar - fri 29 mar</p>
                                                 <nav>
                                                     <ol class="cd-multi-steps text-bottom ">
+                                                        <li class="visited"><a href="#0">Cart</a></li>
                                                         <li class="visited"><a href="#0">Billing</a></li>
-                                                        <li class="visited"><a href="#0">Delivery</a></li>
-                                                        <li class="current"><em>Complete</em></li>
+                                                        <li class="current"><em>Delivery</em></li>
                                                     </ol>
                                                 </nav>
                                                 {% for obj in object.get_cart %}
@@ -545,12 +560,7 @@
                                                                 <p class="mt- text-warning ">Qty:{{ obj.qty }} </p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-4 text-end">
-                                                            <a href=#"
-                                                               style="background-color: #f5b23c"
-                                                               class="p-1 px-2 text-white">View Shipment
-                                                            </a>
-                                                        </div>
+
                                                     </div>
                                                 {% endfor %}
                                             </div>

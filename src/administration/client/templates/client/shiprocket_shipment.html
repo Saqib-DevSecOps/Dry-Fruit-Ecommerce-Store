@@ -1,0 +1,106 @@
+{% extends  'website/base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block content %}
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Shipment Detail</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 m-2">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-6  text-center border-dark">
+                                                        <h6>Track Status</h6>
+                                                    </div>
+                                                    <div class="col-6  text-center  border-dark">
+                                                        <h6>{{ shipment_data.track_status }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 text-center border-dark">
+                                                        <h6>Shipment Status</h6>
+                                                    </div>
+                                                    <div class="col-6 text-center  border-dark">
+                                                        <h6>{{ shipment_data.shipment_status }}</h6>
+                                                    </div>
+                                                </div>
+                                                {% for item in shipment_data.shipment_track %}
+                                                    {% for key, value in item.items %}
+                                                        <div class="row">
+                                                            <div class="col-6 text-center border-dark">
+                                                                <h6>{{ key }}</h6>
+                                                            </div>
+                                                            <div class="col-6 text-center border-dark">
+                                                                <h6>{{ value }}</h6>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {% if shipment_data.shipment_track_activities %}
+                                                    {% for activity in shipment_data.shipment_track_activities %}
+                                                        {% for key, value in activity.items %}
+                                                            <div class="row">
+                                                                <div class="col-6 text-center border-dark">
+                                                                    <h6>{{ key }}</h6>
+                                                                </div>
+                                                                <div class="col-6 text-center border-dark">
+                                                                    <h6>{{ value }}</h6>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                <div class="row">
+                                                    <div class="col-6 text-center border-dark">
+                                                        <h6>Track Url</h6>
+                                                    </div>
+                                                    <div class="col-6 text-center  border-dark">
+                                                        <h6>{{ shipment_data.track_url }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 text-center border-dark">
+                                                        <h6>qc_response</h6>
+                                                    </div>
+                                                    <div class="col-6 text-center  border-dark">
+                                                        <h6>{{ shipment_data.qc_response }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 text-center border-dark">
+                                                        <h6>is_return</h6>
+                                                    </div>
+                                                    <div class="col-6 text-center  border-dark">
+                                                        <h6>{{ shipment_data.qc_response }}</h6>
+                                                    </div>
+                                                </div>
+                                                {% if shipment_data.error %}
+                                                    <div class="row">
+                                                        <div class="col-12 text-center border-dark">
+                                                            <h6 class="text-danger">{{ shipment_data.error }}</h6>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

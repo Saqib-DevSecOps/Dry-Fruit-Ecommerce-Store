@@ -1,26 +1,31 @@
 import base64
+import json
 
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import TemplateView, UpdateView, ListView, DetailView
+from django.views.generic import TemplateView, UpdateView, ListView, DetailView, CreateView
 from pdf2image import convert_from_bytes, convert_from_path
 
 from src.accounts.decorators import client_protected
 from src.accounts.models import Address
-from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment
+from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment, Shipment, ShipRocketOrder, \
+    ProductRating
+from src.administration.client.bll import calculate_reviews
 from src.administration.client.forms import AddressForm, UserProfileForm
 
 import io
 from PIL import Image
 from django.shortcuts import get_object_or_404, render
+
+from src.apps.shipment.bll import track_shipping
 
 
 # Create your views here.
@@ -117,6 +122,31 @@ class OrderDetailView(DetailView):
         return self.model.objects.filter(client=self.request.user)
 
 
+class ShipmentDetailView(DetailView):
+    model = Shipment
+    template_name = 'client/shipment_detail.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(order__client=self.request.user)
+
+
+class ShipRocketShipment(View):
+    template_name = 'client/shiprocket_shipment.html'
+
+    def get(self,request,*args,**kwargs):
+        shipment_id = self.kwargs.get('pk')
+        shipment_detail, status_code = track_shipping(shipment_id)
+        if not status_code == 200:
+            error_message = shipment_detail['message']
+            messages.error(self.request, error_message)
+            return redirect("client:order_list")
+        shipment_detail = shipment_detail.text
+        shipment_detail = json.loads(shipment_detail)
+        first_key = list(shipment_detail.keys())[0]
+        shipment_detail = shipment_detail[first_key]['tracking_data']
+        return render(self.request, template_name=self.template_name, context={'shipment_data': shipment_detail})
+
+
 @method_decorator(client_protected, name='dispatch')
 class WishCreateView(View):
     def get(self, request, pk):
@@ -157,6 +187,53 @@ class PaymentListView(ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(order__client=self.request.user)
+
+
+@method_decorator(client_protected, name='dispatch')
+class ProductRatingListView(ListView):
+    model = ProductRating
+    template_name = 'client/productrating_list.html'
+
+    def get_queryset(self):
+        rated_products_subquery = ProductRating.objects.filter(
+            client=self.request.user,
+            product_id=OuterRef('product_id'),
+            order_id=OuterRef('order_id')
+        ).values('product_id')
+        order_items_without_review = OrderItem.objects.filter(
+            order__client=self.request.user
+        ).exclude(
+            product_id__in=Subquery(rated_products_subquery)
+        )
+        return order_items_without_review
+
+
+class ProductRatingCreateView(CreateView):
+    model = ProductRating
+    fields = ['rate', 'comment']
+    template_name = 'client/productrating_form.html'
+
+    def form_valid(self, form, *args, **kwargs):
+        rate = form.cleaned_data.get('rate')
+        comment = form.cleaned_data.get('comment')
+        if not rate or not comment:
+            messages.error(self.request, 'Please Enter Rate And Comment')
+            return redirect('client:add-review', product_id=self.kwargs.get('product_id'),
+                            order_id=self.kwargs.get('order_id'))
+        if rate > 5:
+            messages.error(self.request, 'Rate Must be less than 6')
+            return redirect('client:add-review', product_id=self.kwargs.get('product_id'),
+                            order_id=self.kwargs.get('order_id'))
+
+        form.instance.product_id = self.kwargs.get('product_id')
+        form.instance.order_id = self.kwargs.get('order_id')
+        form.instance.client = self.request.user
+        form.save()
+        calculate_reviews(rate, self.kwargs.get('product_id'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('client:reviews')
 
 
 @method_decorator(client_protected, name='dispatch')

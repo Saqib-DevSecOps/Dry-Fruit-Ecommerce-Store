@@ -163,14 +163,15 @@
                         <i class="fa fa-telegram"></i>
                         Postal Code: <strong>{{ object.postal_code }}</strong>
                     </div>
+                    {% if object.shipment_type == "custom" or object.shipment_type == "not-selected" %}
+                        <div class="mb-2">
+                            <a href="{% url 'admins:shipment-update' object.shipment.id %}"
+                               class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Update
+                                Custom Shipment</a>
+                        </div>
+                    {% endif %}
                     {% if object.shipment_type == "not-selected" %}
-                        {% if object.shipment_type == "custom" or object.shipment_type == "not-selected" %}
-                            <div class="mb-2">
-                                <a href="{% url 'admins:shipment-update' object.shipment.id %}"
-                                   class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Update
-                                    Custom Shipment</a>
-                            </div>
-                        {% endif %}
+
                         <div class="mb-2">
                             <a href="{% url 'admins:shiprocket-shipment-create' object.id %}"
                                class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add

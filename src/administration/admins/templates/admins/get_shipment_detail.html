@@ -17,28 +17,87 @@
 
 {% block base_content %}
 
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
             <div class="shadow-none mb-0 card" style="">
                 <div class="card-body">
-                    <h5 class="mb-0 h4 card-title">Shipment Detail</h5>
+                    <h2 class="mb-0 h4 text-center card-title">Shipment Detail</h2>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table mb-0 table-borderless">
-
-                            <tbody>
-                            {% for key, value in shipment_data.data.items %}
-                                <tr class="border-top">
-                                    <th colspan="4"><h2 class="m-0 text-right">{{ key }}</h2></th>
-                                    <td><h2>{{ value }}</h2></td>
-                                </tr>
-                            {% endfor %}
-
-
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-6  text-center border-dark">
+                            <h3>Track Status</h3>
+                        </div>
+                        <div class="col-6  text-center  border-dark">
+                            <h3>{{ shipment_data.track_status }}</h3>
+                        </div>
                     </div>
+                    <div class="row">
+                        <div class="col-6 text-center border-dark">
+                            <h3>Shipment Status</h3>
+                        </div>
+                        <div class="col-6 text-center  border-dark">
+                            <h3>{{ shipment_data.shipment_status }}</h3>
+                        </div>
+                    </div>
+                    {% for item in shipment_data.shipment_track %}
+                        {% for key, value in item.items %}
+                            <div class="row">
+                                <div class="col-6 text-center border-dark">
+                                    <h3>{{ key }}</h3>
+                                </div>
+                                <div class="col-6 text-center border-dark">
+                                    <h3>{{ value }}</h3>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if shipment_data.shipment_track_activities %}
+                        {% for activity in shipment_data.shipment_track_activities %}
+                            {% for key, value in activity.items %}
+                                <div class="row">
+                                    <div class="col-6 text-center border-dark">
+                                        <h3>{{ key }}</h3>
+                                    </div>
+                                    <div class="col-6 text-center border-dark">
+                                        <h3>{{ value }}</h3>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-6 text-center border-dark">
+                            <h3>Track Url</h3>
+                        </div>
+                        <div class="col-6 text-center  border-dark">
+                            <h3>{{ shipment_data.track_url }}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-center border-dark">
+                            <h3>qc_response</h3>
+                        </div>
+                        <div class="col-6 text-center  border-dark">
+                            <h3>{{ shipment_data.qc_response }}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-center border-dark">
+                            <h3>is_return</h3>
+                        </div>
+                        <div class="col-6 text-center  border-dark">
+                            <h3>{{ shipment_data.qc_response }}</h3>
+                        </div>
+                    </div>
+                    {% if shipment_data.error %}
+                        <div class="row">
+                            <div class="col-12 text-center border-dark">
+                                <h3 class="text-danger">{{ shipment_data.error }}</h3>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
