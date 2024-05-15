@@ -504,19 +504,19 @@
                                         <div class="card mt-4">
                                             <div class="card-body">
                                                 <label style="font-size: 22px"><b>Packing {{ object.id }}</b></label>
-                                                <a href="{% url 'client:order_detail' 1 %}"
-                                                   style="background-color: #f5b23c"
-                                                   class="p-1 float-end px-2 text-white">Chat With Seller
-                                                </a>
+{#                                                <a href="{% url 'client:order_detail' 1 %}"#}
+{#                                                   style="background-color: #f5b23c"#}
+{#                                                   class="p-1 float-end px-2 text-white">Chat With Seller#}
+{#                                                </a>#}
                                                 <p class=" fs-11">Placed on {{ object.created_on }}</p>
                                                 <hr>
                                                 <p class=" float-end text-warning">Stander delivery</p>
                                                 <p class="text-warning">Get by fri 22 mar - fri 29 mar</p>
                                                 <nav>
                                                     <ol class="cd-multi-steps text-bottom ">
-                                                        <li class="visited"><a href="#0">Cart</a></li>
                                                         <li class="visited"><a href="#0">Billing</a></li>
-                                                        <li class="current"><em>Delivery</em></li>
+                                                        <li class="visited"><a href="#0">Delivery</a></li>
+                                                        <li class="current"><em>Complete</em></li>
                                                     </ol>
                                                 </nav>
                                                 {% for obj in object.get_cart %}
@@ -548,7 +548,7 @@
                                                         <div class="col-sm-4 text-end">
                                                             <a href=#"
                                                                style="background-color: #f5b23c"
-                                                               class="p-1 px-2 text-white">Cancel
+                                                               class="p-1 px-2 text-white">View Shipment
                                                             </a>
                                                         </div>
                                                     </div>

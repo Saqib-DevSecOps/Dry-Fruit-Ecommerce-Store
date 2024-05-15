@@ -155,6 +155,9 @@ class PaymentListView(ListView):
     model = Payment
     template_name = 'client/payment_list.html'
 
+    def get_queryset(self):
+        return self.model.objects.filter(order__client=self.request.user)
+
 
 @method_decorator(client_protected, name='dispatch')
 class AddressList(TemplateView):
