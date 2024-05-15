@@ -185,6 +185,9 @@ class Product(models.Model):
     def get_related_products(self):
         return Product.objects.filter(category=self.category, is_active=True, is_listed=True).exclude(id=self.id)[:10]
 
+    def get_all_ratings(self):
+        return ProductRating.objects.filter(product=self)
+
 
 class ProductWeight(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False)

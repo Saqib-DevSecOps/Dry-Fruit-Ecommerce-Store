@@ -25,7 +25,8 @@ class ProductHomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id', 'title', 'slug', 'thumbnail_image', 'price', 'discount', 'category',
+            'id', 'title', 'slug', 'thumbnail_image', 'price', 'discount', 'category', 'average_review',
+            'total_reviews',
         ]
 
 
@@ -122,7 +123,7 @@ class CartUpdateSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email', 'profile_image', 'phone_number', 'date_of_birth', 'gender']
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -152,18 +153,28 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductReviewsSerializer(serializers.ModelSerializer):
+    client = UserSerializer()
+
+    class Meta:
+        model = ProductRating
+        fields = [
+            'client', 'rate', 'comment', 'created_on'
+        ]
+
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer()
-    # tags = ProductTagSerializer(many=True)
     images = ProductImageSerializer(many=True, read_only=True, source='productimage_set')
     product_weight = ProductWeightSerializer(many=True, read_only=True, source='get_product_weight')
+    product_review = ProductReviewsSerializer(many=True, read_only=True, source='get_all_ratings')
 
     class Meta:
         model = Product
         fields = [
             'id', 'sku', 'title', 'slug', 'manufacturer_brand', 'category', 'images', 'description',
-            'thumbnail_image',
-            'video_link', 'quantity', 'price', 'discount', 'promotional', 'total_reviews', 'product_weight'
+            'thumbnail_image', 'average_review', 'video_link', 'quantity', 'price', 'discount', 'promotional',
+            'total_reviews', 'product_weight', 'product_review'
         ]
 
 
@@ -255,11 +266,10 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 class ProductRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductRating
-        fields = ['product', 'rate', 'comment', 'client']
+        fields = ['product', 'rate', 'comment', 'order', 'client']
 
     def validate(self, data):
         user = self.context['request'].user
-
         client = data['client']
         product = data['product']
         rate = data['rate']
