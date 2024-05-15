@@ -1,4 +1,4 @@
-from django.db.models import Sum
+from django.db.models import Sum, Subquery, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import permission_classes
@@ -12,12 +12,14 @@ from rest_framework.response import Response
 
 from src.administration.admins.bll import get_cart_calculations
 from src.administration.admins.filters import OrderFilter
-from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment
+from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment, \
+    ProductRating
 from src.api.filter import ProductFilter
 from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
     WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
-    ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer
+    ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer, ProductRatingListSerializer, \
+    OrderItemListSerializer
 from src.apps.razorpay.bll import get_razorpay_order_id
 
 """Product Apis"""
@@ -164,6 +166,30 @@ class OrderDetailAPIView(ListAPIView):
 
         order_id = self.kwargs.get('pk')
         return Order.objects.filter(client=self.request.user, id=order_id)
+
+
+class ProductPendingRatingListView(ListAPIView):
+    serializer_class = OrderItemListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return OrderItem.objects.none()
+        # Subquery to get the products in the order that the user has already rated
+        rated_products_subquery = ProductRating.objects.filter(
+            client=self.request.user,
+            product_id=OuterRef('product_id'),
+            order_id=OuterRef('order_id')
+        ).values('product_id')
+
+        # Query to get order items where the product in the order has not been rated by the user
+        order_items_without_review = OrderItem.objects.filter(
+            order__client=self.request.user
+        ).exclude(
+            product_id__in=Subquery(rated_products_subquery)
+        )
+
+        return order_items_without_review
 
 
 class ProductRatingAddAPIView(CreateAPIView):

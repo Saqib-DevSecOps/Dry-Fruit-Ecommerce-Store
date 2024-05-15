@@ -34,11 +34,6 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'client:address' %}" {% if request.path == '/c/my-address/' %}class="active" aria-selected="true"{% endif %}>
-                    Address Book
-                </a>
-            </li>
-            <li>
                 <a href="{% url 'client:wishlist' %}" {% if request.path == '/c/wishlist/' %}class="active"
                    aria-selected="true"{% endif %}>
                     My Wishlist

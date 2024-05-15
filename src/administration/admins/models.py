@@ -419,6 +419,7 @@ class OrderItem(models.Model):
         return self.qty * self.product.get_price()
 
 
+
 class Shipment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
