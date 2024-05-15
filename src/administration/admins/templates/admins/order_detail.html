@@ -184,6 +184,10 @@
                            class="btn btn-primary d-inline-block"><i class="fa fa-eye"></i>&nbsp;&nbsp;
                             View Shipment Detail
                         </a>
+                        <a href="{% url 'admins:order-complete' object.id %}"
+                           class="btn btn-success mt-2 d-inline-block"><i class="fa fa-check"></i>&nbsp;&nbsp;
+                            Mark As Complete
+                        </a>
                     {% endif %}
 
                 </div>

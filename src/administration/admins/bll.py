@@ -69,12 +69,11 @@ def get_cart_calculations(user):
     total_price = 0
     discount_price = 0
     for cart in cart:
-        total_price += float(cart.get_item_price())
-        discount_price += float(cart.get_discount_price())
+        total_price += float(cart.get_discount_price())
 
-    shipping_charges = calculate_shipping_charges(discount_price)
-    service_charges = calculate_service_charges(discount_price)
-    sub_total = discount_price + shipping_charges + service_charges
+    shipping_charges = calculate_shipping_charges(total_price)
+    service_charges = calculate_service_charges(total_price)
+    sub_total = total_price + shipping_charges + service_charges
     return total_price, service_charges, shipping_charges, sub_total
 
 
