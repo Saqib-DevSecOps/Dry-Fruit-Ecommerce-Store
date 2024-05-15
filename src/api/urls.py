@@ -5,7 +5,8 @@ from .views import (
     OrderListAPIView, OrderDetailAPIView, ProductRatingAddAPIView, OrderCreateApiView,
 
     CartRetrieveUpdateDestroyAPIView, CartListCreateAPIView, HomeProductsListAPIView,
-    ProductListAPIView, ProductDetailAPIView, PaymentSuccessAPIView, ProductPendingRatingListView
+    ProductListAPIView, ProductDetailAPIView, PaymentSuccessAPIView, ProductPendingRatingListView,
+    ShipmentRetrieveAPIView, ShipRocketShipmentRetrieveAPIView
 )
 
 app_name = 'api'
@@ -38,9 +39,11 @@ urlpatterns += [
     path('order/add/rating/', ProductRatingAddAPIView.as_view(), name='product-rating-add'),
     path('payment/success/', PaymentSuccessAPIView.as_view(), name='payment/success/'),
 
+    path('shipment-detail/<str:pk>/', ShipmentRetrieveAPIView.as_view(), name="custom_shipment"),
+    path('shiprocket/shipment-detail/<str:pk>/', ShipRocketShipmentRetrieveAPIView.as_view(), name="shiprocket_shipment")
+
 ]
 
-
-urlpatterns +=[
+urlpatterns += [
     path('accounts/', include('src.api.accounts.urls', namespace='accounts')),
 ]

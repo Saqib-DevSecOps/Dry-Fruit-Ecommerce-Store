@@ -9,8 +9,8 @@
                         <img src="{{ request.user.profile_image|image_or_placeholder }}" alt="image_not_found">
                     </div>
                 </div>
-                <h2 class="vd_mane">{{ request.user.get_full_name}}</h2>
-                <span class="vd_mail"><a href="#!">{{ request.user.email}}</a></span>
+                <h2 class="vd_mane">{{ request.user.get_full_name }}</h2>
+                <span class="vd_mail"><a href="#!">{{ request.user.email }}</a></span>
             </div>
         </div>
 
@@ -40,12 +40,19 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'client:payment-list' %}" {% if request.path == '/c/payment/list/' %}class="active" aria-selected="true"{% endif %}>
+                <a href="{% url 'client:reviews' %}" {% if request.path == '/c/reviews/' %}class="active"
+                   aria-selected="true"{% endif %}>
+                    Reviews
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'client:payment-list' %}" {% if request.path == '/c/payment/list/' %}class="active"
+                   aria-selected="true"{% endif %}>
                     My Payment
                 </a>
             </li>
             <li>
-                <a href="{% url 'accounts:logout' %}"  aria-selected="true">
+                <a href="{% url 'accounts:logout' %}" aria-selected="true">
                     Logout
                 </a>
             </li>

@@ -13,14 +13,15 @@ from rest_framework.response import Response
 from src.administration.admins.bll import get_cart_calculations
 from src.administration.admins.filters import OrderFilter
 from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment, \
-    ProductRating
+    ProductRating, Shipment
 from src.api.filter import ProductFilter
 from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
     WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
     ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer, ProductRatingListSerializer, \
-    OrderItemListSerializer
+    OrderItemListSerializer, ShipmentSerializer
 from src.apps.razorpay.bll import get_razorpay_order_id
+from src.apps.shipment.bll import track_shipping
 
 """Product Apis"""
 
@@ -256,3 +257,26 @@ class PaymentSuccessAPIView(GenericAPIView):
             except:
                 return Response({'message': 'Payment processing failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ShipmentRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ShipmentSerializer
+    queryset = Shipment.objects.all()
+
+
+class ShipRocketShipmentRetrieveAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            shipment_detail, status_code = track_shipping(pk)
+            if not status.is_success(status_code):
+                return Response({'error': 'Error occurred while fetching shipment details'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            shipment_data = shipment_detail.json()
+            first_key = list(shipment_data.keys())[0]
+            tracking_data = shipment_data[first_key].get('tracking_data')
+            return Response(tracking_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

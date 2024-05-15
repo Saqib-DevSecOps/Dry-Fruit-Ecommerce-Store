@@ -137,7 +137,7 @@ class Product(models.Model):
     total_sales = models.PositiveIntegerField(default=0)
     total_reviews = models.PositiveIntegerField(default=0)
     average_review = models.PositiveIntegerField(
-        default=5,
+        default=0,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(5)
@@ -348,7 +348,7 @@ class Order(models.Model):
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
 
-    shipment_type = models.CharField(max_length=100, choices=SHIPMENT_TYPE_CHOICE, default=SHIPMENT_STATUS_CHOICE[0][0],
+    shipment_type = models.CharField(max_length=100, choices=SHIPMENT_TYPE_CHOICE, default=SHIPMENT_TYPE_CHOICE[0][0],
                                      null=True,
                                      blank=True)
 
@@ -366,13 +366,20 @@ class Order(models.Model):
         return OrderItem.objects.filter(order=self)
 
     def get_shipment_id(self):
-        shipment, created = ShipRocketOrder.objects.get_or_create(order=self)
+        shipment, created = Shipment.objects.get_or_create(order=self)
         if created:
-            return None
-        return shipment.shipment_id
+            shipment.save()
+            return shipment.id
+        return shipment.id
 
     def is_online(self):
         return True if self.payment_type == 'online' else False
+
+    def get_shiprocket_shipment_id(self):
+        shipment = ShipRocketOrder.objects.filter(order=self).first()
+        if shipment:
+            return shipment.id
+        return None
 
 
 PAYMENT_STATUS_CHOICES = [
@@ -417,7 +424,6 @@ class OrderItem(models.Model):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.qty
         return self.qty * self.product.get_price()
-
 
 
 class Shipment(models.Model):

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from src.accounts.models import User
 from src.administration.admins.models import ProductCategory, Product, Cart, Wishlist, Order, OrderItem, \
-    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight
+    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight, Shipment, ShipRocketOrder
 
 
 class WeightSerializer(serializers.ModelSerializer):
@@ -239,9 +239,27 @@ class WishlistDeleteSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    shipment_id = serializers.SerializerMethodField()
+    shiprocket_shipment_id = serializers.SerializerMethodField()
+
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
+                  'payment_status', 'shipment_type', 'is_active', 'created_on', 'shipment_id',
+                  'is_online', 'shiprocket_shipment_id']
+
+    def get_shipment_id(self, obj):
+        shipment, created = Shipment.objects.get_or_create(order=obj)
+        if created:
+            shipment.save()
+            return shipment.id
+        return shipment.id
+
+    def get_shiprocket_shipment_id(self, obj):
+        shipment = ShipRocketOrder.objects.filter(order=obj).first()
+        if shipment:
+            return shipment.id
+        return None
 
 
 class OrderItemListSerializer(serializers.ModelSerializer):
@@ -338,3 +356,9 @@ class PaymentSuccessSerializer(serializers.Serializer):
     razorpay_order_id = serializers.CharField(max_length=255)
     razorpay_payment_id = serializers.CharField(max_length=255)
     razorpay_signature = serializers.CharField(max_length=255)
+
+
+class ShipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipment
+        fields = "__all__"

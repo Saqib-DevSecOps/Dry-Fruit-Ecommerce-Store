@@ -93,13 +93,9 @@
                             <div class="product_btn">
                                 <a href="#">
                                     <ul class="rating_star ul_li">
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li class="active"><i class="fas fa-star"></i></li>
-                                        <li><i class="far fa-star"></i></li>
+                                        {{ object.average_review|get_html_icons }}
                                     </ul>
-                                    <a href="#!" class="review">Read 3 Reviews</a>
+                                    <a href="#!" class="review">Read {{ reviews.count }} Reviews</a>
                                 </a>
                             </div>
                         </div>
@@ -149,13 +145,13 @@
 
                         </div>
                         <div class="product10_quantity_btn_wrap d-flex align-items-center">
-{#                            <div class="quantity_input bg-white">#}
-{#                                <form action="#">#}
-{#                                    <span class="input_number_decrement">–</span>#}
-{#                                    <input class="input_number" value="1">#}
-{#                                    <span class="input_number_increment">+</span>#}
-{#                                </form>#}
-{#                            </div>#}
+                            {#                            <div class="quantity_input bg-white">#}
+                            {#                                <form action="#">#}
+                            {#                                    <span class="input_number_decrement">–</span>#}
+                            {#                                    <input class="input_number" value="1">#}
+                            {#                                    <span class="input_number_increment">+</span>#}
+                            {#                                </form>#}
+                            {#                            </div>#}
                             <a href="#">
                                 <button type="button" id="buy-now-btn" disabled
                                         class="btn custom_btn rounded-pill ms-3 px-5 py-3 text-white">
@@ -207,7 +203,7 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link shadow rounded-pill text-uppercase" id="pills-reviews-tab"
                                     data-bs-toggle="pill" data-bs-target="#pills-reviews" type="button" role="tab"
-                                    aria-controls="pills-reviews" aria-selected="false">reviews (3)
+                                    aria-controls="pills-reviews" aria-selected="false">reviews {{ reviews.count }}
                             </button>
                         </li>
                     </ul>
@@ -233,79 +229,18 @@
                                 <div class="review_comment2 ms-3">
                                     <h3 class="title_text">Reviews:</h3>
                                     <ul class="review_comment_list2 ul_li_block">
-                                        <li class="review_comment_wrap2">
-                                            <h4 class="admin_name">John Doe <span class="comment_date">30 Mar
-                                                            2022</span></h4>
-                                            <ul class="rating_star ul_li">
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                            </ul>
-                                            <p class="mb-0">
-                                                Duis ante magna, aliquet sit amet sagittis vitae, tristique at
-                                                lacus. Ut et accumsan turpis. Phasellus ornare, tortor ut congue
-                                                imperdiet, mauris magna condimentum nulla, non malesuada mauris
-                                                massa eu augue.
-                                            </p>
-                                        </li>
-                                        <li class="review_comment_wrap2">
-                                            <h4 class="admin_name">Smith Alex <span class="comment_date">25 Feb
-                                                            2022</span></h4>
-                                            <ul class="rating_star ul_li">
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                                <li class="active"><i class="fas fa-star"></i></li>
-                                            </ul>
-                                            <p class="mb-0">
-                                                Duis ante magna, aliquet sit amet sagittis vitae, tristique at
-                                                lacus. Ut et accumsan turpis. Phasellus ornare, tortor ut congue
-                                                imperdiet, mauris magna condimentum nulla, non malesuada mauris
-                                                massa eu augue.
-                                            </p>
-                                        </li>
+                                        {% for review in reviews %}
+                                            <li class="review_comment_wrap2">
+                                                <h4 class="admin_name">{{ review.order.client }} <span class="comment_date">{{ review.created_on }}</span></h4>
+                                                <ul class="rating_star ul_li">
+                                                    {{ review.rate|get_html_icons }}
+                                                </ul>
+                                                <p class="mb-0">
+                                                   {{ review.comment }}
+                                                </p>
+                                            </li>
+                                        {% endfor %}
                                     </ul>
-                                </div>
-
-                                <div class="comment_form_area">
-                                    <form action="#">
-                                        <div class="row">
-                                            <h4 class="comment_title">Add New Comment</h4>
-                                            <div class="col-lg-6">
-                                                <div class="form_item">
-                                                    <input class="rounded-pill" type="text" name="name"
-                                                           placeholder="Your Name*" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form_item">
-                                                    <input class="rounded-pill" type="text" name="name"
-                                                           placeholder="Your Name*" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form_item">
-                                                    <input class="rounded-pill" type="email" name="email"
-                                                           placeholder="Email Address*" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form_item">
-                                                    <input class="rounded-pill" type="text" name="name"
-                                                           placeholder="Website*" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form_item">
-                                            <textarea name="comment" placeholder="your Comment*"></textarea>
-                                        </div>
-                                        <button type="submit"
-                                                class="btn custom_btn rounded-pill py-3 text-white text-uppercase">Post
-                                            Comments <i class="fas fa-long-arrow-alt-right"></i></button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -430,13 +365,15 @@
                 if (objectId) {
                     window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + objectId + '/';
                 } else {
-                    window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + 0 + '/';                }
+                    window.location.href = '/add-to-cart/' + "{{object.id}}" + '/' + 0 + '/';
+                }
             });
             buyNowBtn.addEventListener('click', function () {
                 if (objectId) {
                     window.location.href = '/buy-now/' + "{{object.id}}" + '/' + objectId + '/';
                 } else {
-                    window.location.href = '/buy-now/' + "{{object.id}}" + '/' + 0 + '/';                }
+                    window.location.href = '/buy-now/' + "{{object.id}}" + '/' + 0 + '/';
+                }
             });
             const radioButtons = document.querySelectorAll('input[type="radio"]');
             radioButtons.forEach(function (radioButton) {

@@ -1,0 +1,67 @@
+{% extends  'website/base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block content %}
+    <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <div class="row">
+                {% include 'client/include/dashboard_navbar.html' %}
+                <div class="col col-lg-6">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
+                            <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                                <div class="vd_title_wrap">
+                                    <h3>Shipment  Detail</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 m-2">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <label style="font-size: 22px"><b>Shipment # {{ object.id }}</b></label>
+                                                <div>
+                                                    <br>
+                                                    <label class=" fs-11">provider </label>
+                                                    <p class=" float-end  fs-11">{{ object.provider }} </p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class=" fs-11">Tracking id </label>
+                                                    <p class=" float-end  fs-11">{{ object.tracking_id }} </p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class="  fs-11">Tracking Url </label>
+                                                    <p class=" float-end  fs-11"><a href="{% if object.tracking_url %}{{ object.tracking_url }}{% else %}#{% endif %}"> <i class="fa fa-link"></i></a></p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class="  fs-11">Tracking Number </label>
+                                                    <p class=" float-end  fs-11">{{ object.tracking_number }} </p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class="  fs-11">Description </label>
+                                                    <p class=" float-end  fs-11">{{ object.description }} </p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class="  fs-11">Shipment Started </label>
+                                                    <p class=" float-end  fs-11">{{ object.started }} </p>
+                                                </div>
+                                                <div>
+                                                    <br>
+                                                    <label class="  fs-11">Shipment Shipment reached </label>
+                                                    <p class=" float-end  fs-11">{{ object.reached }} </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </section>
+{% endblock %}
