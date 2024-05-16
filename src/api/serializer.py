@@ -244,9 +244,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
-                  'payment_status', 'shipment_type', 'is_active', 'created_on', 'shipment_id',
-                  'is_online', 'shiprocket_shipment_id']
+        fields = ['id', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
+                  'service_charges', 'shipping_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
+                  'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
+                  'is_active', 'created_on', ]
 
     def get_shipment_id(self, obj):
         shipment, created = Shipment.objects.get_or_create(order=obj)
@@ -281,13 +282,29 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
+    shipment_id = serializers.SerializerMethodField()
+    shiprocket_shipment_id = serializers.SerializerMethodField()
     order_items = OrderItemSerializer(many=True, read_only=True, source='get_cart')
 
     class Meta:
         model = Order
-        fields = ['full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
+        fields = ['id', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
                   'service_charges', 'shipping_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
+                  'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
                   'is_active', 'created_on', 'order_items']
+
+    def get_shipment_id(self, obj):
+        shipment, created = Shipment.objects.get_or_create(order=obj)
+        if created:
+            shipment.save()
+            return shipment.id
+        return shipment.id
+
+    def get_shiprocket_shipment_id(self, obj):
+        shipment = ShipRocketOrder.objects.filter(order=obj).first()
+        if shipment:
+            return shipment.id
+        return None
 
 
 class ProductRatingListSerializer:
