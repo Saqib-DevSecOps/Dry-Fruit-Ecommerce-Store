@@ -27,7 +27,13 @@
 
 
 </head>
-
+<style>
+    @media screen and (max-width: 1550px) {
+        body {
+            zoom: 75%;
+        }
+    }
+</style>
 <body>
 <!-- body wrap start -->
 <div class="body-wrap overflow-hidden">
@@ -47,8 +53,8 @@
         {% include 'website/include/sidebar.html' %}
 
 
-    {% block content %}
-    {% endblock %}
+        {% block content %}
+        {% endblock %}
 
     </main>
     {% include 'website/include/footer.html' %}
