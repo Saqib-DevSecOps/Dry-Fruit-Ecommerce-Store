@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import (
-    Product, ProductImage, Blog, ProductWeight, PickupLocation
+    Product, ProductImage, Blog, ProductWeight, PickupLocation, ProductSize
 )
 from ...accounts.models import User
 
@@ -30,6 +30,14 @@ class ProductWeightForm(forms.ModelForm):
         model = ProductWeight
         fields = [
             'weight', 'price'
+        ]
+
+
+class ProductSizeForm(forms.ModelForm):
+    class Meta:
+        model = ProductSize
+        fields = [
+            'length', 'breadth', 'height', 'weight'
         ]
 
 

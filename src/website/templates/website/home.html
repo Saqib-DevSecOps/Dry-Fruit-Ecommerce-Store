@@ -4,23 +4,23 @@
 
 {% block content %}
     <style>
-@media screen and (max-width: 1200px) {
-    .item_content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        @media screen and (max-width: 1200px) {
+            .item_content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
 
-    .logo-upper {
-        height: 45px;
-        margin-bottom: 0; /* Adjust this according to your layout */
-    }
+            .logo-upper {
+                height: 45px;
+                margin-bottom: 0; /* Adjust this according to your layout */
+            }
 
-    .logo-lower {
-        height: 80px;
-        margin-top: -45px; /* Adjust this according to your layout */
-    }
-}
+            .logo-lower {
+                height: 80px;
+                margin-top: -45px; /* Adjust this according to your layout */
+            }
+        }
     </style>
 
     <!-- sidebar section end -->
@@ -129,7 +129,7 @@
     <!-- category section end -->
 
     <!-- product section start -->
-    <section class="product_section sec_space_xxs_50" >
+    <section class="product_section sec_space_xxs_50">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
@@ -172,7 +172,7 @@
                          aria-labelledby="pills-all-tab">
                         <div class="row g-4">
                             {% for product in product_category_all %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -236,7 +236,7 @@
                          aria-labelledby="product_category2_tab">
                         <div class="row g-4">
                             {% for product in product_category_0 %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -300,7 +300,7 @@
                          aria-labelledby="product_category1_tab">
                         <div class="row g-4">
                             {% for product in product_category_1 %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -364,7 +364,7 @@
                          aria-labelledby="product_category2_tab">
                         <div class="row g-4">
                             {% for product in product_category_2 %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -428,7 +428,7 @@
                          aria-labelledby="product_category3_tab">
                         <div class="row g-4">
                             {% for product in product_category_3 %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -492,7 +492,7 @@
                          aria-labelledby="product_category4_tab">
                         <div class="row g-4">
                             {% for product in product_category_4 %}
-                                <div class="col-sm-6 col-md-6 col-xl-3">
+                                <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                                     <div class="product_layout_1 overflow-hidden position-relative">
 
                                         <div class="product_layout_content bg-white position-relative">
@@ -558,7 +558,7 @@
     </section>
     <!-- product section start -->
 
-    <section class="deal_section sec_space_xs_70 " >
+    <section class="deal_section sec_space_xs_70 ">
         <div class="container-fluid">
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-6 col-lg-4">
@@ -570,7 +570,7 @@
                                     <h5 class="text-white">FRESH FROM OUR FARM</h5>
                                 </div>
                                 <div class="deal_title"
-                                   >
+                                >
                                     <h3 class="text-white">Get Every Dry Fruit You Need</h3>
                                 </div>
                                 <div class="deal_btn">
@@ -587,13 +587,13 @@
                     <div class="deal_item_content_wrap">
                         <div class="deal_item_content position-relative aos-init "
                              style="background-image: url('{% static 'website/images/deals/deals2.png' %}');"
-                             >
+                        >
                             <div class="deal_item_txt position-absolute">
                                 <div class="deal_sub_title">
                                     <h5 class="text-white">FRESH FROM OUR FARM</h5>
                                 </div>
                                 <div class="deal_title "
-                                     >
+                                >
                                     <h3 class="text-white">Get Discounts on Dry Fruits You Need</h3>
                                 </div>
                                 <div class="deal_btn">
@@ -610,7 +610,7 @@
                     <div class="deal_item_content_wrap">
                         <div class="deal_item_content position-relative"
                              style="background-image: url('{% static 'website/images/deals/deals3.png' %}');"
-                            >
+                        >
                             <div class="deal_item_txt position-absolute">
                                 <div class="deal_sub_title">
                                     <h5 class="text-white">FRESH FROM OUR FARM</h5>
@@ -660,7 +660,7 @@
 
             <div class="row g-4">
                 {% for product in popular_discount %}
-                    <div class="col-sm-6 col-md-6 col-xl-3">
+                    <div class="col-6 col-sm-6 col-md-6 col-xl-3">
                         <div class="product_layout_1 overflow-hidden position-relative">
 
                             <div class="product_layout_content bg-white position-relative">
@@ -743,8 +743,8 @@
 
             <div class="row g-4">
                 {% for product in popular_discount %}
-                    <div class="col-md-6">
-                        <div class="offer_inner_content"  data-aos-duration="1000">
+                    <div class="col-6 col-md-6">
+                        <div class="offer_inner_content" data-aos-duration="1000">
                             <div class="offer_item_content bg-white d-flex align-items-center">
                                 <div class="offer_item_img pe-4">
                                     <img src="{{ product.thumbnail_image|image_or_placeholder }}" alt="offer1">
@@ -807,7 +807,7 @@
     </section>
 
     <!-- testimonial section start -->
-    <section class="gallery_section sec_space_xxs_50 position-relative" >
+    <section class="gallery_section sec_space_xxs_50 position-relative">
         <div class="gallery_content_wrap inner_sec_sm"
              style="background-image: url({% static 'website/images/gallery/gallery.png' %});padding-top: 250px">
             <div class="container">
@@ -838,7 +838,7 @@
                     </div>
                     <div class="col-6 col-md-4 col-xl-3">
                         <div class="service_inner_content d-flex justify-content-center align-items-center "
-                             >
+                        >
                             <div class="service_content_icon rounded-pill me-2">
                                 <i class="fas fa-user-shield"></i>
                             </div>
@@ -854,7 +854,7 @@
                     </div>
                     <div class="col-6 col-md-4 col-xl-3">
                         <div class="service_inner_content d-flex justify-content-center align-items-center "
-                            >
+                        >
                             <div class="service_content_icon rounded-pill me-2">
                                 <i class="fas fa-exchange-alt"></i>
                             </div>
@@ -869,7 +869,7 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-4 col-xl-3">
-                        <div class="service_inner_content d-flex justify-content-center align-items-center" >
+                        <div class="service_inner_content d-flex justify-content-center align-items-center">
                             <div class="service_content_icon rounded-pill me-2">
                                 <i class="fas fa-shipping-fast"></i>
                             </div>
@@ -889,49 +889,49 @@
     </section>
 
     <!-- instagram section start -->
-{#    <section class="instagram_section instagram_style_1 sec_space_xs_70" data-aos="fade-up"#}
-{#             data-aos-duration="2000">#}
-{#        <div class="container">#}
-{#            <h2 class="instagram_title pb-5 text-center">Gallery</h2>#}
-{#            <ul class="zoom-gallery instagram_image_content ul_li">#}
-{#                <li>#}
-{#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram1.png' %}">#}
-{#                        <img src="{% static 'website/images/instagram/instagram1.png' %}" alt="image_not_found">#}
-{#                        <i class="fas fa-eye"></i>#}
-{#                        <span>View</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram4.png' %}">#}
-{#                        <img src="{% static 'website/images/instagram/instagram4.png' %}" alt="image_not_found">#}
-{#                        <i class="fas fa-eye"></i>#}
-{#                        <span>View</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram3.png' %}">#}
-{#                        <img src="{% static 'website/images/instagram/instagram3.png' %}" alt="image_not_found">#}
-{#                        <i class="fas fa-eye"></i>#}
-{#                        <span>View</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram4.png' %}">#}
-{#                        <img src="{% static 'website/images/instagram/instagram4.png' %}" alt="image_not_found">#}
-{#                        <i class="fas fa-eye"></i>#}
-{#                        <span>View</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram5.png' %}">#}
-{#                        <img src="{% static 'website/images/instagram/instagram5.png' %}" alt="image_not_found">#}
-{#                        <i class="fas fa-eye"></i>#}
-{#                        <span>View</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </div>#}
-{#    </section>#}
+    {#    <section class="instagram_section instagram_style_1 sec_space_xs_70" data-aos="fade-up"#}
+    {#             data-aos-duration="2000">#}
+    {#        <div class="container">#}
+    {#            <h2 class="instagram_title pb-5 text-center">Gallery</h2>#}
+    {#            <ul class="zoom-gallery instagram_image_content ul_li">#}
+    {#                <li>#}
+    {#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram1.png' %}">#}
+    {#                        <img src="{% static 'website/images/instagram/instagram1.png' %}" alt="image_not_found">#}
+    {#                        <i class="fas fa-eye"></i>#}
+    {#                        <span>View</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#                <li>#}
+    {#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram4.png' %}">#}
+    {#                        <img src="{% static 'website/images/instagram/instagram4.png' %}" alt="image_not_found">#}
+    {#                        <i class="fas fa-eye"></i>#}
+    {#                        <span>View</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#                <li>#}
+    {#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram3.png' %}">#}
+    {#                        <img src="{% static 'website/images/instagram/instagram3.png' %}" alt="image_not_found">#}
+    {#                        <i class="fas fa-eye"></i>#}
+    {#                        <span>View</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#                <li>#}
+    {#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram4.png' %}">#}
+    {#                        <img src="{% static 'website/images/instagram/instagram4.png' %}" alt="image_not_found">#}
+    {#                        <i class="fas fa-eye"></i>#}
+    {#                        <span>View</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#                <li>#}
+    {#                    <a class="popup_image" href="{% static 'website/images/instagram/instagram5.png' %}">#}
+    {#                        <img src="{% static 'website/images/instagram/instagram5.png' %}" alt="image_not_found">#}
+    {#                        <i class="fas fa-eye"></i>#}
+    {#                        <span>View</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+    {#            </ul>#}
+    {#        </div>#}
+    {#    </section>#}
     <!-- instagram section end -->
 
     <script src="{% static 'website/js/magnific-popup.min.js' %}"></script>
@@ -968,27 +968,27 @@
         updateCountdown();
     </script>
 
-<script
-  src="https://code.jquery.com/jquery-3.7.1.js"
-  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-  crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
 
     <script>
-    var settings = {
-  "url": "https://apiv2.shiprocket.in/v1/external/auth/login",
-  "method": "POST",
-  "timeout": 0,
-  "headers": {
-    "Content-Type": "application/json"
-  },
-  "data": JSON.stringify({
-    "email": "saqib71501@gmail.com",
-    "password": "saqib71501@gmail.com"
-  }),
-};
+        var settings = {
+            "url": "https://apiv2.shiprocket.in/v1/external/auth/login",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "email": "saqib71501@gmail.com",
+                "password": "saqib71501@gmail.com"
+            }),
+        };
 
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
     </script>
 {% endblock %}

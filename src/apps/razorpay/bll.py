@@ -1,15 +1,14 @@
 import razorpay
 from django.shortcuts import get_object_or_404
 
-from core.settings import RAZORPAY_API_KEY, RAZORPAY_API_SECRET
+from core.settings import RAZORPAY_API_KEY, RAZORPAY_API_SECRET, BASE_URL
 from src.administration.admins.models import Order, OrderItem, Payment
 
 razorpay_client = razorpay.Client(
     auth=(RAZORPAY_API_KEY, RAZORPAY_API_SECRET))
 
 
-
-def payment_success(payment_id,razorpay_order_id):
+def payment_success(payment_id, razorpay_order_id):
     order = get_object_or_404(Order, razorpay_order_id=razorpay_order_id)
     order.payment_status = 'paid'
     order.order_status = 'approved'
@@ -27,18 +26,6 @@ def payment_success(payment_id,razorpay_order_id):
     payment.payment_status = "completed"
     payment.amount_paid = order.sub_total
     payment.save()
-
-def create_razorpay_checkout_session(order):
-    currency = 'INR'
-    amount = 20000
-    razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                       currency=currency,
-                                                       payment_capture='0'))
-    razorpay_order_id = razorpay_order['id']
-    callback_url = "http://" + "127.0.0.1:8000" + "/razorpay/paymenthandler/"
-    context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': RAZORPAY_API_KEY,
-               'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
-    return context
 
 
 def handle_payment(request):
@@ -73,13 +60,13 @@ def handle_payment(request):
                 payment.payment_status = "completed"
                 payment.amount_paid = order.sub_total
                 payment.save()
-                return 'success'  # Indicate successful payment
+                return 'success'
             except:
-                return 'cancelled'  # Indicate payment capture failure
+                return 'cancelled'
         else:
-            return 'cancelled'  # Indicate signature verification failure
+            return 'cancelled'
     except:
-        return 'error'  # Indicate error in processing the payment
+        return 'error'
 
 
 def get_razorpay_order_id(self, request, order_id):

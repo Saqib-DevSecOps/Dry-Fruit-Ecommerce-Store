@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 
+from _decimal import Decimal
 from django.contrib import messages
 from django.db.models import Sum
 
 from core.bll import calculate_shipping_charges, calculate_service_charges
 from src.administration.admins.models import OrderItem, Cart, Payment, Order
+from src.website.utility import calculate_volumetric_weight, get_chargeable_weight, calculate_shipping_cost
 
 """ HELPERS """
 
@@ -65,16 +67,34 @@ def order_repay_quantity_check(request, order):
 
 
 def get_cart_calculations(user):
-    cart = Cart.objects.filter(user=user)
-    total_price = 0
-    discount_price = 0
-    for cart in cart:
-        total_price += float(cart.get_discount_price())
+    cart_items = Cart.objects.filter(user=user)
+    total_price = Decimal(0)
+    discount_price = Decimal(0)
+    shipping_charges = Decimal(0)
+    base_rate = Decimal('26')
+    additional_500g_rate = Decimal('15')
 
-    shipping_charges = calculate_shipping_charges(total_price)
-    service_charges = calculate_service_charges(total_price)
-    sub_total = total_price + shipping_charges + service_charges
-    return total_price, service_charges, shipping_charges, sub_total
+    for cart_item in cart_items:
+        product_size = cart_item.get_product_size()
+        if product_size:
+            length = Decimal(product_size.length)
+            width = Decimal(product_size.breadth)
+            height = Decimal(product_size.height)
+            weight = Decimal(product_size.weight)
+        else:
+            length = Decimal('10')
+            width = Decimal('10')
+            height = Decimal('10')
+            weight = Decimal('1')
+
+        total_price += Decimal(cart_item.get_discount_price())
+        discount_price += Decimal(cart_item.get_item_price()) - Decimal(cart_item.get_discount_price())
+        volumetric_weight = calculate_volumetric_weight(length, width, height)
+        chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
+        shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
+
+    sub_total = total_price + shipping_charges
+    return total_price, discount_price, shipping_charges, sub_total
 
 
 # VERIFIED

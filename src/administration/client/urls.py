@@ -3,7 +3,7 @@ from django.urls import path
 from src.administration.client.views import ClientDashboard, WishlistView, WishListDelete, UserUpdateView, \
     AddressUpdate, WishCreateView, OrderListView, AddressList, OrderCancelListView, OrderDetailView, PasswordCheck, \
     PasswordSetView, PasswordChangeView, PaymentListView, ShipmentDetailView, ShipRocketShipment, ProductRatingListView, \
-    ProductRatingCreateView
+    ProductRatingCreateView, OrderInvoiceDetailView
 
 app_name = 'client'
 urlpatterns = [
@@ -19,6 +19,7 @@ urlpatterns = [
     path('my-orders/', OrderListView.as_view(), name='order_list'),
     path('cancel-orders/', OrderCancelListView.as_view(), name='cancel_order'),
     path('order-detail/<str:pk>/', OrderDetailView.as_view(), name='order_detail'),
+    path('order-invoice/<str:pk>/', OrderInvoiceDetailView.as_view(), name='order_invoice'),
     path('shipment-detail/<str:pk>/', ShipmentDetailView.as_view(), name='shipment_detail'),
     path('r/shipment-detail/<str:pk>/', ShipRocketShipment.as_view(), name='shiprocket_shipment_detail'),
     path('payment/list/', PaymentListView.as_view(), name="payment-list"),

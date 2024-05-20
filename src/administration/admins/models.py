@@ -24,6 +24,16 @@ def positive_validator(value):
         raise ValidationError('Value must be positive')
 
 
+def product_size_validator(value):
+    if value < 0.5:
+        raise ValidationError('Must be more than 0.5.')
+
+
+def product_weight_validator(value):
+    if value < 1:
+        raise ValidationError('Must be more than 0.')
+
+
 def discount_validator(value):
     if value < 0 or value > 100:
         raise ValidationError('Value must be between 0 and 100')
@@ -204,6 +214,25 @@ class ProductWeight(models.Model):
     def get_product_weight_discounted_price(self):
         return self.price * self.product.discount / 100
 
+    def get_product_size(self):
+        return ProductSize.objects.get(product_weight=self)
+
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_weight = models.OneToOneField(ProductWeight, on_delete=models.CASCADE)
+    length = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
+                                 help_text="The Value of the item in cms. Must be more than 0.5.")
+    breadth = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
+                                  help_text="The Value of the item in cms. Must be more than 0.5.")
+    height = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
+                                 help_text="The Value of the item in cms. Must be more than 0.5.")
+    weight = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_weight_validator],
+                                 help_text="The Value of the item in kgs. Must be more than 0.")
+
+    def __str__(self):
+        return f"{self.product.title}"
+
 
 class ProductImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -260,6 +289,15 @@ class Cart(models.Model):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.quantity
         return self.quantity * self.product.get_price()
+
+    def get_product_size(self):
+        if self.product_weight:
+            try:
+                product_size = ProductSize.objects.get(product_weight=self.product_weight)
+                return product_size
+            except ProductSize.DoesNotExist:
+                return None
+        return None
 
 
 """ ORDERS """
@@ -375,11 +413,36 @@ class Order(models.Model):
     def is_online(self):
         return True if self.payment_type == 'online' else False
 
-    def get_shiprocket_shipment_id(self):
+    def get_shiprocket_shipment(self):
         shipment = ShipRocketOrder.objects.filter(order=self).first()
+        return shipment
+
+    def get_shiprocket_shipment_id(self):
+        shipment = self.get_shiprocket_shipment()
         if shipment:
             return shipment.id
         return None
+
+    def get_order_invoice(self):
+        invoice, created = OrderInvoice.objects.get_or_create(order=self)
+        return invoice
+
+
+class OrderInvoice(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='invoice')
+    invoice_number = models.CharField(max_length=100, unique=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invoice {self.invoice_number} for Order {self.order.id}"
+
+    def generate_invoice_number(self):
+        return f"INV-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+
+    def save(self, *args, **kwargs):
+        if not self.invoice_number:
+            self.invoice_number = self.generate_invoice_number()
+        super().save(*args, **kwargs)
 
 
 PAYMENT_STATUS_CHOICES = [
@@ -546,6 +609,15 @@ class PickupLocation(models.Model):
         return self.pickup_location
 
 
+SHIPROCKET_ORDER_STATUS = (
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('cancelled', 'cancelled'),
+    ('delivery', 'Delivery'),
+    ('completed', 'Completed'),
+)
+
+
 class ShipRocketOrder(models.Model):
     order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
     shiprocket_order_id = models.CharField(max_length=250, null=True, blank=True)
@@ -556,6 +628,7 @@ class ShipRocketOrder(models.Model):
     awb_code = models.CharField(max_length=250, null=True, blank=True)
     courier_company_id = models.CharField(max_length=250, null=True, blank=True)
     courier_name = models.CharField(max_length=250, null=True, blank=True)
+    is_added = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.order_id
+        return self.order.full_name

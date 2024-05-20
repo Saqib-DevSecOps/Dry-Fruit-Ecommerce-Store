@@ -3,7 +3,7 @@ import json
 import requests
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.urls import reverse_lazy, reverse
@@ -19,9 +19,9 @@ from src.accounts.models import User
 from src.administration.admins.bll import get_sales_by_month, get_orders_by_month
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
-    ShipRocketShipmentForm
+    ShipRocketShipmentForm, ProductSizeForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder
+    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize
 from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
     generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail, track_shipping
 
@@ -282,6 +282,7 @@ class ProductDetailView(DetailView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['product_image_add_form'] = ProductImageForm()
         context['product_weight_add_form'] = ProductWeightForm()
+        context['product_size_add_form'] = ProductSizeForm()
         return context
 
 
@@ -345,6 +346,26 @@ class ProductWeightDeleteView(View):
         return redirect("admins:product-detail", product_id)
 
 
+class ProductSizeCreateView(CreateView):
+    model = ProductWeight
+    form_class = ProductSizeForm
+    template_name = 'admins/productsize_form.html'
+
+    def form_valid(self, form):
+        product_weight_id = self.kwargs.get('product_weight_id')
+        if ProductSize.objects.filter(product_weight_id=product_weight_id).exists():
+            messages.error(self.request, "Product Size Already Added")
+            return redirect('admins:product-detail', pk=self.kwargs.get('product_id'))
+        form.instance.product_id = self.kwargs.get('product_id')
+        form.instance.product_weight_id = self.kwargs.get('product_weight_id')
+        form.save()
+        messages.success(self.request, "Product Size Added")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('admins:product-detail', kwargs={'pk': self.kwargs.get('product_id')})
+
+
 """ ORDERS """
 
 
@@ -374,6 +395,16 @@ class OrderDetailView(DetailView):
         context = super(OrderDetailView, self).get_context_data(**kwargs)
         context['orders'] = Order.objects.filter(pk=self.object.pk)
         return context
+
+
+@method_decorator(admin_protected, name='dispatch')
+class OrderInvoiceDetailView(DetailView):
+    model = Order
+    template_name = 'admins/order_invoice.html'
+
+    def get_object(self, queryset=None):
+        order = get_object_or_404(Order, id=self.kwargs.get('pk'))
+        return order
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -408,8 +439,8 @@ class OrderCompleteView(View):
         order = Order.objects.get(id=pk)
         order.order_status = "completed"
         order.save()
-        messages.success(request,'Order Has Been Completed Successfully')
-        return redirect('admins:order-detail',pk = pk)
+        messages.success(request, 'Order Has Been Completed Successfully')
+        return redirect('admins:order-detail', pk=pk)
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -456,7 +487,9 @@ class ShipRocketOrderCreate(FormView):
                                                                               'courier_company_id'],
                                                                           courier_name=awb_json['response']['data'][
                                                                               'courier_name'],
+                                                                          is_added=True
                                                                           )
+
         shiprocket_order.save()
         order.shipment_type = "ship_rocket"
         order.save()
