@@ -15,89 +15,91 @@
                 <div class="billing_form mb_50">
                     <h3 class="form_title mb_30">Billing details</h3>
                     <div class="form_wrap card">
+                        <style>
+                            #div_id_shipment_type .nice-select {
+                                display: none;
+                            }
+                        </style>
                         {{ form|crispy }}
-                    </div>
-
-
-                    <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
-                        <h3 class="form_title mb_30">Your order</h3>
-                        <form action="#">
-                            <div class="form_wrap card">
-                                <div class="checkout_table table-responsive">
-                                    <table class="table text-center mb_50">
-                                        <thead class="text-uppercase text-uppercase">
-                                        <tr>
-                                            <th>Product Name</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for obj in cart %}
+                        <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
+                            <h3 class="form_title mb_30">Your order</h3>
+                            <form action="#">
+                                <div class="form_wrap card">
+                                    <div class="checkout_table table-responsive">
+                                        <table class="table text-center mb_50">
+                                            <thead class="text-uppercase text-uppercase">
                                             <tr>
-                                                <td>
-                                                    <div class="cart_product">
-                                                        <div class="item_image">
-                                                            <img src="{{ obj.product.thumbnail_image|image_or_placeholder }}"
-                                                                 alt="image_not_found">
+                                                <th>Product Name</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for obj in cart %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="cart_product">
+                                                            <div class="item_image">
+                                                                <img src="{{ obj.product.thumbnail_image|image_or_placeholder }}"
+                                                                     alt="image_not_found">
+                                                            </div>
+                                                            <div class="item_content">
+                                                                <h4 class="item_title mb_0">{{ obj.product.title }}</h4>
+                                                            </div>
                                                         </div>
-                                                        <div class="item_content">
-                                                            <h4 class="item_title mb_0">{{ obj.product.title }}</h4>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
+                                                    </td>
+                                                    <td>
                                     <span class="price_text">{% if obj.product_weight %}
                                         {{ obj.product_weight.get_product_weight_discounted_price }}{% else %}
                                         {{ obj.product.get_price }}{% endif %}</span>
-                                                </td>
-                                                <td>
-                                                    <span class="quantity_text">{{ obj.quantity }}</span>
-                                                </td>
-                                                <td> <span class="total_price">
+                                                    </td>
+                                                    <td>
+                                                        <span class="quantity_text">{{ obj.quantity }}</span>
+                                                    </td>
+                                                    <td> <span class="total_price">
                                             {% if obj.product_weight %}
                                                 {{ obj.quantity|multiply:obj.product_weight.get_product_weight_discounted_price }}
                                             {% else %}
                                                 {{ obj.quantity|multiply:obj.product.get_price }}
                                             {% endif %}
                                         </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span class="subtotal_text">SHIPPING CHARGES</span>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span class="total_price">{{ shipping_charges|floatformat:2 }}</span>
                                                 </td>
                                             </tr>
-                                        {% endfor %}
+                                            <tr>
+                                                <td class="text-left">
+                                                    <span class="subtotal_text">TOTAL</span>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span class="total_price">{{ sub_total|floatformat:2 }}</span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                        <tr>
-                                            <td class="text-left">
-                                                <span class="subtotal_text">SHIPPING CHARGES</span>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
-                                                <span class="total_price">{{ shipping_charges|floatformat:2 }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">
-                                                <span class="subtotal_text">TOTAL</span>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
-                                                <span class="total_price">{{ sub_total|floatformat:2 }}</span>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="billing_payment_mathod">
+                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red">PLACE ORDER
+                                        </button>
+                                    </div>
                                 </div>
-
-                                <div class="billing_payment_mathod">
-                                    <button type="submit" id="pay-btn" class="custom_btn bg_default_red">PLACE ORDER
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </div>
             </form>
         </div>
     </section>
@@ -108,6 +110,8 @@
         window.addEventListener('load', function () {
             var selectElement = document.getElementById('id_country');
             selectElement.style.display = 'block';
+            var selectShipmentElement = document.getElementById('id_shipment_type');
+            selectShipmentElement.style.display = 'block';
             var customSelect = document.querySelector('.nice-select');
             customSelect.style.display = 'none';
         });

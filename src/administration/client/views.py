@@ -1,19 +1,13 @@
-import base64
 import json
-
 from allauth.account.views import PasswordSetView, PasswordChangeView
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q, OuterRef, Subquery
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView, CreateView
-from pdf2image import convert_from_bytes, convert_from_path
-
 from src.accounts.decorators import client_protected
 from src.accounts.models import Address
 from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment, Shipment, ShipRocketOrder, \
@@ -21,8 +15,6 @@ from src.administration.admins.models import Wishlist, Order, Product, OrderItem
 from src.administration.client.bll import calculate_reviews
 from src.administration.client.forms import AddressForm, UserProfileForm
 
-import io
-from PIL import Image
 from django.shortcuts import get_object_or_404, render
 
 from src.apps.shipment.bll import track_shipping
@@ -130,10 +122,21 @@ class ShipmentDetailView(DetailView):
         return self.model.objects.filter(order__client=self.request.user)
 
 
+@method_decorator(client_protected, name='dispatch')
+class OrderInvoiceDetailView(DetailView):
+    model = Order
+    template_name = 'client/order_invoice.html'
+
+    def get_object(self, queryset=None):
+        order = get_object_or_404(Order, id=self.kwargs.get('pk'))
+        return order
+
+
+@method_decorator(client_protected, name='dispatch')
 class ShipRocketShipment(View):
     template_name = 'client/shiprocket_shipment.html'
 
-    def get(self,request,*args,**kwargs):
+    def get(self, request, *args, **kwargs):
         shipment_id = self.kwargs.get('pk')
         shipment_detail, status_code = track_shipping(shipment_id)
         if not status_code == 200:

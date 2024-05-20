@@ -25,3 +25,4 @@ drf-yasg
 django-phonenumber-field
 razorpay
 requests
+WeasyPrint

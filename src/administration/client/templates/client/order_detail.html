@@ -481,7 +481,8 @@
                         <div class="tab-pane fade show active" id="tab_dashboard" role="tabpanel">
                             <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                                 <div class="vd_title_wrap">
-                                    <h3>Order Detail</h3>
+                                    <h3 class="float-end">Order Detail</h3>
+                                    <h3><a class="btn btn-warning btn-sm text-dark" href="{% url 'client:order_invoice' object.id %}"> Generate Invoice</a></h3>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 m-2">
@@ -489,7 +490,7 @@
                                             <div class="card-body">
                                                 <label style="font-size: 22px"><b>Order # {{ object.id }}</b></label>
                                                 <p class="float-end text-warning  fs-11">
-                                                    Total {{ object.sub_total|floatformat:"2" }}</p>
+                                                    Total {{ object.sub_total|floatformat:"2" }} &nbsp;</p>
                                                 <p class="  fs-11">Placed on {{ object.created_on }}</p>
                                                 {% if object.payment_status == "unpaid" %}
                                                     <p class=" float-end fs-11">

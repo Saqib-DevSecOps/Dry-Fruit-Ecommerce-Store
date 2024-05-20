@@ -11,6 +11,9 @@
     <a class="btn btn-ghost-primary" href="{% url 'admins:order-list' %}">
         <i class="fa fa-arrow-left"></i>&nbsp;Orders
     </a>
+    <a class="btn btn-ghost-primary" href="{% url 'admins:order_invoice' object.id %}">
+        &nbsp;Invoice
+    </a>
 {% endblock %}
 
 {% block base_content %}
@@ -163,31 +166,33 @@
                         <i class="fa fa-telegram"></i>
                         Postal Code: <strong>{{ object.postal_code }}</strong>
                     </div>
-                    {% if object.shipment_type == "custom" or object.shipment_type == "not-selected" %}
+                    {% if object.shipment_type == "custom" %}
                         <div class="mb-2">
                             <a href="{% url 'admins:shipment-update' object.shipment.id %}"
                                class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Update
                                 Custom Shipment</a>
                         </div>
                     {% endif %}
-                    {% if object.shipment_type == "not-selected" %}
 
-                        <div class="mb-2">
-                            <a href="{% url 'admins:shiprocket-shipment-create' object.id %}"
-                               class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add
-                                Shiprocket
-                                Shipment</a>
-                        </div>
-                    {% endif %}
                     {% if  object.shipment_type == "ship_rocket" %}
-                        <a href="{% url 'admins:shiprocket-shipment-detail' object.get_shipment_id %}"
-                           class="btn btn-primary d-inline-block"><i class="fa fa-eye"></i>&nbsp;&nbsp;
-                            View Shipment Detail
-                        </a>
-                        <a href="{% url 'admins:order-complete' object.id %}"
-                           class="btn btn-success mt-2 d-inline-block"><i class="fa fa-check"></i>&nbsp;&nbsp;
-                            Mark As Complete
-                        </a>
+                        {% if not object.get_shiprocket_shipment.is_added %}
+                            <div class="mb-2">
+                                <a href="{% url 'admins:shiprocket-shipment-create' object.id %}"
+                                   class="btn btn-primary d-inline-block"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add
+                                    Shiprocket
+                                    Shipment</a>
+                            </div>
+                        {% else %}
+
+                            <a href="{% url 'admins:shiprocket-shipment-detail' object.get_shipment_id %}"
+                               class="btn btn-primary d-inline-block"><i class="fa fa-eye"></i>&nbsp;&nbsp;
+                                View Shipment Detail
+                            </a>
+                            <a href="{% url 'admins:order-complete' object.id %}"
+                               class="btn btn-success mt-2 d-inline-block"><i class="fa fa-check"></i>&nbsp;&nbsp;
+                                Mark As Complete
+                            </a>
+                        {% endif %}
                     {% endif %}
 
                 </div>
