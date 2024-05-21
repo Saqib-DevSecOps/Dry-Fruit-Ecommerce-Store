@@ -19,9 +19,9 @@ from src.accounts.models import User
 from src.administration.admins.bll import get_sales_by_month, get_orders_by_month
 from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
-    ShipRocketShipmentForm, ProductSizeForm
+    ShipRocketShipmentForm, ProductSizeForm, ProductDealForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize
+    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal
 from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
     generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail, track_shipping
 
@@ -283,6 +283,7 @@ class ProductDetailView(DetailView):
         context['product_image_add_form'] = ProductImageForm()
         context['product_weight_add_form'] = ProductWeightForm()
         context['product_size_add_form'] = ProductSizeForm()
+        context['product_deal_form'] = ProductDealForm()
         return context
 
 
@@ -315,6 +316,26 @@ class ProductWeightAddView(View):
             form.instance.product = product
             form.save()
             messages.success(request, "Product Weight added successfully")
+        return redirect("admins:product-detail", product_id)
+
+
+@method_decorator(admin_protected, name='dispatch')
+class ProductDealAddView(View):
+
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, pk=product_id)
+        form = ProductDealForm(data=request.POST)
+        if form.is_valid():
+            product_deal = ProductDeal.objects.filter(product=product).first()
+            if not product_deal:
+                form.instance.product = product
+                form.save()
+                messages.success(request, "Product Deal added successfully")
+            else:
+                product_deal.started_at = form.cleaned_data.get('started_at')
+                product_deal.expire_at = form.cleaned_data.get('expire_at')
+                product_deal.save()
+                messages.success(request, "Product Deal Updated successfully")
         return redirect("admins:product-detail", product_id)
 
 

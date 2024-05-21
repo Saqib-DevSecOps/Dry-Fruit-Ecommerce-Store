@@ -198,6 +198,18 @@ class Product(models.Model):
     def get_all_ratings(self):
         return ProductRating.objects.filter(product=self)
 
+    def get_product_deal(self):
+        product_deal = ProductDeal.objects.filter(product=Product).first()
+
+
+class ProductDeal(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.SET_NULL, null=True, blank=False)
+    started_at = models.DateTimeField()
+    expire_at = models.DateTimeField()
+
+    def __str__(self):
+        return self.product.title
+
 
 class ProductWeight(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False)

@@ -648,14 +648,7 @@
                         <h2 class="product_sec_title pb-3">Popular Organic Discount</h2>
                     </div>
                 </div>
-                <div class="col-lg-6 ul_li_right">
-                    <ul class="countdown_timer ul_li" data-countdown="2023/3/24">
-                        <li class="days_count"><strong>00</strong><span>Days</span></li>
-                        <li class="hours_count"><strong>00</strong><span>Hours</span></li>
-                        <li class="minutes_count"><strong>00</strong><span>Mins</span></li>
-                        <li class="seconds_count"><strong>00</strong><span>Secs</span></li>
-                    </ul>
-                </div>
+
             </div>
 
             <div class="row g-4">
@@ -766,9 +759,7 @@
                                         <button type="button"
                                                 class="btn text-white rounded-pill text-uppercase d-flex justify-content-center align-items-center">
                                             <i class="far fa-clock pe-1"></i>
-                                            <ul class="countdown_timer3 list-unstyled d-flex justify-content-center align-items-center mb-0"
-                                                data-countdown="2024/3/24">
-                                            </ul>
+                                           {{ product.productdeal.expire_at }}
                                         </button>
                                     </div>
                                     <div class="offer_item_qty_prog_cnt d-flex align-items-center">
@@ -934,61 +925,4 @@
     {#    </section>#}
     <!-- instagram section end -->
 
-    <script src="{% static 'website/js/magnific-popup.min.js' %}"></script>
-    <script>
-        // JavaScript code to update the countdown timer
-        function updateCountdown() {
-            const countdownElement = document.querySelector('.countdown_timer');
-            const endDate = new Date(countdownElement.getAttribute('data-countdown'));
-
-            const now = new Date().getTime();
-            const distance = endDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Update the HTML with the new countdown values
-            const daysElement = countdownElement.querySelector('.days_count strong');
-            const hoursElement = countdownElement.querySelector('.hours_count strong');
-            const minutesElement = countdownElement.querySelector('.minutes_count strong');
-            const secondsElement = countdownElement.querySelector('.seconds_count strong');
-
-            daysElement.textContent = days.toString().padStart(2, '0');
-            hoursElement.textContent = hours.toString().padStart(2, '0');
-            minutesElement.textContent = minutes.toString().padStart(2, '0');
-            secondsElement.textContent = seconds.toString().padStart(2, '0');
-        }
-
-        // Update the countdown every second
-        setInterval(updateCountdown, 1000);
-
-        // Initial call to start the countdown
-        updateCountdown();
-    </script>
-
-    <script
-            src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous"></script>
-
-    <script>
-        var settings = {
-            "url": "https://apiv2.shiprocket.in/v1/external/auth/login",
-            "method": "POST",
-            "timeout": 0,
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "data": JSON.stringify({
-                "email": "saqib71501@gmail.com",
-                "password": "saqib71501@gmail.com"
-            }),
-        };
-
-        $.ajax(settings).done(function (response) {
-            console.log(response);
-        });
-    </script>
 {% endblock %}

@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import (
-    Product, ProductImage, Blog, ProductWeight, PickupLocation, ProductSize
+    Product, ProductImage, Blog, ProductWeight, PickupLocation, ProductSize, ProductDeal
 )
 from ...accounts.models import User
 
@@ -39,6 +39,18 @@ class ProductSizeForm(forms.ModelForm):
         fields = [
             'length', 'breadth', 'height', 'weight'
         ]
+
+
+class ProductDealForm(forms.ModelForm):
+    class Meta:
+        model = ProductDeal
+        fields = [
+            'started_at', 'expire_at'
+        ]
+        widgets = {
+            'started_at': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'expire_at': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
 
 
 class MyProfileForm(ModelForm):

@@ -1,4 +1,5 @@
 {% extends 'admins/base.html' %}
+{% load crispy_forms_filters %}
 {% load static %}
 {% load custom_tags %}
 {% load crispy_forms_tags %}
@@ -27,6 +28,11 @@
     <button class="btn btn-outline-success float-end pr-4-3" data-bs-target="#modal-weight-add"
             data-bs-toggle="modal" type="button">
         <i class="fa fa-plus"></i>&nbsp;Add Weight
+    </button>
+
+    <button class="btn btn-outline-success float-end pr-4-3" data-bs-target="#modal-product-deal-add"
+            data-bs-toggle="modal" type="button">
+        <i class="fa fa-plus"></i>&nbsp;Add Deal
     </button>
 {% endblock %}
 
@@ -194,6 +200,10 @@
                                                     <th scope="row">Total Reviews</th>
                                                     <td>{{ object.total_reviews }}</td>
                                                 </tr>
+                                                <tr>
+                                                    <th scope="row">Product Deal</th>
+                                                    <td>{{ object.productdeal.started_at }} - {{ object.productdeal.expire_at }}</td>
+                                                </tr>
 
                                                 </tbody>
                                             </table>
@@ -271,7 +281,29 @@
 
 
 
+    <div class="modal modal-blur fade hide" id="modal-product-deal-add" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <form action="{% url 'admins:product-deal-add' object.pk %}"
+                  method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Product Deal</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
 
+                        {% csrf_token %}
+                        {{ product_deal_form|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ms-auto" type="submit">
+                            <i class="fa fa-check"></i>&nbsp;Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="modal modal-blur fade hide" id="modal-weight-add" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
