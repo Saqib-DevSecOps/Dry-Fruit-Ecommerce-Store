@@ -138,6 +138,7 @@
                                         <img style="height: 30px;" src="{% static 'website/images/filter_image.png' %}">
                                     </div>
                                 </div>
+                                {{ filter_form.form.title }}
                                 <hr>
                                 <div class="accordion" id="accordionCategory">
                                     <div class="blog_category_wrap">
@@ -155,6 +156,50 @@
                                                 <div class="accordion-body">
                                                     {{ filter_form.form.category }}
 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapsePrice" aria-expanded="true"
+                                                        aria-controls="collapsePrice">
+                                                    Sort By
+                                                </button>
+                                            </h2>
+                                            <div id="collapsePrice" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.sorting }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseAppliancePrice" aria-expanded="true"
+                                                        aria-controls="collapseAppliancePrice">
+                                                    Sort By
+                                                </button>
+                                            </h2>
+                                            <div id="collapseAppliancePrice" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.appliance_price }}
                                                 </div>
                                             </div>
                                         </div>
@@ -225,71 +270,72 @@
                                             <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
                                                  aria-labelledby="pills-grid_layout-tab">
                                                 <div class="row g-4" id="shop_list">
-                                                {% if object_list %}
-                                                    {% for object in object_list %}
-                                                        <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 card-length">
-                                                            <div class="product_layout_1 overflow-hidden position-relative">
+                                                    {% if object_list %}
+                                                        {% for object in object_list %}
+                                                            <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 card-length">
+                                                                <div class="product_layout_1 overflow-hidden position-relative">
 
-                                                                <div class="product_layout_content bg-white position-relative">
-                                                                    <div class="product_image_wrap">
-                                                                        <a class="product_image d-flex justify-content-center align-items-center"
-                                                                           href="{% url 'website:product-detail' object.pk %}">
-                                                                            <img class="pic-1"
-                                                                                 src="{{ object.thumbnail_image.url|image_or_placeholder }}"
-                                                                                 alt="image_not_found">
-                                                                            <img class="pic-2"
-                                                                                 src="{{ object.thumbnail_image.url|image_or_placeholder }}"
-                                                                                 alt="image_not_found">
-                                                                        </a>
-                                                                        <ul class="product_badge_group ul_li_block">
-                                                                            <li><span
-                                                                                    class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
-                                                                            </li>
-                                                                            <li><span
-                                                                                    class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
-                                                                            </li>
-                                                                        </ul>
-                                                                        <ul class="product_action_btns ul_li_block d-flex">
-                                                                            <li><a class="tooltips" data-placement="top"
-                                                                                   title="Search Product"
-                                                                                   href="{% url 'website:product-detail' object.pk %}"><i
-                                                                                    class="fas fa-eye"></i></a>
-                                                                            </li>
-                                                                            <li><a class="tooltips"
-                                                                                   title="Add To Cart"
-                                                                                   href="{% url 'website:wishlist-add' object.pk  %}"><i
-                                                                                    class="far fa-heart"></i></a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div class="rating_wrap d-flex">
-                                                                        <ul class="rating_star ul_li">
-                                                                           {{ object.average_review|get_html_icons }}
-                                                                        </ul>
-                                                                        <span class="shop_review_text">( {{ object.average_review }})</span>
-                                                                    </div>
-                                                                    <div class="product_content">
-                                                                        <h3 class="product_title">
-                                                                            <a href="{% url 'website:product-detail' object.pk %}"
-                                                                               >{{ object.title }}</a>
-                                                                        </h3>
-                                                                        <div class="product_price">
-                                                                            <span class="sale_price pe-1">{{ object.get_price }}</span>
-                                                                            {% if object.discount %}
-                                                                                <del>{{ object.price }}</del>
-                                                                            {% endif %}
+                                                                    <div class="product_layout_content bg-white position-relative">
+                                                                        <div class="product_image_wrap">
+                                                                            <a class="product_image d-flex justify-content-center align-items-center"
+                                                                               href="{% url 'website:product-detail' object.pk %}">
+                                                                                <img class="pic-1"
+                                                                                     src="{{ object.thumbnail_image.url|image_or_placeholder }}"
+                                                                                     alt="image_not_found">
+                                                                                <img class="pic-2"
+                                                                                     src="{{ object.thumbnail_image.url|image_or_placeholder }}"
+                                                                                     alt="image_not_found">
+                                                                            </a>
+                                                                            <ul class="product_badge_group ul_li_block">
+                                                                                <li><span
+                                                                                        class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
+                                                                                </li>
+                                                                                <li><span
+                                                                                        class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
+                                                                                </li>
+                                                                            </ul>
+                                                                            <ul class="product_action_btns ul_li_block d-flex">
+                                                                                <li><a class="tooltips"
+                                                                                       data-placement="top"
+                                                                                       title="Search Product"
+                                                                                       href="{% url 'website:product-detail' object.pk %}"><i
+                                                                                        class="fas fa-eye"></i></a>
+                                                                                </li>
+                                                                                <li><a class="tooltips"
+                                                                                       title="Add To Cart"
+                                                                                       href="{% url 'website:wishlist-add' object.pk %}"><i
+                                                                                        class="far fa-heart"></i></a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="rating_wrap d-flex">
+                                                                            <ul class="rating_star ul_li">
+                                                                                {{ object.average_review|get_html_icons }}
+                                                                            </ul>
+                                                                            <span class="shop_review_text">( {{ object.average_review }})</span>
+                                                                        </div>
+                                                                        <div class="product_content">
+                                                                            <h3 class="product_title">
+                                                                                <a href="{% url 'website:product-detail' object.pk %}"
+                                                                                >{{ object.title }}</a>
+                                                                            </h3>
+                                                                            <div class="product_price">
+                                                                                <span class="sale_price pe-1">{{ object.get_price }}</span>
+                                                                                {% if object.discount %}
+                                                                                    <del>{{ object.price }}</del>
+                                                                                {% endif %}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
 
+                                                                </div>
                                                             </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <div class="col-12">
+                                                            <h3 class="text-center">Products Not Found</h3>
                                                         </div>
-                                                    {% endfor %}
-                                                {% else %}
-                                                    <div class="col-12">
-                                                    <h3 class="text-center">Products Not Found</h3>
-                                                    </div>
-                                                {% endif  %}
+                                                    {% endif %}
                                                 </div>
                                             </div>
 

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
@@ -33,7 +34,14 @@ class HomeTemplateView(TemplateView):
         context[f'product_category_all'] = Product.objects.all()[:8]
         for i, category in enumerate(categories):
             context[f'product_category_{i}'] = Product.objects.filter(category=category)[:8]
-        context['popular_discount'] = Product.objects.order_by('-discount')[:8]
+        current_datetime = timezone.now()
+        current_date = timezone.localdate()
+
+        products_with_deals = Product.objects.filter(
+            productdeal__started_at__lte=current_datetime,
+            productdeal__expire_at__gt=current_datetime
+        ).distinct()
+        context['popular_discount'] = products_with_deals[:8]
 
         return context
 
@@ -56,6 +64,12 @@ class ProductListView(ListView):
 class ProductDetailView(DetailView):
     template_name = 'website/product_detail.html'
     model = Product
+
+    def get_object(self, queryset=None):
+        product = get_object_or_404(Product, id=self.kwargs.get('pk'))
+        product.total_views += 1
+        product.save()
+        return product
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
