@@ -5157,13 +5157,13 @@ input[type=text]:focus {
     height: 7px;
     border: none;
     border-radius: 0;
-    background-color: #e7e7ee;
+    background-color: #76b625;
 }
 
 .price-range-area .ui-slider-range {
     border: none;
     border-radius: 0;
-    background-color: #f6fafb;
+    background-color: #76b625;
 }
 
 .price-range-area .ui-state-default {

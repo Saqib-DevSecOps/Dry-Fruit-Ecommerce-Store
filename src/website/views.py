@@ -57,6 +57,12 @@ class ProductDetailView(DetailView):
     template_name = 'website/product_detail.html'
     model = Product
 
+    def get_object(self, queryset=None):
+        product = get_object_or_404(Product, id=self.kwargs.get('pk'))
+        product.total_views += 1
+        product.save()
+        return product
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['related_product'] = Product.objects.filter().distinct()[:4]

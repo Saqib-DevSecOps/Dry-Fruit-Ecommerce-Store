@@ -94,10 +94,30 @@ class ProductFilter(django_filters.FilterSet):
         method='filter_by_discount',
         label="Rating"
     )
+    sorting = django_filters.MultipleChoiceFilter(
+        choices=[
+            (1, 'Popularity'),
+            (2, 'Best selling'),
+            (3, 'Trending'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'shop-widget-checkbox'}),
+        method='filter_by_sorting',
+        label="Sort By"
+    )
+    appliance_price = django_filters.MultipleChoiceFilter(
+        choices=[
+            (1, 'High to Low'),
+            (2, 'Low to High'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'shop-widget-checkbox'}),
+        method='filter_by_appliance_price',
+        label="Appliance Price"
+    )
 
     class Meta:
         model = Product
-        fields = ['title', 'category', 'min_price', 'ratings', 'max_price', 'ratings', 'promotional', 'tags']
+        fields = ['title', 'category', 'min_price', 'ratings', 'sorting', 'appliance_price', 'max_price', 'ratings',
+                  'promotional', 'tags']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -133,6 +153,29 @@ class ProductFilter(django_filters.FilterSet):
             queryset = queryset.filter(filters)
         return queryset
 
+    def filter_by_sorting(self, queryset, name, value):
+        selected_sorting = [int(val) for val in value]
+        filters = Q()
+
+        for sorting_option in selected_sorting:
+            if sorting_option == 1:
+                queryset = queryset.order_by('-total_views')
+            elif sorting_option == 2:
+                queryset = queryset.order_by('-total_sales')
+            elif sorting_option == 3:
+                queryset = queryset.order_by('-created_on')
+
+        return queryset.distinct()
+
+    def filter_by_appliance_price(self, queryset, name, value):
+        selected_sorting = [int(val) for val in value]
+        for sorting_option in selected_sorting:
+            if sorting_option == 1:
+                queryset = queryset.order_by('-price')
+            elif sorting_option == 2:
+                queryset = queryset.order_by('price')
+        return queryset.distinct()
+
     def filter_by_discount(self, queryset, name, value):
         selected_discount = [int(val) for val in value]
         filters = Q()
@@ -159,7 +202,6 @@ def post_filter(queryset, name, value):
 
 
 class BlogFilter(django_filters.FilterSet):
-
     category = django_filters.ModelMultipleChoiceFilter(
         queryset=BlogCategory.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'name'}),
