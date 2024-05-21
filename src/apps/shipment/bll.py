@@ -1,15 +1,13 @@
 import json
-import os
-
 import requests
 
-from src.administration.admins.models import Order
+from core.settings import SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD
 
 
 # Getting Token
 def get_or_refresh_token():
-    email = "hiren9016573094@gmail.com"
-    password = "Hiren@007"
+    email = SHIPROCKET_EMAIL
+    password = SHIPROCKET_PASSWORD
 
     if email and password:
         url = "https://apiv2.shiprocket.in/v1/external/auth/login"

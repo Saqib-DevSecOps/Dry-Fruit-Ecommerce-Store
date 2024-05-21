@@ -130,10 +130,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 if ENVIRONMENT == 'server':
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env('DB_HOST'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASS'),
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
         }
     }
+
 else:
     DATABASES = {
         'default': {
@@ -207,5 +212,7 @@ OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-RAZORPAY_API_KEY = "rzp_test_Jg802qU7X2QjKh"
-RAZORPAY_API_SECRET = "xs5giv3wJeDQR2aqiwr6DDVH"
+RAZORPAY_API_KEY = env("RAZORPAY_API_KEY")
+RAZORPAY_API_SECRET = env("RAZORPAY_API_SECRET")
+SHIPROCKET_EMAIL = env("SHIPROCKET_EMAIL")
+SHIPROCKET_PASSWORD = env("SHIPROCKET_PASSWORD")
