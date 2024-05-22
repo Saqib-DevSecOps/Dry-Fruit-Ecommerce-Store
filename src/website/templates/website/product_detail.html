@@ -231,12 +231,13 @@
                                     <ul class="review_comment_list2 ul_li_block">
                                         {% for review in reviews %}
                                             <li class="review_comment_wrap2">
-                                                <h4 class="admin_name">{{ review.order.client }} <span class="comment_date">{{ review.created_on }}</span></h4>
+                                                <h4 class="admin_name">{{ review.order.client }} <span
+                                                        class="comment_date">{{ review.created_on }}</span></h4>
                                                 <ul class="rating_star ul_li">
                                                     {{ review.rate|get_html_icons }}
                                                 </ul>
                                                 <p class="mb-0">
-                                                   {{ review.comment }}
+                                                    {{ review.comment }}
                                                 </p>
                                             </li>
                                         {% endfor %}
@@ -287,9 +288,11 @@
                                         <li><span
                                                 class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
                                         </li>
-                                        <li><span
-                                                class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
-                                        </li>
+                                        {% if object.discount %}
+                                            <li><span
+                                                    class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                     <ul class="product_action_btns ul_li_block d-flex">
                                         <li><a class="tooltips" data-placement="top"
