@@ -33,10 +33,9 @@
     </style>
     <section class="product10_sec position-relative aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="product10_wrap sec_space_small">
-            <div class="container-xxl">
+            <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
-                        <!-- User this HTML for Slider -->
                         <!-- User this HTML for Slider -->
                         <section class="banner-section">
                             <div class="container">
@@ -88,7 +87,7 @@
                                 <ul class="rating_star ul_li">
                                     <i class="fa fa-circle text-warning" aria-hidden="true"></i>
                                 </ul>
-                                <b>&nbsp;In Stock</b>
+                                <b>&nbsp;In Stock ({{ object.quantity }})</b>
                             </div>
                             <div class="product_btn">
                                 <a href="#">
@@ -102,27 +101,7 @@
                         <h2 class="product_detail_title">{{ object.title }}</h2>
                         <div class="row mt-5">
                             <div class="col-8">
-                                <div class="product10_value_content">
-                                    <h4 class="value_title mb-3">Additional Info</h4>
-                                    <div class="product10_value_table bg-white shadow-lg">
-                                        <table class="table">
-                                            <tbody>
-                                            <tr>
-                                                <th scope="row">Manufacturer</th>
-                                                <td>{{ object.manufacturer_brand }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Category</th>
-                                                <td>{{ object.category }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Quantity</th>
-                                                <td>{{ object.quantity }}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <p>{{ object.short_description|safe }}</p>
                             </div>
                         </div>
                         <div class="row mt-5">
@@ -186,10 +165,9 @@
         </div>
     </section>
 
-    <section class="product10_reviews sec_top_space_70 aos-init aos-animate" data-aos="fade-up"
-             data-aos-duration="2000">
+    <section class="product10_reviews sec_top_space_70">
         <div class="product10_reviews_wrap">
-            <div class="container-xxl">
+            <div class="container">
                 <div class="d-flex justify-content-center justify-content-lg-start align-items-center">
                     <ul class="product_tabnav_3 nav nav-pills my-5" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -251,9 +229,8 @@
         </div>
     </section>
 
-    <section class="product_section sec_top_space_50 sec_inner_bottom_130 aos-init" data-aos="fade-up"
-             data-aos-duration="2000">
-        <div class="container-xxl">
+    <section class="product_section sec_top_space_50 sec_inner_bottom_130">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-6">
                     <div class="product_sec_content">

@@ -12,7 +12,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             'thumbnail_image', 'title', 'category', 'manufacturer_brand',
-            'tags', 'description', 'video_link', 'tax',
+            'tags', 'description', 'video_link', 'tax','short_description',
             'promotional', 'price', 'quantity', 'discount',
         ]
 

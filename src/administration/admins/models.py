@@ -1,5 +1,6 @@
 import uuid
 
+from _decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator, MinLengthValidator, \
     MaxLengthValidator
@@ -129,6 +130,7 @@ class Product(models.Model):
         upload_to='vendor/inventory/product/thumbnail', null=True, blank=False)
 
     title = models.CharField(max_length=255, help_text="Product name or title")
+    short_description = HTMLField(null=True)
     manufacturer_brand = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(blank=True, null=False, unique=False, )
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
@@ -209,7 +211,7 @@ class Product(models.Model):
         if not self.sku:
             self.sku = self.generate_sku()
         if self.tax > 0:
-            self.price = (self.price * self.tax) / 100
+            self.price = self.price * (1 + (self.tax / Decimal(100)))
         super(Product, self).save(*args, **kwargs)
 
     def generate_sku(self):
@@ -239,10 +241,17 @@ class ProductWeight(models.Model):
         return str(self.price)
 
     def get_product_weight_discounted_price(self):
-        return self.price * self.product.discount / 100
+        discount_amount = self.price * self.product.discount / 100
+        discounted_price = self.price - discount_amount
+        return discounted_price
 
     def get_product_size(self):
         return ProductSize.objects.get(product_weight=self)
+
+    def save(self, *args, **kwargs):
+        if self.product.tax > 0:
+            self.price = self.price * (1 + (self.product.tax / Decimal(100)))
+        super(ProductWeight, self).save(*args, **kwargs)
 
 
 class ProductSize(models.Model):
