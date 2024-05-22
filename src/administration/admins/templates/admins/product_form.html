@@ -263,6 +263,7 @@
 
                             <div class="card-header">
                                 <h4>Short Description</h4>
+
                             </div>
 
                             <div class="card-body">
@@ -270,6 +271,13 @@
                                 {# DESC #}
                                 <div class="mb-4">
                                     {{ form.short_description }}
+                                    {% if form.short_description.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.short_description.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -285,6 +293,13 @@
                                 {# DESC #}
                                 <div class="mb-4">
                                     {{ form.description }}
+                                    {% if form.description.errors %}
+                                        <ul class="text-danger">
+                                            {% for error in form.description.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
