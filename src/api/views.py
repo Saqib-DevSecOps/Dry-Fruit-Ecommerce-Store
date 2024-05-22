@@ -22,6 +22,7 @@ from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     OrderItemListSerializer, ShipmentSerializer
 from src.apps.razorpay.bll import get_razorpay_order_id
 from src.apps.shipment.bll import track_shipping
+from src.website.utility import get_total_amount
 
 """Product Apis"""
 
@@ -82,6 +83,20 @@ class CartListCreateAPIView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        total_price, discount_price, shipping_charges, sub_total = get_total_amount(request)
+        data = {
+            'cart_items': serializer.data,
+            'total_price': total_price,
+            'discount_price': discount_price,
+            'shipping_charges': shipping_charges,
+            'sub_total': sub_total
+        }
+
+        return Response(data)
 
 
 class CartRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
