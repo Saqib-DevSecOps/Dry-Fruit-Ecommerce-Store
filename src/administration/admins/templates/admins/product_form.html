@@ -192,20 +192,19 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label for="{{ form.weight.id_for_label }}"
-                                                   class="form-label">{{ form.weight.label }}</label>
-                                            {% render_field form.weight class="form-control" %}
-                                            <small class="form-text text-muted">{{ form.weight.help_text }}</small>
-                                            {% if form.weight.errors %}
-                                                <ul class="text-danger">
-                                                    {% for error in form.weight.errors %}
-                                                        <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        </div>
+                                        <label for="{{ form.price.id_for_label }}"
+                                               class="form-label">{{ form.price.label }}</label>
+                                        {% render_field form.price class="form-control" placeholder='product details down price' %}
+                                        <small class="form-text text-muted">{{ form.price.help_text }}</small>
+                                        {% if form.price.errors %}
+                                            <ul class="text-danger">
+                                                {% for error in form.price.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
                                     </div>
+
                                 </div>
 
 
@@ -228,19 +227,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
-                                        <label for="{{ form.price.id_for_label }}"
-                                               class="form-label">{{ form.price.label }}</label>
-                                        {% render_field form.price class="form-control" placeholder='product details down price' %}
-                                        <small class="form-text text-muted">{{ form.price.help_text }}</small>
-                                        {% if form.price.errors %}
-                                            <ul class="text-danger">
-                                                {% for error in form.price.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-lg-4">
                                         <label for="{{ form.discount.id_for_label }}"
                                                class="form-label">{{ form.discount.label }}</label>
                                         {% render_field form.discount class="form-control" placeholder='product details down discount' %}
@@ -252,6 +238,21 @@
                                                 {% endfor %}
                                             </ul>
                                         {% endif %}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label for="{{ form.tax.id_for_label }}"
+                                                   class="form-label">{{ form.tax.label }}</label>
+                                            {% render_field form.tax class="form-control" %}
+                                            <small class="form-text text-muted">{{ form.tax.help_text }}</small>
+                                            {% if form.tax.errors %}
+                                                <ul class="text-danger">
+                                                    {% for error in form.tax.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

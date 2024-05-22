@@ -28,20 +28,21 @@ class HomeTemplateView(TemplateView):
         context = super(HomeTemplateView, self).get_context_data(**kwargs)
         context['new_products'] = Product.objects.order_by('-created_on')[:10]
         context['blogs'] = Blog.objects.order_by('-created_on')[:10]
-        context['top_products'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:5]
-        categories = ProductCategory.objects.all()[:5]
+        context['top_products'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:10]
+        context['best_selling'] = Product.objects.order_by('-total_sales', )[:10]
+        categories = ProductCategory.objects.all()[:10]
         context['top_categories'] = categories
         context[f'product_category_all'] = Product.objects.all()[:8]
         for i, category in enumerate(categories):
             context[f'product_category_{i}'] = Product.objects.filter(category=category)[:8]
         current_datetime = timezone.now()
-        current_date = timezone.localdate()
 
         products_with_deals = Product.objects.filter(
             productdeal__started_at__lte=current_datetime,
             productdeal__expire_at__gt=current_datetime
         ).distinct()
-        context['popular_discount'] = products_with_deals[:8]
+        context['popular_discount'] = Product.objects.order_by('-discount').exclude(discount__lte=0)
+        context['discount_deals'] = products_with_deals[:8]
 
         return context
 

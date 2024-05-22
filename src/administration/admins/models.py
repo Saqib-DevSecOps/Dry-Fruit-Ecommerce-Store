@@ -7,6 +7,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from phonenumber_field.formfields import PhoneNumberField
 from tinymce.models import HTMLField
 
@@ -138,6 +139,8 @@ class Product(models.Model):
     promotional = models.CharField(max_length=50, choices=PROMOTIONAL_CHOICE, null=True, blank=True)
 
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[positive_validator])
+    tax = models.PositiveIntegerField(default=0, verbose_name="Tax in %", help_text="Tax  in percentage",
+                                      validators=[discount_validator])
     quantity = models.PositiveIntegerField(default=1, help_text="Total quantity of product",
                                            validators=[quantity_validator])
     discount = models.PositiveIntegerField(default=0, verbose_name="Discount in %", help_text="discount  in percentage",
@@ -200,6 +203,18 @@ class Product(models.Model):
 
     def get_product_deal(self):
         product_deal = ProductDeal.objects.filter(product=Product).first()
+        return product_deal
+
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = self.generate_sku()
+        if self.tax > 0:
+            self.price = (self.price * self.tax) / 100
+        super(Product, self).save(*args, **kwargs)
+
+    def generate_sku(self):
+        random_string = get_random_string(8).upper()
+        return f'{self.id}-{random_string}'
 
 
 class ProductDeal(models.Model):
