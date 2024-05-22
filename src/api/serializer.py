@@ -73,10 +73,14 @@ class CartCreateSerializer(serializers.ModelSerializer):
 class CartListSerializer(serializers.ModelSerializer):
     product = ProductHomeSerializer()
     product_weight = serializers.SerializerMethodField()
+    total_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    discount_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    sub_total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'product', 'quantity', 'product_weight']
+        fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price', 'shipping_charges', 'sub_total']
 
     def get_product_weight(self, obj):
         product_weight = obj.product.get_product_weight().first()  # Assuming you want to get the first product weight
