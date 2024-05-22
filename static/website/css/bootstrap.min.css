@@ -5835,7 +5835,7 @@ textarea.form-control-lg {
 }
 
 .modal-backdrop.show {
-    opacity: .5
+    /*opacity: .5*/
 }
 
 .modal-header {
@@ -6629,7 +6629,7 @@ textarea.form-control-lg {
 }
 
 .offcanvas-backdrop.show {
-    opacity: .5
+    /*opacity: .5*/
 }
 
 .offcanvas-header {

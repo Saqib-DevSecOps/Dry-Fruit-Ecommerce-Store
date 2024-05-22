@@ -50,49 +50,36 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                    <span class="price_text">{% if obj.product_weight %}
-                                        {{ obj.product_weight.get_product_weight_discounted_price }}{% else %}
-                                        {{ obj.product.get_price }}{% endif %}</span>
+                                                    <span class="price_text">{% if obj.product_weight %}
+                                                        {{ obj.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                        {{ obj.product.get_price }}{% endif %}</span>
                                                     </td>
                                                     <td>
                                                         <span class="quantity_text">{{ obj.quantity }}</span>
                                                     </td>
                                                     <td> <span class="total_price">
-                                            {% if obj.product_weight %}
-                                                {{ obj.quantity|multiply:obj.product_weight.get_product_weight_discounted_price }}
-                                            {% else %}
-                                                {{ obj.quantity|multiply:obj.product.get_price }}
-                                            {% endif %}
-                                        </span>
+                                                        {% if obj.product_weight %}
+                                                            {{ obj.quantity|multiply:obj.product_weight.get_product_weight_discounted_price }}
+                                                        {% else %}
+                                                            {{ obj.quantity|multiply:obj.product.get_price }}
+                                                        {% endif %}
+                                                          </span>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
-
-                                            <tr>
-                                                <td class="text-left">
-                                                    <span class="subtotal_text">SHIPPING CHARGES</span>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <span class="total_price">{{ shipping_charges|floatformat:2 }}</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left">
-                                                    <span class="subtotal_text">TOTAL</span>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <span class="total_price">{{ sub_total|floatformat:2 }}</span>
-                                                </td>
-                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
 
                                     <div class="billing_payment_mathod">
+                                        <div class="m-4">
+                                            <h5 class="float-end">{{ shipping_charges|floatformat:2 }}</h5>
+                                            <h5>Shipping Charges</h5>
+                                        </div>
+                                        <div class="m-4">
+                                            <h5 class="float-end">{{ sub_total|floatformat:2 }}</h5>
+                                            <h5>TOTAL </h5>
+                                        </div>
                                         <button type="submit" id="pay-btn" class="custom_btn bg_default_red">PLACE ORDER
                                         </button>
                                     </div>
