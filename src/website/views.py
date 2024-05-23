@@ -130,7 +130,8 @@ class CartTemplateView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CartTemplateView, self).get_context_data(**kwargs)
         context['cart'] = Cart.objects.filter(user=self.request.user)
-        total_amount, discount_amount, sipping_charges, sub_total = get_total_amount(self.request)
+        total_amount, discount_amount, sipping_charges, custom_sipping_charges, sub_total = get_total_amount(
+            self.request)
         context['total_amount'] = total_amount
         context['discount_amount'] = discount_amount
         context['sipping_charges'] = sipping_charges
@@ -264,13 +265,15 @@ class OrderCreate(View):
     cart = None
     total = 0
     service_charges = 0
-    shipping_charges = 0
+    shiprocket_shipping_charges = 0
+    custom_shipping_charges = 0
     sub_total = 0
     context = {}
 
     def dispatch(self, request, *args, **kwargs):
         self.cart = Cart.objects.filter(user=request.user)
-        self.total, self.service_charges, self.shipping_charges, self.sub_total = get_total_amount(self.request)
+        self.total, self.service_charges, self.shiprocket_shipping_charges, self.custom_shipping_charges, self.sub_total = get_total_amount(
+            self.request)
 
         # 1: CHECK IF THE CART IS EMPTY
         if not self.cart:
@@ -298,7 +301,7 @@ class OrderCreate(View):
             'user_cart': self.cart,
             'total': self.total,
             'service_charges': self.service_charges,
-            'shipping_charges': self.shipping_charges,
+            'shipping_charges': self.shiprocket_shipping_charges,
             'sub_total': self.sub_total,
         }
         self.context.update(data)

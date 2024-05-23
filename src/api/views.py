@@ -87,12 +87,13 @@ class CartListCreateAPIView(ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        total_price, discount_price, shipping_charges, sub_total = get_total_amount(request)
+        total_price, discount_price, shiprocket_sipping_charges, custom_sipping_charges, sub_total = get_total_amount(request)
         data = {
             'cart_items': serializer.data,
             'total_price': total_price,
             'discount_price': discount_price,
-            'shipping_charges': shipping_charges,
+            'shiprocket_shipping_charges': shiprocket_sipping_charges,
+            'custom_shipping_charges': custom_sipping_charges,
             'sub_total': sub_total
         }
 
