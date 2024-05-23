@@ -80,7 +80,8 @@ class CartListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price', 'shipping_charges', 'sub_total']
+        fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price', 'shipping_charges',
+                  'sub_total']
 
     def get_product_weight(self, obj):
         product_weight = obj.product.get_product_weight().first()  # Assuming you want to get the first product weight
@@ -176,7 +177,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id', 'sku', 'title', 'slug', 'manufacturer_brand', 'category', 'images', 'description',
+            'id', 'sku', 'title', 'slug', 'manufacturer_brand', 'short_description', 'category', 'images',
+            'description',
             'thumbnail_image', 'average_review', 'video_link', 'quantity', 'price', 'discount', 'promotional',
             'total_reviews', 'product_weight', 'product_review'
         ]
