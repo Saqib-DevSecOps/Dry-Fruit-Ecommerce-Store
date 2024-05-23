@@ -125,7 +125,7 @@
                                         <input type="text" placeholder="ENTER COUPON CODE" id="coupan" name="coupan">
                                     </div>
                                     <div class="col-lg-4">
-                                        <button class="btn custom_btn mt-4">Apply</button>
+                                        <button class="btn btn-sm custom_btn mt-4">Apply</button>
                                     </div>
                                 </div>
                             </div>
@@ -181,8 +181,8 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="{% url 'website:order' %}" class="btn custom_btn  mt-4">Continue To
-                                        Checkout -{{ sub_total|floatformat:"2" }}</a>
+                                    <a href="{% url 'website:order' %}" class="btn btn-sm custom_btn  mt-4">Continue To
+                                        Checkout {{ sub_total|floatformat:"2" }}</a>
                                 </div>
                             </div>
                         </div>

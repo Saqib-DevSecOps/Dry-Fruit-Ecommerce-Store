@@ -1043,7 +1043,10 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form>
                 <div class="modal-content p-4">
-                    <h5 class="modal-title text-center p-4" id="RateUsTitle">Please Rate Our Website</h5>
+                    <div class="d-flex justify-content-between align-items-center p-4">
+                        <h5 class="modal-title" id="RateUsTitle">Please Rate Our Website</h5>
+                        <a href="javascript:void(0)" id="closeModalButton" class="float-end">❌</a>
+                    </div>
                     <p class="modal-title text-center " id="RateUsTitle">HOW EASY TO OR DIFFICULT WAS IT TO USE
                         OUR WEBSITE</p>
                     <div class="form-group text-center mt-3">
@@ -1083,7 +1086,7 @@
         $(document).ready(function () {
             setTimeout(function () {
                 $('#RateUs').modal('show');
-            }, 5000); // 10000 milliseconds = 10 seconds
+            }, 1); // 10000 milliseconds = 10 seconds
         });
     </script>
     <script>
@@ -1094,6 +1097,9 @@
                 $(this).prevAll().addBack().addClass('checked');
                 console.log('Rating selected:', ratingValue);
             });
+        });
+        document.getElementById('closeModalButton').addEventListener('click', function () {
+            $('#RateUs').modal('hide');
         });
     </script>
 {% endblock %}

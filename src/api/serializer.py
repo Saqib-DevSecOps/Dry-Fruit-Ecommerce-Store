@@ -75,12 +75,14 @@ class CartListSerializer(serializers.ModelSerializer):
     product_weight = serializers.SerializerMethodField()
     total_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     discount_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    shiprocket_shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    custom_shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     sub_total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price', 'shipping_charges',
+        fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price',
+                  'shiprocket_shipping_charges', 'custom_shipping_charges',
                   'sub_total']
 
     def get_product_weight(self, obj):

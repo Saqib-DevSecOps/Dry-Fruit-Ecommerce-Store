@@ -37,7 +37,8 @@ def get_total_amount(request):
 
     total_price = Decimal(0)
     discount_price = Decimal(0)
-    shipping_charges = Decimal(0)
+    shiprocket_shipping_charges = Decimal(0)
+    custom_shipping_charges = Decimal(0)
     base_rate = Decimal('26')
     additional_500g_rate = Decimal('15')
 
@@ -58,10 +59,10 @@ def get_total_amount(request):
         discount_price += Decimal(cart_item.get_item_price()) - Decimal(cart_item.get_discount_price())
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
-        shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
+        shiprocket_shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
 
-    sub_total = total_price + shipping_charges
-    return total_price, discount_price, shipping_charges, sub_total
+    sub_total = total_price + shiprocket_shipping_charges
+    return total_price, discount_price, shiprocket_shipping_charges,custom_shipping_charges, sub_total
 
 
 def total_quantity(request):
