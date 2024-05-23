@@ -175,14 +175,14 @@
                                                     <p class="mb-1">Sub Total</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-1">{{ sub_total|floatformat:"2" }}</p>
+                                                    <p class="mb-1">{{ total_amount|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <a href="{% url 'website:order' %}" class="btn btn-sm custom_btn  mt-4">Continue To
-                                        Checkout {{ sub_total|floatformat:"2" }}</a>
+                                        Checkout {{ total_amount|floatformat:"2" }}</a>
                                 </div>
                             </div>
                         </div>
