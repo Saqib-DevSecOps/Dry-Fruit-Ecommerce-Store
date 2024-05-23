@@ -116,6 +116,10 @@ class ContactUsTemplateView(TemplateView):
     template_name = 'website/contact_us.html'
 
 
+class FranchiseTemplateView(TemplateView):
+    template_name = 'website/franchise.html'
+
+
 """ ORDER AND CART  ------------------------------------------------------------------------------------------ """
 
 
