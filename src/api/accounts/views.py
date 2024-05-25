@@ -12,12 +12,6 @@ class GoogleLoginView(SocialLoginView):
     callback_url = GOOGLE_CALLBACK_ADDRESS
     client_class = OAuth2Client
 
-    def get_response(self):
-        response = super().get_response()
-        token, created = Token.objects.get_or_create(user=self.user)
-        response.data['token'] = token.key
-        return response
-
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
