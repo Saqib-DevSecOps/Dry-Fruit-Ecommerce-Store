@@ -459,7 +459,10 @@ class OrderCompleteView(View):
         pk = self.kwargs.get('pk')
         order = Order.objects.get(id=pk)
         order.order_status = "completed"
+        ship_rocket_order = ShipRocketOrder.objects.get(order=order)
+        ship_rocket_order.status = "completed"
         order.save()
+        ship_rocket_order.save()
         messages.success(request, 'Order Has Been Completed Successfully')
         return redirect('admins:order-detail', pk=pk)
 
@@ -511,9 +514,10 @@ class ShipRocketOrderCreate(FormView):
                                                                           is_added=True
                                                                           )
 
-        shiprocket_order.save()
+        shiprocket_order.status = "delivery"
         order.shipment_type = "ship_rocket"
         order.save()
+        shiprocket_order.save()
         return super().form_valid(form)
 
     def get_success_url(self):

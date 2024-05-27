@@ -43,7 +43,7 @@ class CreateRazorPayCheckout(View):
         order.save()
         callback_url = BASE_URL + "/razorpay/paymenthandler/"
         context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
-                   'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
+                   'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url, 'order': order}
 
         return render(request, 'razorpay/payment.html', context=context)
 

@@ -4,472 +4,60 @@
 
 {% block content %}
     <style>
-        .cd-nugget-info a {
+        /* CSS */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
             position: relative;
-            font-size: 14px;
-            color: #96c03d;
-            -webkit-transition: all 0.2s;
-            -moz-transition: all 0.2s;
-            transition: all 0.2s;
         }
 
-        .no-touch .cd-nugget-info a:hover {
-            opacity: .8;
+        .step-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #b8b8b8;
+            transition: .4s;
         }
 
-        .cd-nugget-info span {
-            vertical-align: middle;
-            display: inline-block;
+        .step-button[aria-expanded="true"] {
+            width: 60px;
+            height: 60px;
+            background-color: #f9b43c;
+            color: #fff;
         }
 
-        .cd-nugget-info span svg {
-            display: block;
+        .done {
+            background-color: #0b5ed7;
+            color: #fff;
         }
 
-        .cd-breadcrumb li, .cd-multi-steps li {
-            display: inline-block;
-            float: left;
-            margin: 0.5em 0;
+        .step-item {
+            z-index: 10;
+            text-align: center;
         }
 
-        .cd-breadcrumb li::after, .cd-multi-steps li::after {
-            display: inline-block;
-            content: '\00bb';
-            margin: 0 .6em;
-            color: #959fa5;
+        #progress {
+            -webkit-appearance: none;
+            position: absolute;
+            width: 95%;
+            z-index: 5;
+            height: 1px;
+            margin-left: 18px;
+            margin-bottom: 18px;
         }
 
-        .cd-breadcrumb li:last-of-type::after, .cd-multi-steps li:last-of-type::after {
-            display: none;
+        /* to customize progress bar */
+        #progress::-webkit-progress-value {
+            background-color: #acacac;
+            transition: .5s ease;
         }
 
-        .cd-breadcrumb li > *, .cd-multi-steps li > * {
-            /* single step */
-            display: inline-block;
-            font-size: 1.4rem;
-            color: #2c3f4c;
-        }
+        #progress::-webkit-progress-bar {
+            background-color: #acacac;
 
-        .cd-breadcrumb li.current > *, .cd-multi-steps li.current > * {
-            /* selected step */
-            color: #96c03d;
-        }
-
-        .no-touch .cd-breadcrumb a:hover, .no-touch .cd-multi-steps a:hover {
-            /* steps already visited */
-            color: #96c03d;
-        }
-
-        .cd-breadcrumb.custom-separator li::after, .cd-multi-steps.custom-separator li::after {
-            /* replace the default separator with a custom icon */
-            content: '';
-            height: 16px;
-            width: 16px;
-            background: url(https://codyhouse.co/demo/breadcrumbs-multi-steps-indicator/img/cd-custom-separator.svg) no-repeat center center;
-            vertical-align: middle;
-        }
-
-        .cd-breadcrumb.custom-icons li > *::before, .cd-multi-steps.custom-icons li > *::before {
-            /* add a custom icon before each item */
-            content: '';
-            display: inline-block;
-            height: 20px;
-            width: 20px;
-            margin-right: .4em;
-            margin-top: -2px;
-            background: url(https://codyhouse.co/demo/breadcrumbs-multi-steps-indicator/img/cd-custom-icons-01.svg) no-repeat 0 0;
-            vertical-align: middle;
-        }
-
-        .cd-breadcrumb.custom-icons li:not(.current):nth-of-type(2) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(2) > *::before {
-            /* change custom icon using image sprites */
-            background-position: -20px 0;
-        }
-
-        .cd-breadcrumb.custom-icons li:not(.current):nth-of-type(3) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(3) > *::before {
-            background-position: -40px 0;
-        }
-
-        .cd-breadcrumb.custom-icons li:not(.current):nth-of-type(4) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(4) > *::before {
-            background-position: -60px 0;
-        }
-
-        .cd-breadcrumb.custom-icons li.current:first-of-type > *::before, .cd-multi-steps.custom-icons li.current:first-of-type > *::before {
-            /* change custom icon for the current item */
-            background-position: 0 -20px;
-        }
-
-        .cd-breadcrumb.custom-icons li.current:nth-of-type(2) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(2) > *::before {
-            background-position: -20px -20px;
-        }
-
-        .cd-breadcrumb.custom-icons li.current:nth-of-type(3) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(3) > *::before {
-            background-position: -40px -20px;
-        }
-
-        .cd-breadcrumb.custom-icons li.current:nth-of-type(4) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(4) > *::before {
-            background-position: -60px -20px;
-        }
-
-        @media only screen and (min-width: 768px) {
-            .cd-breadcrumb, .cd-multi-steps {
-                padding: 0 1.2em;
-            }
-
-            .cd-breadcrumb li, .cd-multi-steps li {
-                margin: 1.2em 0;
-            }
-
-            .cd-breadcrumb li::after, .cd-multi-steps li::after {
-                margin: 0 1em;
-            }
-
-            .cd-breadcrumb li > *, .cd-multi-steps li > * {
-                font-size: 1.6rem;
-            }
-        }
-
-        /* --------------------------------
-
-        Triangle breadcrumb
-
-        -------------------------------- */
-        @media only screen and (min-width: 768px) {
-            .cd-breadcrumb.triangle {
-                /* reset basic style */
-                background-color: transparent;
-                padding: 0;
-            }
-
-            .cd-breadcrumb.triangle li {
-                position: relative;
-                padding: 0;
-                margin: 4px 4px 4px 0;
-            }
-
-            .cd-breadcrumb.triangle li:last-of-type {
-                margin-right: 0;
-            }
-
-            .cd-breadcrumb.triangle li > * {
-                position: relative;
-                padding: 1em .8em 1em 2.5em;
-                color: #2c3f4c;
-                background-color: #edeff0;
-                /* the border color is used to style its ::after pseudo-element */
-                border-color: #edeff0;
-            }
-
-            .cd-breadcrumb.triangle li.current > * {
-                /* selected step */
-                color: #ffffff;
-                background-color: #96c03d;
-                border-color: #96c03d;
-            }
-
-            .cd-breadcrumb.triangle li:first-of-type > * {
-                padding-left: 1.6em;
-                border-radius: .25em 0 0 .25em;
-            }
-
-            .cd-breadcrumb.triangle li:last-of-type > * {
-                padding-right: 1.6em;
-                border-radius: 0 .25em .25em 0;
-            }
-
-            .no-touch .cd-breadcrumb.triangle a:hover {
-                /* steps already visited */
-                color: #ffffff;
-                background-color: #2c3f4c;
-                border-color: #2c3f4c;
-            }
-
-            .cd-breadcrumb.triangle li::after, .cd-breadcrumb.triangle li > *::after {
-                /*
-                    li > *::after is the colored triangle after each item
-                    li::after is the white separator between two items
-                */
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 100%;
-                content: '';
-                height: 0;
-                width: 0;
-                /* 48px is the height of the <a> element */
-                border: 24px solid transparent;
-                border-right-width: 0;
-                border-left-width: 20px;
-            }
-
-            .cd-breadcrumb.triangle li::after {
-                /* this is the white separator between two items */
-                z-index: 1;
-                -webkit-transform: translateX(4px);
-                -moz-transform: translateX(4px);
-                -ms-transform: translateX(4px);
-                -o-transform: translateX(4px);
-                transform: translateX(4px);
-                border-left-color: #ffffff;
-                /* reset style */
-                margin: 0;
-            }
-
-            .cd-breadcrumb.triangle li > *::after {
-                /* this is the colored triangle after each element */
-                z-index: 2;
-                border-left-color: inherit;
-            }
-
-            .cd-breadcrumb.triangle li:last-of-type::after, .cd-breadcrumb.triangle li:last-of-type > *::after {
-                /* hide the triangle after the last step */
-                display: none;
-            }
-
-            .cd-breadcrumb.triangle.custom-separator li::after {
-                /* reset style */
-                background-image: none;
-            }
-
-            .cd-breadcrumb.triangle.custom-icons li::after, .cd-breadcrumb.triangle.custom-icons li > *::after {
-                /* 50px is the height of the <a> element */
-                border-top-width: 25px;
-                border-bottom-width: 25px;
-            }
-
-            @-moz-document url-prefix() {
-                .cd-breadcrumb.triangle li::after,
-                .cd-breadcrumb.triangle li > *::after {
-                    /* fix a bug on Firefix - tooth edge on css triangle */
-                    border-left-style: dashed;
-                }
-            }
-        }
-
-        /* --------------------------------
-
-        Custom icons hover effects - breadcrumb and multi-steps
-
-        -------------------------------- */
-        @media only screen and (min-width: 768px) {
-            .no-touch .cd-breadcrumb.triangle.custom-icons li:first-of-type a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:first-of-type em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:first-of-type a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:first-of-type em::before {
-                /* change custom icon using image sprites - hover effect or current item */
-                background-position: 0 -40px;
-            }
-
-            .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(2) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(2) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(2) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(2) em::before {
-                background-position: -20px -40px;
-            }
-
-            .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(3) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(3) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(3) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(3) em::before {
-                background-position: -40px -40px;
-            }
-
-            .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(4) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(4) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(4) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(4) em::before {
-                background-position: -60px -40px;
-            }
-        }
-
-        /* --------------------------------
-
-        Multi steps indicator
-
-        -------------------------------- */
-        @media only screen and (min-width: 768px) {
-            .cd-multi-steps {
-                /* reset style */
-                background-color: transparent;
-                padding: 0;
-                text-align: center;
-            }
-
-            .cd-multi-steps li {
-                position: relative;
-                float: none;
-                margin: 0.4em 40px 0.4em 0;
-            }
-
-            .cd-multi-steps li:last-of-type {
-                margin-right: 0;
-            }
-
-            .cd-multi-steps li::after {
-                /* this is the line connecting 2 adjacent items */
-                position: absolute;
-                content: '';
-                height: 4px;
-                background: #edeff0;
-                /* reset style */
-                margin: 0;
-            }
-
-            .cd-multi-steps li.visited::after {
-                background-color: #f9b43c;
-            }
-
-            .cd-multi-steps li > *, .cd-multi-steps li.current > * {
-                position: relative;
-                color: #2c3f4c;
-            }
-
-            .cd-multi-steps.custom-separator li::after {
-                /* reset style */
-                height: 4px;
-                background: #edeff0;
-            }
-
-            .cd-multi-steps.text-center li::after {
-                width: 100%;
-                top: 50%;
-                left: 100%;
-                -webkit-transform: translateY(-50%) translateX(-1px);
-                -moz-transform: translateY(-50%) translateX(-1px);
-                -ms-transform: translateY(-50%) translateX(-1px);
-                -o-transform: translateY(-50%) translateX(-1px);
-                transform: translateY(-50%) translateX(-1px);
-            }
-
-            .cd-multi-steps.text-center li > * {
-                z-index: 1;
-                padding: .6em 1em;
-                border-radius: .25em;
-                background-color: #edeff0;
-            }
-
-            .no-touch .cd-multi-steps.text-center a:hover {
-                background-color: #2c3f4c;
-            }
-
-            .cd-multi-steps.text-center li.current > *, .cd-multi-steps.text-center li.visited > * {
-                color: #ffffff;
-                background-color: #96c03d;
-            }
-
-            .cd-multi-steps.text-center.custom-icons li.visited a::before {
-                /* change the custom icon for the visited item - check icon */
-                background-position: 0 -60px;
-            }
-
-            .cd-multi-steps.text-top li, .cd-multi-steps.text-bottom li {
-                width: 80px;
-                text-align: center;
-            }
-
-            .cd-multi-steps.text-top li::after, .cd-multi-steps.text-bottom li::after {
-                /* this is the line connecting 2 adjacent items */
-                position: absolute;
-                left: 50%;
-                /* 40px is the <li> right margin value */
-                width: calc(100% + 40px);
-            }
-
-            .cd-multi-steps.text-top li > *::before, .cd-multi-steps.text-bottom li > *::before {
-                /* this is the spot indicator */
-                content: '';
-                position: absolute;
-                z-index: 1;
-                left: 50%;
-                right: auto;
-                -webkit-transform: translateX(-50%);
-                -moz-transform: translateX(-50%);
-                -ms-transform: translateX(-50%);
-                -o-transform: translateX(-50%);
-                transform: translateX(-50%);
-                height: 12px;
-                width: 12px;
-                border-radius: 50%;
-                background-color: #edeff0;
-            }
-
-            .cd-multi-steps.text-top li.visited > *::before,
-            .cd-multi-steps.text-top li.current > *::before, .cd-multi-steps.text-bottom li.visited > *::before,
-            .cd-multi-steps.text-bottom li.current > *::before {
-                background-color: #f3b13c;
-            }
-
-            .no-touch .cd-multi-steps.text-top a:hover, .no-touch .cd-multi-steps.text-bottom a:hover {
-                color: #f3b13c;
-            }
-
-            .no-touch .cd-multi-steps.text-top a:hover::before, .no-touch .cd-multi-steps.text-bottom a:hover::before {
-                box-shadow: 0 0 0 3px rgba(150, 192, 61, 0.3);
-            }
-
-            .cd-multi-steps.text-top li::after {
-                /* this is the line connecting 2 adjacent items */
-                bottom: 4px;
-            }
-
-            .cd-multi-steps.text-top li > * {
-                padding-bottom: 20px;
-            }
-
-            .cd-multi-steps.text-top li > *::before {
-                /* this is the spot indicator */
-                bottom: 0;
-            }
-
-            .cd-multi-steps.text-bottom li::after {
-                /* this is the line connecting 2 adjacent items */
-                top: 3px;
-            }
-
-            .cd-multi-steps.text-bottom li > * {
-                padding-top: 20px;
-            }
-
-            .cd-multi-steps.text-bottom li > *::before {
-                /* this is the spot indicator */
-                top: 0;
-            }
-        }
-
-        /* --------------------------------
-
-        Add a counter to the multi-steps indicator
-
-        -------------------------------- */
-        .cd-multi-steps.count li {
-            counter-increment: steps;
-        }
-
-        .cd-multi-steps.count li > *::before {
-            content: counter(steps) " - ";
-        }
-
-        @media only screen and (min-width: 768px) {
-            .cd-multi-steps.text-top.count li > *::before,
-            .cd-multi-steps.text-bottom.count li > *::before {
-                /* this is the spot indicator */
-                content: counter(steps);
-                height: 26px;
-                width: 26px;
-                line-height: 26px;
-                font-size: 1.4rem;
-                color: #ffffff;
-            }
-
-            .cd-multi-steps.text-top.count li:not(.current) em::before,
-            .cd-multi-steps.text-bottom.count li:not(.current) em::before {
-                /* steps not visited yet - counter color */
-                color: #2c3f4c;
-            }
-
-            .cd-multi-steps.text-top.count li::after {
-                bottom: 11px;
-            }
-
-            .cd-multi-steps.text-top.count li > * {
-                padding-bottom: 34px;
-            }
-
-            .cd-multi-steps.text-bottom.count li::after {
-                top: 11px;
-            }
-
-            .cd-multi-steps.text-bottom.count li > * {
-                padding-top: 34px;
-            }
         }
     </style>
     <section class="vendor_dashboard_section  aos-init aos-animate mt-4" data-aos="fade-up" data-aos-duration="2000">
@@ -482,7 +70,8 @@
                             <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                                 <div class="vd_title_wrap">
                                     <h3 class="float-end">Order Detail</h3>
-                                    <h3><a class="btn btn-warning btn-sm text-dark" href="{% url 'client:order_invoice' object.id %}"> Generate Invoice</a></h3>
+                                    <h3><a class="btn btn-warning btn-sm text-dark"
+                                           href="{% url 'client:order_invoice' object.id %}"> Generate Invoice</a></h3>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 m-2">
@@ -506,13 +95,13 @@
                                         <div class="card mt-4">
                                             <div class="card-body">
                                                 <label style="font-size: 22px"><b>Packing {{ object.id }}</b></label>
-                                                {% if order.order_status == "approved" %}
+                                                {% if object.order_status != "pending" or object.order_status != "cancelled" %}
                                                     {% if order.shipment_type == "custom" %}
                                                         <a href="{% url 'client:shipment_detail' object.get_shipment_id %}"
                                                            style="background-color: #f5b23c"
                                                            class="p-1 px-2 float-end text-white">View Shipment
                                                         </a>
-                                                    {% elif order.shipment_type == "ship_rocket" %}
+                                                    {% elif object.shipment_type == "ship_rocket" %}
                                                         <a href="{% url 'client:shiprocket_shipment_detail' object.get_shiprocket_shipment_id %}"
                                                            style="background-color: #f5b23c"
                                                            class="p-1 px-2 float-end text-white">View Shipment
@@ -528,13 +117,59 @@
                                                 <hr>
                                                 <p class=" float-end text-warning">Stander delivery</p>
                                                 <p class="text-warning">Get by fri 22 mar - fri 29 mar</p>
-                                                <nav>
-                                                    <ol class="cd-multi-steps text-bottom ">
-                                                        <li class="visited"><a href="#0">Cart</a></li>
-                                                        <li class="visited"><a href="#0">Billing</a></li>
-                                                        <li class="current"><em>Delivery</em></li>
-                                                    </ol>
-                                                </nav>
+                                                <div style="padding-left: 80px;padding-right: 80px;">
+                                                    <div class="steps">
+                                                        <progress id="progress" value="0" max="100"></progress>
+                                                        <div class="step-item">
+                                                            <button class="step-button text-center" type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapseOne"
+                                                                    {% if object.order_status != 'pending' or object.order_status != 'cancelled' %}
+                                                                    aria-expanded="true"
+                                                                    {% else %}
+                                                                    aria-expanded="false"
+                                                                    {% endif %}
+                                                                    aria-controls="collapseOne">
+                                                            </button>
+                                                            <div class="step-title">
+                                                                Ordered
+                                                            </div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <button class="step-button text-center collapsed"
+                                                                    type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapseTwo"
+                                                                    {% if object.get_shipment_status == 'initialized' or object.get_shipment_status == 'cancelled' %}
+                                                                    aria-expanded="false"
+                                                                    {% else %}
+                                                                    aria-expanded="true"
+                                                                    {% endif %}
+                                                                    aria-controls="collapseTwo">
+                                                            </button>
+                                                            <div class="step-title">
+                                                                Shipping
+                                                            </div>
+                                                        </div>
+                                                        <div class="step-item">
+                                                            <button class="step-button text-center collapsed"
+                                                                    type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#collapseThree"
+                                                                    {% if object.get_shipment_status == 'completed' or object.order_status == 'completed' %}
+                                                                    aria-expanded="true"
+                                                                    {% else %}
+                                                                    aria-expanded="false"
+                                                                    {% endif %}
+                                                                    aria-controls="collapseThree">
+                                                            </button>
+                                                            <div class="step-title">
+                                                                Delivered
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                                 {% for obj in object.get_cart %}
                                                     <div class="row align-items-end mt-3 mb-3">
                                                         <div class="col-sm-4">
@@ -607,12 +242,12 @@
                                                             <p class="  mt-1 m-0">Total</p>
                                                         </div>
                                                         <div>
-                                                            <p class="float-end  mt-1 m-0">{{ object.service_charges }}</p>
-                                                            <p class="  mt-1 m-0">Service Charges</p>
-                                                        </div>
-                                                        <div>
                                                             <p class="float-end  mt-1 m-0">{{ object.shipping_charges }}</p>
                                                             <p class="  mt-1 m-0">Shipping Charges</p>
+                                                        </div>
+                                                        <div>
+                                                            <p class="float-end  mt-1 m-0">{{ object.tax }}</p>
+                                                            <p class="  mt-1 m-0">Tax</p>
                                                         </div>
                                                         <hr>
                                                         <div>

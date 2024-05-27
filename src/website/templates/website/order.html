@@ -19,6 +19,9 @@
                             #div_id_shipment_type .nice-select {
                                 display: none;
                             }
+                            #div_id_service_type .nice-select {
+                                display: none;
+                            }
                         </style>
                         {{ form|crispy }}
                         <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
@@ -72,15 +75,7 @@
                                     </div>
 
                                     <div class="billing_payment_mathod">
-                                        <div class="m-4">
-                                            <h5 class="float-end">{{ shipping_charges|floatformat:2 }}</h5>
-                                            <h5>Shipping Charges</h5>
-                                        </div>
-                                        <div class="m-4">
-                                            <h5 class="float-end">{{ sub_total|floatformat:2 }}</h5>
-                                            <h5>TOTAL </h5>
-                                        </div>
-                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red">PLACE ORDER
+                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red text-white">PLACE ORDER
                                         </button>
                                     </div>
                                 </div>
@@ -97,8 +92,11 @@
         window.addEventListener('load', function () {
             var selectElement = document.getElementById('id_country');
             selectElement.style.display = 'block';
+
             var selectShipmentElement = document.getElementById('id_shipment_type');
             selectShipmentElement.style.display = 'block';
+            var selectServiceElement = document.getElementById('id_service_type');
+            selectServiceElement.style.display = 'block';
             var customSelect = document.querySelector('.nice-select');
             customSelect.style.display = 'none';
         });

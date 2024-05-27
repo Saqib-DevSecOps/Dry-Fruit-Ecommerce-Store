@@ -5,7 +5,7 @@ from src.website.views import HomeTemplateView, \
     ProductListView, ProductDetailView, BlogDetailView, AddToCart, \
     RemoveFromCartView, OrderCreate, SuccessPayment, CancelPayment, CookiePolicy, PrivacyPolicy, \
     TermsAndCondition, Jobs, ReturnPolicy, ShippingPolicy, WishListListView, UpdateCart, AddToWishlist, \
-    DeleteFromWishlist, BuyNow, FranchiseTemplateView
+    DeleteFromWishlist, BuyNow, FranchiseTemplateView, ShipmentPriceRetrieveView
 
 app_name = "website"
 urlpatterns = [
@@ -39,4 +39,9 @@ urlpatterns = [
     path('jobs/', Jobs.as_view(), name='jobs'),
     path('return-policy/', ReturnPolicy.as_view(), name='return_policy'),
     path('shipping-policy/', ShippingPolicy.as_view(), name='shipping_policy')
+]
+
+urlpatterns += [
+    path('get-shpment_price', ShipmentPriceRetrieveView.as_view(), name='shipment_retrieve'),
+
 ]

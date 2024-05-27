@@ -16,7 +16,7 @@ from src.administration.admins.models import (
 )
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.forms import OrderCheckoutForm
-from src.website.utility import get_total_amount, validate_product_quantity
+from src.website.utility import get_total_amount, validate_product_quantity, calculate_shipment_price
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
 
@@ -256,9 +256,6 @@ class DeleteFromWishlist(View):
         return redirect('website:wishlist_list')
 
 
-stripe.api_key = 'sk_test_51MzSVMKxiugCOnUxT0YN5E7M8BhbZrzPFrx6NE6vRwmkTIYKREvGTyLBfXhbdORJybRfmzVm2cjPBTkkuGyAjVfP00cf3sDcP9'
-
-# @method_decorator(login_required, name='dispatch')
 razorpay_client = razorpay.Client(
     auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
 
@@ -267,25 +264,15 @@ razorpay_client = razorpay.Client(
 class OrderCreate(View):
     template_name = 'website/order.html'
     cart = None
-    total = 0
-    service_charges = 0
-    shiprocket_shipping_charges = 0
-    custom_shipping_charges = 0
-    sub_total = 0
     context = {}
 
     def dispatch(self, request, *args, **kwargs):
         self.cart = Cart.objects.filter(user=request.user)
-        self.total, self.service_charges, self.shiprocket_shipping_charges, self.custom_shipping_charges, self.sub_total = get_total_amount(
-            self.request)
-
-        # 1: CHECK IF THE CART IS EMPTY
         if not self.cart:
             messages.error(
                 request, "No items available in cart, to proceed to checkout add some items to cart first."
             )
             return redirect('website:shop')
-
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
@@ -302,11 +289,6 @@ class OrderCreate(View):
 
         data = {
             'form': form,
-            'user_cart': self.cart,
-            'total': self.total,
-            'service_charges': self.service_charges,
-            'shipping_charges': self.shiprocket_shipping_charges,
-            'sub_total': self.sub_total,
         }
         self.context.update(data)
         return render(request, self.template_name, self.context)
@@ -338,7 +320,19 @@ class OrderCreate(View):
 
         messages.error(request, "There are some issues in your order, kindly review your order once again.")
         return render(request, self.template_name, {'form': form})
-    #
+
+
+@method_decorator(login_required, name='dispatch')
+class ShipmentPriceRetrieveView(View):
+    def get(self, *args, **kwargs):
+        shipment_charges = "Select Shipment Type and Service Type"
+        service_type = self.request.POST.get('service_type')
+        shipment_type = self.request.POST.get('shipment_type')
+        state = self.request.POST.get('state')
+        if state and shipment_type and service_type:
+            shipment_charges = calculate_shipment_price(self.request, service_type, state, shipment_type)
+        context = {'shipment_charges': shipment_charges}
+        return render(self.request, template_name='website/htmx/shipment_charges.html', context=context)
 
 
 @method_decorator(login_required, name='dispatch')

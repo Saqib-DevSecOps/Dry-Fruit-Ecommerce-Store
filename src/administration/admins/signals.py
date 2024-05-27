@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from src.administration.admins.bll import create_order_items
-from src.administration.admins.models import Order, OrderItem, Shipment
+from src.administration.admins.models import Order, OrderItem, Shipment, ShipRocketOrder
 
 """ ORDERS, SUB ORDERS, SHIPMENTS """
 
@@ -20,7 +20,9 @@ def order_save_post(sender, instance, created, **kwargs):
         order = create_order_items(order=instance, user_request=instance.client)
         # notify_buyer_on_order_creation(instance)
         shipment = Shipment.objects.create(order=instance)
+        ship_rocket_shipment = ShipRocketOrder.objects.create(order=instance)
         shipment.save()
+        ship_rocket_shipment.save()
     # ON ORDER APPROVE
     if instance.order_status == "approved":
 

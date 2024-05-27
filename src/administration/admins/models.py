@@ -141,12 +141,14 @@ class Product(models.Model):
     promotional = models.CharField(max_length=50, choices=PROMOTIONAL_CHOICE, null=True, blank=True)
 
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[positive_validator])
-    tax = models.PositiveIntegerField(default=0, verbose_name="Tax in %", help_text="Tax  in percentage",
-                                      validators=[discount_validator])
     quantity = models.PositiveIntegerField(default=1, help_text="Total quantity of product",
                                            validators=[quantity_validator])
     discount = models.PositiveIntegerField(default=0, verbose_name="Discount in %", help_text="discount  in percentage",
                                            validators=[discount_validator])
+
+    sgst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
+    cgst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
+    igst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
     # Statistics
     total_views = models.PositiveIntegerField(default=0)
     total_sales = models.PositiveIntegerField(default=0)
@@ -210,8 +212,6 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = self.generate_sku()
-        if self.tax > 0:
-            self.price = self.price * (1 + (self.tax / Decimal(100)))
         super(Product, self).save(*args, **kwargs)
 
     def generate_sku(self):
@@ -376,6 +376,11 @@ Country = (
     ('india', 'India'),
 )
 
+SERVICE_TYPE = (
+    ('normal', 'Normal'),
+    ('fast', 'Fast Delivery'),
+)
+
 
 def validate_contact(value):
     if not value.isdigit() or len(value) != 10 or value[0] not in ['9', '8', '7', '6']:
@@ -415,6 +420,7 @@ class Order(models.Model):
 
     total = models.FloatField(default=0)
     service_charges = models.FloatField(default=0)
+    tax = models.FloatField(default=0)
     shipping_charges = models.FloatField(default=0)
     sub_total = models.FloatField(default=0)
 
@@ -425,6 +431,7 @@ class Order(models.Model):
     shipment_type = models.CharField(max_length=100, choices=SHIPMENT_TYPE_CHOICE, default=SHIPMENT_TYPE_CHOICE[0][0],
                                      null=True,
                                      blank=True)
+    service_type = models.CharField(choices=SERVICE_TYPE, default=SERVICE_TYPE[0][0], max_length=30)
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -462,6 +469,13 @@ class Order(models.Model):
     def get_order_invoice(self):
         invoice, created = OrderInvoice.objects.get_or_create(order=self)
         return invoice
+
+    def get_shipment_status(self):
+        if self.shipment_type == "custom":
+            shipment, created = Shipment.objects.get_or_create(order=self)
+            return shipment.shipment_status
+        shiprocket_shipment, created = ShipRocketOrder.objects.get_or_create(order=self)
+        return shiprocket_shipment.status
 
 
 class OrderInvoice(models.Model):
@@ -523,6 +537,17 @@ class OrderItem(models.Model):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.qty
         return self.qty * self.product.get_price()
+
+    def get_discount_price(self):
+        if self.product_weight:
+            return self.product_weight.get_product_weight_discounted_price() * self.qty
+        return self.qty * self.product.get_price()
+
+    def get_tax(self):
+        if self.order.state == "gujarat":
+            return (self.get_discount_price() * (self.product.sgst / 100)) + (
+                    self.get_discount_price() * (self.product.cgst / 100))
+        return self.get_discount_price() * (self.product.igst / 100)
 
 
 class Shipment(models.Model):
@@ -658,7 +683,8 @@ class ShipRocketOrder(models.Model):
     order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True, blank=True)
     shiprocket_order_id = models.CharField(max_length=250, null=True, blank=True)
     shipment_id = models.CharField(max_length=250, null=True, blank=True)
-    status = models.CharField(max_length=250, null=True, blank=True)
+    status = models.CharField(max_length=250, choices=SHIPMENT_STATUS_CHOICE,
+                              default=SHIPMENT_STATUS_CHOICE[0][0], null=True, blank=True)
     status_code = models.CharField(max_length=250, null=True, blank=True)
     onboarding_completed_now = models.CharField(max_length=250, null=True, blank=True)
     awb_code = models.CharField(max_length=250, null=True, blank=True)

@@ -297,7 +297,8 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
-                  'service_charges', 'shipping_charges', 'sub_total', 'payment_type', 'order_status', 'payment_status',
+                  'service_charges', 'tax', 'shipping_charges', 'sub_total', 'payment_type', 'order_status',
+                  'payment_status', 'service_type',
                   'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
                   'is_active', 'created_on', 'order_items']
 
@@ -354,7 +355,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country'
-            , 'payment_type', 'shipment_type'
+            , 'payment_type', 'shipment_type', 'service_type'
 
         ]
 

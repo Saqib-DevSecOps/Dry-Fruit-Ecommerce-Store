@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timedelta
 
 from _decimal import Decimal
@@ -66,6 +67,87 @@ def order_repay_quantity_check(request, order):
 """ ORDERS """
 
 
+def match_state(state_patterns, state):
+    state = state.lower()
+    for key, pattern in state_patterns.items():
+        if re.search(pattern, state):
+            return key
+    return "other"
+
+
+def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state):
+    print("matched State is ", matched_state)
+    if service_type == "normal":
+        if matched_state == "local":
+            return 30 * chargeable_weight
+        elif matched_state == "gujarat":
+            return 40 * chargeable_weight
+        elif matched_state == "mumbai":
+            return 60 * chargeable_weight
+        else:
+            return 80 * chargeable_weight
+    elif service_type == "fast":
+        if chargeable_weight <= 0.5:
+            if matched_state == "local":
+                return 150
+            elif matched_state == "gujarat":
+                return 200
+            elif matched_state == "mumbai":
+                return 250
+            else:
+                return 300
+        elif chargeable_weight <= 1:
+            if matched_state == "local":
+                return 200
+            elif matched_state == "gujarat":
+                return 250
+            elif matched_state == "mumbai":
+                return 300
+            else:
+                return 350
+
+        else:
+            if matched_state == "local":
+                return 200 * chargeable_weight
+            elif matched_state == "gujarat":
+                return 250 * chargeable_weight
+            elif matched_state == "mumbai":
+                return 300 * chargeable_weight
+            else:
+                return 350 * chargeable_weight
+    else:
+        return 1
+
+
+def get_custom_shipping_charge(cart_items, service_type, state):
+    custom_shipping_cost = Decimal(0)
+    state_patterns = {
+        "local": r"local",
+        "gujarat": r"gujarat",
+        "mumbai": r"mumbai",
+        "other": r"other"
+    }
+    matched_state = match_state(state_patterns, state)
+
+    for cart_item in cart_items:
+        product_size = cart_item.get_product_size()
+        if product_size:
+            length = Decimal(product_size.length)
+            width = Decimal(product_size.breadth)
+            height = Decimal(product_size.height)
+            weight = Decimal(product_size.weight)
+        else:
+            length = Decimal('10')
+            width = Decimal('10')
+            height = Decimal('10')
+            weight = Decimal('1')
+
+        volumetric_weight = calculate_volumetric_weight(length, width, height)
+        chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
+        custom_shipping_cost += calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state)
+    return custom_shipping_cost
+
+
 def get_cart_calculations(user):
     cart_items = Cart.objects.filter(user=user)
     total_price = Decimal(0)
@@ -97,6 +179,10 @@ def get_cart_calculations(user):
     return total_price, discount_price, shipping_charges, sub_total
 
 
+def calculate_tax(item):
+    pass
+
+
 # VERIFIED
 def create_order_items(order, user_request):
     """
@@ -105,10 +191,12 @@ def create_order_items(order, user_request):
     3: Delete Cart Items
     4: Update Order
     """
-
+    tax = Decimal(0)
     # 1: Calculate Charge
     cart = Cart.objects.filter(user=user_request)
     total, service_charges, shipping_charges, sub_total = get_cart_calculations(user_request)
+    custom_shipping_cost = get_custom_shipping_charge(cart, order.service_type, order.state)
+
     # 2: Create Order Items
     order_items = [
         OrderItem(order=order, product=cart_item.product, product_weight=cart_item.product_weight,
@@ -116,14 +204,23 @@ def create_order_items(order, user_request):
     ]
     OrderItem.objects.bulk_create(order_items)
 
-    # 3: Delete Cart Items
+    order_items = OrderItem.objects.filter(order=order)
+    tax += sum(item.get_tax() for item in order_items)
     cart.delete()
 
     # 4: Update Order
+    if order.shipment_type == "custom":
+        sub_total = sub_total - shipping_charges
+        sub_total = sub_total + custom_shipping_cost
+        final_shipping_charges = custom_shipping_cost
+    else:
+        final_shipping_charges = shipping_charges
+
     order.total = total
-    order.sub_total = int(sub_total)
+    order.sub_total = int(sub_total) + int(tax)
     order.service_charges = service_charges
-    order.shipping_charges = shipping_charges
+    order.shipping_charges = final_shipping_charges
+    order.tax = tax
     order.save()
     payment, created = Payment.objects.get_or_create(order=order)
     payment.save()
