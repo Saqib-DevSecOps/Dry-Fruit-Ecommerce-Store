@@ -13,5 +13,6 @@ class GoogleLoginView(SocialLoginView):
     client_class = OAuth2Client
 
 
+
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
