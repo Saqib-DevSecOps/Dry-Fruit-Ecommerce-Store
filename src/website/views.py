@@ -11,6 +11,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from core import settings
+from core.settings import BASE_URL
 from src.administration.admins.models import (
     Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, ProductRating,
     TeamMember, Testimonial, Address
@@ -290,7 +291,7 @@ class OrderCreate(View):
                                                            currency=currency,
                                                            payment_capture='0'))
         razorpay_order_id = razorpay_order['id']
-        callback_url = "http://" + "127.0.0.1:8000" + "/razorpay/paymenthandler/"
+        callback_url = BASE_URL + "/razorpay/paymenthandler/"
         payment_context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
                            'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
 
