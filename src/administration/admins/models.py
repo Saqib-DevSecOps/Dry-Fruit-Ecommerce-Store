@@ -584,9 +584,13 @@ class OrderItem(models.Model):
 
     def get_tax(self):
         if self.order.state == "gujarat":
-            return (self.get_discount_price() * (self.product.sgst / 100)) + (
-                    self.get_discount_price() * (self.product.cgst / 100))
-        return self.get_discount_price() * (self.product.igst / 100)
+            sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
+            cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
+            discount_price = Decimal(self.get_discount_price())
+            return (discount_price * (sgst_rate / 100)) + (discount_price * (cgst_rate / 100))
+
+        igst_rate = Decimal(self.product.igst) if self.product.igst is not None else Decimal(0)
+        return Decimal(self.get_discount_price()) * (igst_rate / 100)
 
 
 class Shipment(models.Model):
