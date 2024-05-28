@@ -38,7 +38,6 @@ def handle_payment(request):
             'razorpay_payment_id': payment_id,
             'razorpay_signature': signature
         }
-
         result = razorpay_client.utility.verify_payment_signature(params_dict)
         if result is not None:
             try:
@@ -62,13 +61,10 @@ def handle_payment(request):
                 payment.save()
                 return 'success', order
             except Exception as e:
-                print(f"Internal error while processing the order: {e}")
                 return 'cancelled', None
         else:
-            print("Payment verification failed.")
             return 'cancelled', None
     except Exception as e:
-        print(f"Error in payment handling: {e}")
         return 'error', None
 
 

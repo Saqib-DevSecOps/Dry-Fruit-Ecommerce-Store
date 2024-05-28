@@ -44,7 +44,6 @@ class CreateRazorPayCheckout(View):
         callback_url = BASE_URL + "/razorpay/paymenthandler/"
         context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
                    'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url, 'order': order}
-
         return render(request, 'razorpay/payment.html', context=context)
 
 
@@ -59,6 +58,6 @@ def paymenthandler(request):
         elif payment_result == 'cancelled':
             return render(request, 'razorpay/cancelled.html')
         else:
-            return HttpResponseBadRequest("Payment error occurred.")
+            return render(request, 'razorpay/cancelled.html')
     else:
-        return HttpResponseBadRequest("Invalid request method. Only POST requests are allowed.")
+        return render(request, 'razorpay/cancelled.html')
