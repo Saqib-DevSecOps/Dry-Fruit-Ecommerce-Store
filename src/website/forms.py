@@ -8,7 +8,7 @@ class OrderCheckoutForm(ModelForm):
     class Meta:
         model = Order
         fields = [
-            'full_name', 'contact', 'postal_code', 'address', 'city',
+            'full_name', 'contact', 'postal_code', 'address', 'address_label', 'city',
             'state', 'country', 'shipment_type', 'service_type'
         ]
 

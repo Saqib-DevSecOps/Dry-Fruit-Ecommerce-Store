@@ -381,6 +381,11 @@ SERVICE_TYPE = (
     ('fast', 'Fast Delivery'),
 )
 
+ADDRESS_LABEL = (
+    ('home', 'HOME'),
+    ('office', 'OFFICE'),
+)
+
 
 def validate_contact(value):
     if not value.isdigit() or len(value) != 10 or value[0] not in ['9', '8', '7', '6']:
@@ -388,6 +393,39 @@ def validate_contact(value):
             _('Invalid contact number. It should be 10 digits and start with 9/8/7/6.'),
             code='invalid_contact'
         )
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    contact = models.CharField(max_length=100, null=True, blank=False, validators=[validate_contact])
+    postal_code = models.IntegerField(
+        null=True,
+        blank=False,
+        validators=[
+            MinValueValidator(100000, message='The pin code must be 6 digits.'),
+            MaxValueValidator(999999, message='The pin code must be 6 digits.')
+        ]
+    )
+    address = models.CharField(
+        max_length=300,
+        null=True,
+        blank=False,
+        validators=[
+            MinLengthValidator(10, message='The address must be at least 10 characters long.'),
+            MaxLengthValidator(300, message='The address must be at most 300 characters long.')
+        ]
+    )
+    address_label = models.CharField(max_length=250, null=True, blank=False, choices=ADDRESS_LABEL,
+                                     default=ADDRESS_LABEL[0][0])
+    city = models.CharField(max_length=1000, null=True, blank=False)
+    state = models.CharField(max_length=1000, null=True, blank=False)
+    country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.pk)
 
 
 class Order(models.Model):
@@ -423,7 +461,8 @@ class Order(models.Model):
     tax = models.FloatField(default=0)
     shipping_charges = models.FloatField(default=0)
     sub_total = models.FloatField(default=0)
-
+    address_label = models.CharField(max_length=250, null=True, blank=False, choices=ADDRESS_LABEL,
+                                     default=ADDRESS_LABEL[0][0])
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICE, default=PAYMENT_TYPE_CHOICE[0][0])
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
@@ -694,3 +733,38 @@ class ShipRocketOrder(models.Model):
 
     def __str__(self):
         return self.order.full_name
+
+
+class TeamMember(models.Model):
+    name = models.CharField(max_length=250, null=True, blank=False)
+    image = models.ImageField()
+    rank = models.CharField(max_length=250, null=True, blank=False)
+    description = models.CharField(max_length=250, null=True, blank=False)
+    facebook_link = models.URLField(null=True, blank=True)
+    twitter_link = models.URLField(null=True, blank=True)
+    instagram_link = models.URLField(null=True, blank=True)
+    youtube_link = models.URLField(null=True, blank=True)
+    linkedin_link = models.URLField(null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=250, null=True, blank=False)
+    rank = models.CharField(max_length=250, null=True, blank=False)
+    review = models.TextField()
+    rating = models.PositiveIntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(5)
+        ]
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

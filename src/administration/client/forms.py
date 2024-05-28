@@ -1,5 +1,7 @@
 from django.forms import ModelForm
-from src.accounts.models import User, Address
+
+from src.accounts.models import User
+from src.administration.admins.models import Address
 
 
 class UserProfileForm(ModelForm):

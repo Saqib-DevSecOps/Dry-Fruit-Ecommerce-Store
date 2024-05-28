@@ -12,7 +12,8 @@ from django.views.generic import TemplateView, ListView, DetailView
 
 from core import settings
 from src.administration.admins.models import (
-    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, ProductRating
+    Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, ProductRating,
+    TeamMember, Testimonial, Address
 )
 from src.website.filters import ProductFilter, BlogFilter
 from src.website.forms import OrderCheckoutForm
@@ -58,6 +59,7 @@ class ProductListView(ListView):
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
         context['object_list'] = page_obj
+        context['testimonials'] = Testimonial.objects.all()
         context['filter_form'] = filter_product
         return context
 
@@ -110,6 +112,11 @@ class BlogDetailView(DetailView):
 
 class AboutUsTemplateView(TemplateView):
     template_name = 'website/about.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(AboutUsTemplateView, self).get_context_data(**kwargs)
+        context['team'] = TeamMember.objects.all()
+        return context
 
 
 class ContactUsTemplateView(TemplateView):
@@ -287,8 +294,10 @@ class OrderCreate(View):
         payment_context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
                            'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
 
+        address = Address.objects.filter(user=self.request.user)
         data = {
             'form': form,
+            'address': address,
         }
         self.context.update(data)
         return render(request, self.template_name, self.context)

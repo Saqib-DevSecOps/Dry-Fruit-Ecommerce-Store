@@ -3,7 +3,8 @@
 from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
     OrderItem, BlogCategory, Blog, Wishlist, \
-    ProductWeight, Weight, Payment, Shipment, PickupLocation, ProductSize, ShipRocketOrder, ProductDeal
+    ProductWeight, Weight, Payment, Shipment, PickupLocation, ProductSize, ShipRocketOrder, ProductDeal, TeamMember, \
+    Testimonial, Address
 
 # Register your models here.
 
@@ -81,3 +82,6 @@ admin.site.register(ProductSize)
 admin.site.register(ProductDeal)
 admin.site.register(ShipRocketOrder)
 admin.site.register(PickupLocation)
+admin.site.register(TeamMember)
+admin.site.register(Testimonial)
+admin.site.register(Address)

@@ -4353,7 +4353,7 @@ div#main_search_collapse2 {
     color: #ffffff;
     line-height: 45px;
     border-radius: 100%;
-    background-color: #5892d0;
+    background-color: #d3b142;
     text-align: center;
 }
 
@@ -4363,7 +4363,7 @@ div#main_search_collapse2 {
     color: #ffffff;
     line-height: 45px;
     border-radius: 100%;
-    background-color: #88d9f7;
+    background-color: #d3b142;
     text-align: center;
 }
 
@@ -7980,7 +7980,7 @@ input[type=text]:focus {
 .team_author_social_link i:hover {
     color: #ffffff;
     padding: 0.5rem;
-    background-color: #4363dc;
+    background-color: #f7b33c;
     -webkit-transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     border-radius: 100%;

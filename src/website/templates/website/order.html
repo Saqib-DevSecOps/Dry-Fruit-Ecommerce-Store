@@ -13,12 +13,53 @@
                 {% csrf_token %}
                 <!-- Billing info start -->
                 <div class="billing_form mb_50">
+                    <h6 class=" text-warning mb_30 float-end"><a class="text-warning" href="{% url 'client:address-create' %}"><i
+                            class="fa fa-plus"></i>&nbsp;Add New Address</a></h6>
+                    <h3 class="form_title mb_30">Select Address</h3>
+                    <div class="row">
+                        {% if address %}
+                            {% for object in  address %}
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <input type="radio" name="selected_address"
+                                                   id="address{{ forloop.counter }}"
+                                                   value="{{ object.id }}" class="form-check-input float-end" required
+                                                   onchange="logAddressDetails('{{ object.full_name }}', '{{ object.contact }}', '{{ object.postal_code }}', '{{ object.address }}', '{{ object.address_label }}', '{{ object.city }}', '{{ object.state }}', '{{ object.country }}')">
+                                            <p class=" m-0">{{ object.full_name }}</p>
+                                            <p class=" m-0">{{ object.contact }}</p>
+                                            <p class=" m-0">{{ object.state }}</p>
+                                            <p class="  m-0">{{ object.address }}</p>
+                                            <div>
+                                                <small style="font-size: 12px;background-color: #f5f5f5">{{ object.address_label }}</small>&nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-sm-12">
+                                <h4 class="text-danger">Address Not Found</h4>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section class=" mt-4 clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <!-- Billing info start -->
+                <div class="billing_form mb_50">
                     <h3 class="form_title mb_30">Billing details</h3>
                     <div class="form_wrap card">
                         <style>
                             #div_id_shipment_type .nice-select {
                                 display: none;
                             }
+
                             #div_id_service_type .nice-select {
                                 display: none;
                             }
@@ -75,13 +116,15 @@
                                     </div>
 
                                     <div class="billing_payment_mathod">
-                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red text-white">PLACE ORDER
+                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red text-white">
+                                            PLACE ORDER
                                         </button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
     </section>
@@ -89,16 +132,36 @@
 
     <script>
         // Wait for the page to load
+
+        // JavaScript function to log address details
+        function logAddressDetails(fullName, contact, postal_code, address, address_Label, city, state, country) {
+            // Populate the form fields with the selected address details
+            document.getElementById('id_full_name').value = fullName;
+            document.getElementById('id_contact').value = contact;
+            document.getElementById('id_postal_code').value = postal_code;
+            document.getElementById('id_address').value = address;
+            document.getElementById('id_address_label').value = address_Label;
+            document.getElementById('id_city').value = city;
+            document.getElementById('id_state').value = state;
+            document.getElementById('id_country').value = country;
+        }
+
         window.addEventListener('load', function () {
             var selectElement = document.getElementById('id_country');
             selectElement.style.display = 'block';
-
+            var selectAddressElement = document.getElementById('id_address_label');
+            selectAddressElement.style.display = 'block';
             var selectShipmentElement = document.getElementById('id_shipment_type');
             selectShipmentElement.style.display = 'block';
             var selectServiceElement = document.getElementById('id_service_type');
             selectServiceElement.style.display = 'block';
             var customSelect = document.querySelector('.nice-select');
             customSelect.style.display = 'none';
+            var niceSelect = document.querySelector('#div_id_country .nice-select');
+            if (niceSelect) {
+                niceSelect.style.display = 'none';
+            }
+
         });
 
     </script>

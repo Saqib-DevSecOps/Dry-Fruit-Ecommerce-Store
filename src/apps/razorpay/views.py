@@ -52,12 +52,13 @@ class CreateRazorPayCheckout(View):
 def paymenthandler(request):
     # only accept POST request.
     if request.method == "POST":
-        payment_result = handle_payment(request)
+        payment_result, order = handle_payment(request)
         if payment_result == 'success':
-            return render(request, 'razorpay/success.html')
+            context = {'order': order}
+            return render(request, 'razorpay/success.html', context=context)
         elif payment_result == 'cancelled':
             return render(request, 'razorpay/cancelled.html')
         else:
-            return HttpResponseBadRequest()  # Handle other error cases
+            return HttpResponseBadRequest("Payment error occurred.")
     else:
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest("Invalid request method. Only POST requests are allowed.")

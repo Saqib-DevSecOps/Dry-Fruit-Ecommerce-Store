@@ -13,7 +13,7 @@
 
                             <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                                 <div class="vd_title_wrap">
-                                    <h3>Password Change</h3>
+                                    <h3>Address Form</h3>
                                 </div>
                                 <div class="vd_shadow">
                                     <div class="row">
@@ -21,7 +21,12 @@
                                             {% csrf_token %}
                                             {{ form|crispy }}
                                             <button class="btn text-white" style="background-color: #f7b33c"
-                                                    type="submit">Update
+                                                    type="submit">
+                                                {% if request.path == '/c/my-address/' %}
+                                                    Update
+                                                {% else %}
+                                                    Create
+                                                {% endif %}
                                             </button>
                                         </form>
                                     </div>
@@ -33,4 +38,24 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Wait for the page to load
+        window.addEventListener('load', function () {
+            var selectElement = document.getElementById('id_address_label');
+            selectElement.style.display = 'block';
+
+            var selectElement1 = document.getElementById('id_country');
+            selectElement1.style.display = 'block';
+            var niceSelect = document.querySelector('#div_id_country .nice-select');
+            if (niceSelect) {
+                niceSelect.style.display = 'none';
+            }
+
+            var customSelect = document.querySelector('.nice-select');
+            customSelect.style.display = 'none';
+        });
+
+    </script>
+
 {% endblock %}

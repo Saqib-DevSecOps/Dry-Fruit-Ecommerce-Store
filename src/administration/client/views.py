@@ -9,9 +9,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, ListView, DetailView, CreateView
 from src.accounts.decorators import client_protected
-from src.accounts.models import Address
 from src.administration.admins.models import Wishlist, Order, Product, OrderItem, Payment, Shipment, ShipRocketOrder, \
-    ProductRating
+    ProductRating, Address
 from src.administration.client.bll import calculate_reviews
 from src.administration.client.forms import AddressForm, UserProfileForm
 
@@ -37,20 +36,6 @@ class UserUpdateView(View):
             return redirect('client:dashboard')
         context = {'form': form}
         return render(request, template_name='client/user_update_form.html', context=context)
-
-
-@method_decorator(client_protected, name='dispatch')
-class AddressUpdate(UpdateView):
-    form_class = AddressForm
-    model = Address
-    template_name = 'client/address_form.html'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(AddressUpdate, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('client:dashboard')
 
 
 @method_decorator(client_protected, name='dispatch')
@@ -211,6 +196,7 @@ class ProductRatingListView(ListView):
         return order_items_without_review
 
 
+@method_decorator(client_protected, name='dispatch')
 class ProductRatingCreateView(CreateView):
     model = ProductRating
     fields = ['rate', 'comment']
@@ -240,13 +226,42 @@ class ProductRatingCreateView(CreateView):
 
 
 @method_decorator(client_protected, name='dispatch')
-class AddressList(TemplateView):
-    # model = Order
+class AddressList(ListView):
+    model = Address
     template_name = 'client/address.html'
-    # context_object_name = 'objects'
-    #
-    # def get_queryset(self):
-    #     return self.model.objects.filter(user=self.request.user)
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
+
+@method_decorator(client_protected, name='dispatch')
+class AddressCreateView(CreateView):
+    model = Address
+    form_class = AddressForm
+    template_name = 'client/address_form.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, "Address SuccessFully Added")
+        return reverse('client:address')
+
+
+@method_decorator(client_protected, name='dispatch')
+class AddressUpdate(UpdateView):
+    form_class = AddressForm
+    model = Address
+    template_name = 'client/address_form.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(AddressUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, "Address SuccessFully Updated")
+        return reverse('client:address')
 
 
 @method_decorator(client_protected, name='dispatch')

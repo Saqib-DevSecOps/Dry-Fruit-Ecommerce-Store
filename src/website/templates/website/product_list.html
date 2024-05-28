@@ -3,466 +3,531 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
+    <!-- Slick CSS -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
 
-<style>
-    /* Import Google Font - Poppins */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    <!-- Your HTML code -->
+
+    <!-- Slick JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+    <style>
+        /* Import Google Font - Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 
-    ::selection {
-        color: #fff;
-        background: #17A2B8;
-    }
+        ::selection {
+            color: #fff;
+            background: #17A2B8;
+        }
 
-    .wrapper {
-        width: 400px;
-        background: #fff;
-        border-radius: 10px;
-        padding: 20px 25px 40px;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-    }
+        .wrapper {
+            width: 400px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 25px 40px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+        }
 
-    header h2 {
-        font-size: 24px;
-        font-weight: 600;
-    }
+        header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
 
-    header p {
-        margin-top: 5px;
-        font-size: 16px;
-    }
+        header p {
+            margin-top: 5px;
+            font-size: 16px;
+        }
 
-    .price-input {
-        width: 100%;
-        display: flex;
-        margin: 30px 0 35px;
-    }
+        .price-input {
+            width: 100%;
+            display: flex;
+            margin: 30px 0 35px;
+        }
 
-    .price-input .field {
-        display: flex;
-        width: 100%;
-        height: 45px;
-        align-items: center;
-    }
+        .price-input .field {
+            display: flex;
+            width: 100%;
+            height: 45px;
+            align-items: center;
+        }
 
-    .field input {
-        width: 100%;
-        height: 100%;
-        outline: none;
-        font-size: 19px;
-        margin-left: 12px;
-        border-radius: 5px;
-        text-align: center;
-        border: 1px solid #999;
-        -moz-appearance: textfield;
-    }
+        .field input {
+            width: 100%;
+            height: 100%;
+            outline: none;
+            font-size: 19px;
+            margin-left: 12px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #999;
+            -moz-appearance: textfield;
+        }
 
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-    }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
 
-    .price-input .separator {
-        width: 130px;
-        display: flex;
-        font-size: 19px;
-        align-items: center;
-        justify-content: center;
-    }
+        .price-input .separator {
+            width: 130px;
+            display: flex;
+            font-size: 19px;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .slider {
-        height: 5px;
-        position: relative;
-        background: #ddd;
-        border-radius: 5px;
-    }
+        .slider {
+            height: 5px;
+            position: relative;
+            background: #ddd;
+            border-radius: 5px;
+        }
 
-    .slider .progress {
-        height: 100%;
-        left: 25%;
-        right: 25%;
-        position: absolute;
-        border-radius: 5px;
-        background: #17A2B8;
-    }
+        .slider .progress {
+            height: 100%;
+            left: 25%;
+            right: 25%;
+            position: absolute;
+            border-radius: 5px;
+            background: #17A2B8;
+        }
 
-    .range-input {
-        position: relative;
-    }
+        .range-input {
+            position: relative;
+        }
 
-    .range-input input {
-        position: absolute;
-        width: 100%;
-        height: 5px;
-        top: -5px;
-        background: none;
-        pointer-events: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
+        .range-input input {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            top: -5px;
+            background: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
 
-    input[type="range"]::-webkit-slider-thumb {
-        height: 17px;
-        width: 17px;
-        border-radius: 50%;
-        background: #17A2B8;
-        pointer-events: auto;
-        -webkit-appearance: none;
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-    }
+        input[type="range"]::-webkit-slider-thumb {
+            height: 17px;
+            width: 17px;
+            border-radius: 50%;
+            background: #17A2B8;
+            pointer-events: auto;
+            -webkit-appearance: none;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+        }
 
-    input[type="range"]::-moz-range-thumb {
-        height: 17px;
-        width: 17px;
-        border: none;
-        border-radius: 50%;
-        background: #17A2B8;
-        pointer-events: auto;
-        -moz-appearance: none;
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-    }
-</style>
-<section class="shop_list_sidebar  mt-4">
-    <div class="shop_sidebar_wrap">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <form>
-                        <div class="blog_category aos-init aos-animate card" data-aos="fade-up"
-                             data-aos-duration="2000">
-                            <div class="row">
-                                <div class="col-6">
-                                    <p class="" style="font-size: 20px">Filters</p>
+        input[type="range"]::-moz-range-thumb {
+            height: 17px;
+            width: 17px;
+            border: none;
+            border-radius: 50%;
+            background: #17A2B8;
+            pointer-events: auto;
+            -moz-appearance: none;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <section class="shop_list_sidebar  mt-4">
+        <div class="shop_sidebar_wrap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <form>
+                            <div class="blog_category aos-init aos-animate card" data-aos="fade-up"
+                                 data-aos-duration="2000">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="" style="font-size: 20px">Filters</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <img style="height: 30px;" src="{% static 'website/images/filter_image.png' %}">
+                                    </div>
                                 </div>
-                                <div class="col-6 text-end">
-                                    <img style="height: 30px;" src="{% static 'website/images/filter_image.png' %}">
-                                </div>
-                            </div>
-                            {{ filter_form.form.title }}
-                            <hr>
-                            <div class="accordion" id="accordionCategory">
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header " id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseCategory" aria-expanded="true"
-                                                    aria-controls="collapseCategory">
-                                                Category
-                                            </button>
-                                        </h2>
-                                        <div id="collapseCategory" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.category }}
+                                {{ filter_form.form.title }}
+                                <hr>
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseCategory" aria-expanded="true"
+                                                        aria-controls="collapseCategory">
+                                                    Category
+                                                </button>
+                                            </h2>
+                                            <div id="collapseCategory" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.category }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
+                                <hr>
 
-                            <div class="accordion" id="accordionCategory">
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header " id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapsePrice" aria-expanded="true"
-                                                    aria-controls="collapsePrice">
-                                                Sort By
-                                            </button>
-                                        </h2>
-                                        <div id="collapsePrice" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.sorting }}
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapsePrice" aria-expanded="true"
+                                                        aria-controls="collapsePrice">
+                                                    Sort By
+                                                </button>
+                                            </h2>
+                                            <div id="collapsePrice" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.sorting }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
+                                <hr>
 
-                            <div class="accordion" id="accordionCategory">
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header " id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseAppliancePrice" aria-expanded="true"
-                                                    aria-controls="collapseAppliancePrice">
-                                                Sort By
-                                            </button>
-                                        </h2>
-                                        <div id="collapseAppliancePrice" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.appliance_price }}
+                                <div class="accordion" id="accordionCategory">
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header " id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseAppliancePrice" aria-expanded="true"
+                                                        aria-controls="collapseAppliancePrice">
+                                                    Sort By
+                                                </button>
+                                            </h2>
+                                            <div id="collapseAppliancePrice" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.appliance_price }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
+                                <hr>
 
-                            <div class="accordion" id="accordionExample">
+                                <div class="accordion" id="accordionExample">
 
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseDiscount" aria-expanded="true"
-                                                    aria-controls="collapseDiscount">
-                                                Discount
-                                            </button>
-                                        </h2>
-                                        <div id="collapseDiscount" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.discount }}
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseDiscount" aria-expanded="true"
+                                                        aria-controls="collapseDiscount">
+                                                    Discount
+                                                </button>
+                                            </h2>
+                                            <div id="collapseDiscount" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.discount }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="accordion" id="accordionRating">
+                                <hr>
+                                <div class="accordion" id="accordionRating">
 
-                                <div class="blog_category_wrap">
-                                    <div class="accordion-item border-0">
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="text-warning accordion-button" type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseRating" aria-expanded="true"
-                                                    aria-controls="collapseRating">
-                                                Rating
-                                            </button>
-                                        </h2>
-                                        <div id="collapseRating" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne" data-bs-parent="#accordionRating">
-                                            <div class="accordion-body">
-                                                {{ filter_form.form.ratings }}
+                                    <div class="blog_category_wrap">
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="text-warning accordion-button" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseRating" aria-expanded="true"
+                                                        aria-controls="collapseRating">
+                                                    Rating
+                                                </button>
+                                            </h2>
+                                            <div id="collapseRating" class="accordion-collapse collapse show"
+                                                 aria-labelledby="headingOne" data-bs-parent="#accordionRating">
+                                                <div class="accordion-body">
+                                                    {{ filter_form.form.ratings }}
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
+
+                                <button type="submit" class="btn custom_btn rounded-pill text-white ">
+                                    Apply &nbsp;<i class="fas fa-long-arrow-alt-right"></i></button>
+
                             </div>
-                            <hr>
+                        </form>
+                    </div>
+                    <div class="col-lg-9">
+                        <!-- shop list section start -->
+                        <section class="shop_list_sec aos-init" data-aos="fade-up" data-aos-duration="2000">
+                            <div class="shop_list_wrap">
+                                <div class="container">
+                                    <div class="shop_product_list">
+                                        <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
+                                                 aria-labelledby="pills-grid_layout-tab">
+                                                <div class="row g-4" id="shop_list">
+                                                    {% if object_list %}
+                                                        {% for object in object_list %}
+                                                            <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 card-length">
+                                                                <div class="product_layout_1 overflow-hidden position-relative">
 
-                            <button type="submit" class="btn custom_btn rounded-pill text-white ">
-                                Apply &nbsp;<i class="fas fa-long-arrow-alt-right"></i></button>
+                                                                    <div class="product_layout_content bg-white position-relative">
+                                                                        <div class="product_image_wrap">
+                                                                            <a class="product_image d-flex justify-content-center align-items-center"
+                                                                               href="{% url 'website:product-detail' object.pk %}">
+                                                                                <img class="pic-1"
+                                                                                     src="{{ object.thumbnail_image.url|image_or_placeholder }}"
+                                                                                     alt="image_not_found">
+                                                                                <img class="pic-2"
+                                                                                     src="{{ object.thumbnail_image.url|image_or_placeholder }}"
+                                                                                     alt="image_not_found">
+                                                                            </a>
+                                                                            <ul class="product_badge_group ul_li_block">
+                                                                                <li><span
+                                                                                        class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
+                                                                                </li>
+                                                                                {% if object.discount %}
+                                                                                    <li><span
+                                                                                            class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
+                                                                                    </li>
+                                                                                {% endif %}
+                                                                            </ul>
+                                                                            <ul class="product_action_btns ul_li_block d-flex">
+                                                                                <li><a class="tooltips"
+                                                                                       data-placement="top"
+                                                                                       title="Search Product"
+                                                                                       href="{% url 'website:product-detail' object.pk %}"><i
+                                                                                        class="fas fa-eye"></i></a>
+                                                                                </li>
+                                                                                <li><a class="tooltips"
+                                                                                       title="Add To Cart"
+                                                                                       href="{% url 'website:wishlist-add' object.pk %}"><i
+                                                                                        class="far fa-heart"></i></a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="rating_wrap d-flex">
+                                                                            <ul class="rating_star ul_li">
+                                                                                {{ object.average_review|get_html_icons }}
+                                                                            </ul>
+                                                                            <span class="shop_review_text">( {{ object.average_review }})</span>
+                                                                        </div>
+                                                                        <div class="product_content">
+                                                                            <h3 class="product_title">
+                                                                                <a href="{% url 'website:product-detail' object.pk %}"
+                                                                                >{{ object.title }}</a>
+                                                                            </h3>
+                                                                            <div class="product_price">
+                                                                                <span class="sale_price pe-1">{{ object.get_price }}</span>
+                                                                                {% if object.discount %}
+                                                                                    <del>{{ object.price }}</del>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-9">
-                    <!-- shop list section start -->
-                    <section class="shop_list_sec aos-init" data-aos="fade-up" data-aos-duration="2000">
-                        <div class="shop_list_wrap">
-                            <div class="container">
-                                <div class="shop_product_list">
-                                    <div class="tab-content" id="pills-tabContent">
-                                        <div class="tab-pane fade show active" id="grid_layout" role="tabpanel"
-                                             aria-labelledby="pills-grid_layout-tab">
-                                            <div class="row g-4" id="shop_list">
-                                                {% if object_list %}
-                                                {% for object in object_list %}
-                                                <div class="col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4 card-length">
-                                                    <div class="product_layout_1 overflow-hidden position-relative">
-
-                                                        <div class="product_layout_content bg-white position-relative">
-                                                            <div class="product_image_wrap">
-                                                                <a class="product_image d-flex justify-content-center align-items-center"
-                                                                   href="{% url 'website:product-detail' object.pk %}">
-                                                                    <img class="pic-1"
-                                                                         src="{{ object.thumbnail_image.url|image_or_placeholder }}"
-                                                                         alt="image_not_found">
-                                                                    <img class="pic-2"
-                                                                         src="{{ object.thumbnail_image.url|image_or_placeholder }}"
-                                                                         alt="image_not_found">
-                                                                </a>
-                                                                <ul class="product_badge_group ul_li_block">
-                                                                    <li><span
-                                                                            class="product_badge badge_meats position-absolute rounded-pill text-uppercase">{{ object.category }}</span>
-                                                                    </li>
-                                                                    {% if object.discount %}
-                                                                    <li><span
-                                                                            class="product_badge badge_discount position-absolute rounded-pill">-{{ object.discount }}%</span>
-                                                                    </li>
-                                                                    {% endif %}
-                                                                </ul>
-                                                                <ul class="product_action_btns ul_li_block d-flex">
-                                                                    <li><a class="tooltips"
-                                                                           data-placement="top"
-                                                                           title="Search Product"
-                                                                           href="{% url 'website:product-detail' object.pk %}"><i
-                                                                            class="fas fa-eye"></i></a>
-                                                                    </li>
-                                                                    <li><a class="tooltips"
-                                                                           title="Add To Cart"
-                                                                           href="{% url 'website:wishlist-add' object.pk %}"><i
-                                                                            class="far fa-heart"></i></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                            <div class="rating_wrap d-flex">
-                                                                <ul class="rating_star ul_li">
-                                                                    {{ object.average_review|get_html_icons }}
-                                                                </ul>
-                                                                <span class="shop_review_text">( {{ object.average_review }})</span>
-                                                            </div>
-                                                            <div class="product_content">
-                                                                <h3 class="product_title">
-                                                                    <a href="{% url 'website:product-detail' object.pk %}"
-                                                                    >{{ object.title }}</a>
-                                                                </h3>
-                                                                <div class="product_price">
-                                                                    <span class="sale_price pe-1">{{ object.get_price }}</span>
-                                                                    {% if object.discount %}
-                                                                        <del>{{ object.price }}</del>
-                                                                    {% endif %}
                                                                 </div>
                                                             </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <div class="col-12">
+                                                            <h3 class="text-center">Products Not Found</h3>
                                                         </div>
-
-                                                    </div>
+                                                    {% endif %}
                                                 </div>
-                                                {% endfor %}
-                                                {% else %}
-                                                <div class="col-12">
-                                                    <h3 class="text-center">Products Not Found</h3>
-                                                </div>
-                                                {% endif %}
                                             </div>
-                                        </div>
 
+                                        </div>
                                     </div>
-                                </div>
-                                <ul class="pagination_nav mt-5 list-unstyled d-flex justify-content-center text-uppercase clearfix">
-                                    <div class="align-items-center mb-4 mt-3 mt-sm-0"
-                                         id="loading-spinner"
-                                         style="display:none;">
+                                    <ul class="pagination_nav mt-5 list-unstyled d-flex justify-content-center text-uppercase clearfix">
+                                        <div class="align-items-center mb-4 mt-3 mt-sm-0"
+                                             id="loading-spinner"
+                                             style="display:none;">
 
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        <div class="spinner-grow text-warning"
-                                             role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div class="spinner-grow text-warning"
+                                                 role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
 
-                                    </div>
-                                    <button id="load-more-btn" class="btn custom_btn rounded-pill text-white ">
-                                        Load More
-                                    </button>
+                                        </div>
+                                        <button id="load-more-btn" class="btn custom_btn rounded-pill text-white ">
+                                            Load More
+                                        </button>
 
-                                </ul>
+                                    </ul>
 
-                                <div class="row align-items-center mb-4 text-center text-sm-start"
-                                     id="pagination-element">
-                                    <div class="col-sm-5">
-                                        <div class="text-muted" id="pagination-info">
-                                            Showing {{ object_list.start_index }}
-                                            to {{ object_list.end_index }}
-                                            of {{ object_list.paginator.count }} entries
+                                    <div class="row align-items-center mb-4 text-center text-sm-start"
+                                         id="pagination-element">
+                                        <div class="col-sm-5">
+                                            <div class="text-muted" id="pagination-info">
+                                                Showing {{ object_list.start_index }}
+                                                to {{ object_list.end_index }}
+                                                of {{ object_list.paginator.count }} entries
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                    <!-- shop list section end -->
+                        </section>
+                        <!-- shop list section end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="shop_testimonial_sec sec_inner_bottom_100">
+        <div class="shop_testimonial_wrap">
+            <div class="container-sm">
+                <div class="offer_top_content shop_testimonial_cont text-center">
+                    <div class="offer_sub_title d-flex align-items-center justify-content-center pb-2">
+                        <i class="far fa-circle"></i>
+                        <i class="far fa-circle"></i>
+                        <i class="far fa-circle"></i>
+                        <span class="text-uppercase px-3">testimonial</span>
+                        <i class="far fa-circle"></i>
+                        <i class="far fa-circle"></i>
+                        <i class="far fa-circle"></i>
+                    </div>
+                    <div class="offer_title pb-5">
+                        <h2>What Our Customers Saying</h2>
+                    </div>
+                </div>
+                <div class="slick-carousel">
+                    {% if testimonials %}
+                        {% for object in testimonials %}
+                            <div class="slick-slide">
+                                <div class="shop_testimonial_text aos-init aos-animate">
+                                    <span class="quote_icon"><i class="fas fa-quote-left"></i></span>
+                                    <p class="testimonial_desc py-3">”{{ object.review }}”</p>
+                                    <ul class="rating_star ul_li my-3">
+                                        {{ object.rating|get_html_icons }}
+
+                                    </ul>
+                                    <h4 class="testimonial_author">{{ object.name }} <font>{{ object.rank }}</font></h4>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-danger">Testimonials are not added Yet</span>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
     </div>
-</section>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var page = {% if object_list.has_next %}{{ object_list.next_page_number }}{% else %}null{% endif %};
-        var maxPages = {{ object_list.paginator.num_pages }};
-        var loading = false;
-
-        function loadMore() {
-            if (loading || page === null || page > maxPages) {
-                return;
-            }
-            loading = true;
-            $('#load-more-btn').hide();
-            $('#loading-spinner').show();
-            var searchQuery = window.location.search;
-
-            var filter_queryset = null
-            if (searchQuery) {
-                filter_queryset = searchQuery + '&page=' + page
-            } else {
-                filter_queryset = '?page=' + page
-            }
-
-            $.ajax({
-                url: filter_queryset,
-                type: 'GET',
-                dataType: 'html',
-                success: function (data) {
-                    var $data = $(data);
-                    var $shopList = $data.find('#shop_list');
-
-                    if ($shopList.find('.card-length').length > 0) {
-                        $('#shop_list').append($shopList.html());
-                        $('#loading-spinner').hide();
-                        $('#load-more-btn').show();
-                        page++;
-                        loading = false;
-
-                        updatePaginationInfo();
-                    } else {
-                        $('#loading-spinner').hide();
-                        $('#load-more-btn').hide();
-                    }
-                },
-                error: function () {
-                    loading = false;
-                }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('.slick-carousel').slick({
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                autoplay: true,
+                autoplaySpeed: 2000,
+                dots: false,
+                arrows: false
             });
-        }
+        });
+    </script>
+    <script>
 
-        function updatePaginationInfo() {
-            $('#pagination-info').text('Showing 1 to ' + $('#shop_list .card-length').length + ' of {{ object_list.paginator.count }} entries');
+        document.addEventListener('DOMContentLoaded', function () {
+            var page = {% if object_list.has_next %}{{ object_list.next_page_number }}{% else %}null{% endif %};
+            var maxPages = {{ object_list.paginator.num_pages }};
+            var loading = false;
+
+            function loadMore() {
+                if (loading || page === null || page > maxPages) {
+                    return;
+                }
+                loading = true;
+                $('#load-more-btn').hide();
+                $('#loading-spinner').show();
+                var searchQuery = window.location.search;
+
+                var filter_queryset = null
+                if (searchQuery) {
+                    filter_queryset = searchQuery + '&page=' + page
+                } else {
+                    filter_queryset = '?page=' + page
+                }
+
+                $.ajax({
+                    url: filter_queryset,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (data) {
+                        var $data = $(data);
+                        var $shopList = $data.find('#shop_list');
+
+                        if ($shopList.find('.card-length').length > 0) {
+                            $('#shop_list').append($shopList.html());
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').show();
+                            page++;
+                            loading = false;
+
+                            updatePaginationInfo();
+                        } else {
+                            $('#loading-spinner').hide();
+                            $('#load-more-btn').hide();
+                        }
+                    },
+                    error: function () {
+                        loading = false;
+                    }
+                });
+            }
+
+            function updatePaginationInfo() {
+                $('#pagination-info').text('Showing 1 to ' + $('#shop_list .card-length').length + ' of {{ object_list.paginator.count }} entries');
+
+                if (page === null || page > maxPages) {
+                    $('#load-more-btn').hide();
+                }
+            }
 
             if (page === null || page > maxPages) {
                 $('#load-more-btn').hide();
             }
-        }
 
-        if (page === null || page > maxPages) {
-            $('#load-more-btn').hide();
-        }
-
-        $('#load-more-btn').on('click', loadMore);
-    });
-</script>
+            $('#load-more-btn').on('click', loadMore);
+        });
+    </script>
 
 {% endblock content %}

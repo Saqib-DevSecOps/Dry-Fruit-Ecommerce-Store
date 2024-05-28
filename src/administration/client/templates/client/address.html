@@ -13,36 +13,32 @@
                             <div class="total_revenue aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                                 <div class="vd_title_wrap">
                                     <h3>My Address</h3>
-                                    <a href="#" class="float-end text-warning">Add New Address</a>
+                                    <a href="{% url 'client:address-create' %}" class="float-end text-warning">Add New Address</a>
                                 </div>
                                 <div class="row">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <p class=" float-end text-warning m-0">Edit</p>
-                                                            <p class=" m-0">Rayees khan</p>
-                                                            <p class=" m-0">(+12345667</p>
-                                                            <p class="  m-0">Gilgit baltistan main chowk danyore </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <p class=" float-end text-warning m-0">Edit</p>
-                                                            <p class=" m-0">Rayees khan</p>
-                                                            <p class=" m-0">(+12345667</p>
-                                                            <p class="  m-0">Gilgit baltistan main chowk danyore </p>
-                                                            <div>
-                                                                <small style="font-size: 12px;background-color: #f5f5f5">Default deliver address </small>&nbsp;
-                                                                <small style="font-size: 12px;background-color: #f5f5f5">Default billing address </small>&nbsp;
+                                                {% if object_list %}
+                                                    {% for object in  object_list %}
+                                                        <div class="col-sm-6">
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <a href="{% url 'client:user-address-update' object.id %}" class=" float-end text-warning m-0">Edit</a>
+                                                                    <p class=" m-0">{{ object.full_name }}</p>
+                                                                    <p class=" m-0">{{ object.contact }}</p>
+                                                                    <p class=" m-0">{{ object.state }}</p>
+                                                                    <p class="  m-0">{{ object.address }}</p>
+                                                                    <div>
+                                                                        <small style="font-size: 12px;background-color: #f5f5f5">{{ object.address_label }}</small>&nbsp;
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <span class="text-danger">Address Are Not Added yet</span>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
@@ -54,4 +50,5 @@
             </div>
         </div>
     </section>
+
 {% endblock %}

@@ -5,32 +5,144 @@
 {% load static %}
 
 {% block content %}
+    <style>
+        .confirmation-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .checkmark {
+            font-size: 50px;
+            color: #fdb913;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #fdb913;
+        }
+
+        .order-number {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .order-details {
+            margin: 20px 0;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+        }
+
+        .item-info {
+            flex-grow: 1;
+            margin-left: 10px;
+            text-align: left;
+        }
+
+        .view-order-button {
+            background-color: #fdb913;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tracking-info {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .order-total {
+            color: #fdb913;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
 
     <section class=" mt-4 clearfix aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
-        <div class="container ">
+        <div class="container mt-5">
             <div class="row justify-content-center">
-                <div class="col-6">
-                    <div class="card p-4">
-                        <div class="card-header">
-                            <h1 class="title text-center">Payment Successful</h1>
-
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-md-12">
-                                <span class="text-success">Your payment has been successfully processed.</span>
+                <div class="col-8">
+                    <div class="card p-4 text-center">
+                        <div class="display-1 text-warning">&#10004;</div>
+                        <h1 class="h4 my-3">Thank You For Your Purchase</h1>
+                        <p class="lead">Your Order Number Is <strong>{{ order.id }}</strong></p>
+                        <div class="card mb-3">
+                            {% for object in order.get_cart %}
+                                <div class="row no-gutters">
+                                    <div class="col-sm-4 pt-2">
+                                        <div class="d-flex position-relative">
+                                            <img src="{% static 'website/images/product/product1.png' %}"
+                                                 style="height: 90px;"
+                                                 class="flex-shrink-0 me-3 avatar-xl rounded" alt="...">
+                                            <div>
+                                                <h5 class="card-title mt-4 float-center">{{ object.product.title }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h6 class="card-text float-end mt-4">Est: {{ object.order.created_at }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="d-flex justify-content-between  p-3">
+                                        <p>To Track The Delivery Of Your Order Is, My Account &gt; My Order</p>
+                                        <p class="mb-0 text-warning">
+                                            <a href="{% url 'client:order_detail' object.id %}"
+                                               class="btn btn-warning text-white">View Order</a>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- Payment Button -->
-                        <a href="{% url 'client:order_list' %}" class="btn btn-secondary mt-4 mb-4">Go To Orders</a>
+                        <div class="card mb-3">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="d-flex justify-content-between  p-3">
+                                        <h5>Order Summary</h5>
+                                        <h5 class="mb-0 text-warning">{{ order.sub_total }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-
             </div>
         </div>
-
     </section>
 
 
@@ -100,7 +212,9 @@
             setTimeout(function () {
                 $('#RateUs').modal('show');
             }, 1); // 10000 milliseconds = 10 seconds
-        });
+        })
+            ;
+
     </script>
     <script>
         $(document).ready(function () {

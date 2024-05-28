@@ -84,22 +84,7 @@ class User(AbstractUser):
         print()
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_registered")
-def on_user_registration(sender, instance, created, **kwargs):
-    if created:
-        Address.objects.create(user=instance)
+#
 
 
-class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="address_set")
-    country = models.CharField(max_length=200)
-    Province = models.CharField(max_length=250)
-    City = models.CharField(max_length=250)
-    street_address_1 = models.CharField(max_length=250)
-    street_address_2 = models.CharField(max_length=250, null=True, blank=True)
-    postal_code = models.CharField(max_length=250)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.user.email

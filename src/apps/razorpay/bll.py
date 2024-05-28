@@ -60,13 +60,16 @@ def handle_payment(request):
                 payment.payment_status = "completed"
                 payment.amount_paid = order.sub_total
                 payment.save()
-                return 'success'
-            except:
-                return 'cancelled'
+                return 'success', order
+            except Exception as e:
+                print(f"Internal error while processing the order: {e}")
+                return 'cancelled', None
         else:
-            return 'cancelled'
-    except:
-        return 'error'
+            print("Payment verification failed.")
+            return 'cancelled', None
+    except Exception as e:
+        print(f"Error in payment handling: {e}")
+        return 'error', None
 
 
 def get_razorpay_order_id(self, request, order_id):

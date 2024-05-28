@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import View, UpdateView
 from django.contrib.auth import logout
-from src.accounts.models import Address
 
 
 @method_decorator(login_required, name='dispatch')
