@@ -248,11 +248,6 @@ class ProductWeight(models.Model):
     def get_product_size(self):
         return ProductSize.objects.get(product_weight=self)
 
-    def save(self, *args, **kwargs):
-        if self.product.tax > 0:
-            self.price = self.price * (1 + (self.product.tax / Decimal(100)))
-        super(ProductWeight, self).save(*args, **kwargs)
-
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
