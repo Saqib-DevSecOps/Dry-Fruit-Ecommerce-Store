@@ -76,7 +76,6 @@ def match_state(state_patterns, state):
 
 
 def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state):
-    print("matched State is ", matched_state)
     if service_type == "normal":
         if matched_state == "gujarat":
             return 30 * chargeable_weight
@@ -114,7 +113,6 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
 def get_custom_shipping_charge(cart_items, service_type, state):
     custom_shipping_cost = Decimal(0)
     state_patterns = {
-        "local": r"local",
         "gujarat": r"gujarat",
         "mumbai": r"mumbai",
         "other": r"other"

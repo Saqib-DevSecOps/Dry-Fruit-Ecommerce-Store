@@ -380,6 +380,44 @@ ADDRESS_LABEL = (
     ('home', 'HOME'),
     ('office', 'OFFICE'),
 )
+INDIA_STATES_AND_UTS = (
+    ('andhra_pradesh', 'Andhra Pradesh'),
+    ('arunachal_pradesh', 'Arunachal Pradesh'),
+    ('assam', 'Assam'),
+    ('bihar', 'Bihar'),
+    ('chhattisgarh', 'Chhattisgarh'),
+    ('goa', 'Goa'),
+    ('gujarat', 'Gujarat'),
+    ('haryana', 'Haryana'),
+    ('himachal_pradesh', 'Himachal Pradesh'),
+    ('jharkhand', 'Jharkhand'),
+    ('karnataka', 'Karnataka'),
+    ('kerala', 'Kerala'),
+    ('madhya_pradesh', 'Madhya Pradesh'),
+    ('maharashtra', 'Maharashtra'),
+    ('manipur', 'Manipur'),
+    ('meghalaya', 'Meghalaya'),
+    ('mizoram', 'Mizoram'),
+    ('nagaland', 'Nagaland'),
+    ('odisha', 'Odisha'),
+    ('punjab', 'Punjab'),
+    ('rajasthan', 'Rajasthan'),
+    ('sikkim', 'Sikkim'),
+    ('tamil_nadu', 'Tamil Nadu'),
+    ('telangana', 'Telangana'),
+    ('tripura', 'Tripura'),
+    ('uttar_pradesh', 'Uttar Pradesh'),
+    ('uttarakhand', 'Uttarakhand'),
+    ('west_bengal', 'West Bengal'),
+    ('andaman_and_nicobar_islands', 'Andaman and Nicobar Islands'),
+    ('chandigarh', 'Chandigarh'),
+    ('dadra_and_nagar_haveli_and_daman_and_diu', 'Dadra and Nagar Haveli and Daman and Diu'),
+    ('lakshadweep', 'Lakshadweep'),
+    ('delhi', 'Delhi'),
+    ('puducherry', 'Puducherry'),
+    ('ladakh', 'Ladakh'),
+    ('jammu_and_kashmir', 'Jammu and Kashmir')
+)
 
 
 def validate_contact(value):
@@ -414,7 +452,8 @@ class Address(models.Model):
     address_label = models.CharField(max_length=250, null=True, blank=False, choices=ADDRESS_LABEL,
                                      default=ADDRESS_LABEL[0][0])
     city = models.CharField(max_length=1000, null=True, blank=False)
-    state = models.CharField(max_length=1000, null=True, blank=False)
+    state = models.CharField(max_length=250, null=True, blank=False, choices=INDIA_STATES_AND_UTS,
+                             default=INDIA_STATES_AND_UTS[0][0])
     country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -446,7 +485,8 @@ class Order(models.Model):
         ]
     )
     city = models.CharField(max_length=1000, null=True, blank=False)
-    state = models.CharField(max_length=1000, null=True, blank=False)
+    state = models.CharField(max_length=250, null=True, blank=False, choices=INDIA_STATES_AND_UTS,
+                             default=INDIA_STATES_AND_UTS[0][0])
     country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
 
     razorpay_order_id = models.CharField(max_length=1000, null=True, blank=True)

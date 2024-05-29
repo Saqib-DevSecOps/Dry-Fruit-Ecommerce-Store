@@ -151,6 +151,8 @@
             selectElement.style.display = 'block';
             var selectAddressElement = document.getElementById('id_address_label');
             selectAddressElement.style.display = 'block';
+            var selectStateElement = document.getElementById('id_state');
+            selectStateElement.style.display = 'block';
             var selectShipmentElement = document.getElementById('id_shipment_type');
             selectShipmentElement.style.display = 'block';
             var selectServiceElement = document.getElementById('id_service_type');
@@ -160,6 +162,10 @@
             var niceSelect = document.querySelector('#div_id_country .nice-select');
             if (niceSelect) {
                 niceSelect.style.display = 'none';
+            }
+            var stateniceSelect = document.querySelector('#div_id_state .nice-select');
+            if (stateniceSelect) {
+                stateniceSelect.style.display = 'none';
             }
 
         });

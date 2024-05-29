@@ -52,6 +52,13 @@
                 niceSelect.style.display = 'none';
             }
 
+            var selectStateElement = document.getElementById('id_state');
+            selectStateElement.style.display = 'block';
+            var stateniceSelect = document.querySelector('#div_id_state .nice-select');
+            if (stateniceSelect) {
+                stateniceSelect.style.display = 'none';
+            }
+
             var customSelect = document.querySelector('.nice-select');
             customSelect.style.display = 'none';
         });
