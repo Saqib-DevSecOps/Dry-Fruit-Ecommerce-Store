@@ -100,7 +100,7 @@
                                 <div class="row no-gutters">
                                     <div class="col-sm-4 pt-2">
                                         <div class="d-flex position-relative">
-                                            <img src="{% static 'website/images/product/product1.png' %}"
+                                            <img src="{{ object.product.thumbnail_image.url }}"
                                                  style="height: 90px;"
                                                  class="flex-shrink-0 me-3 avatar-xl rounded" alt="...">
                                             <div>
@@ -213,7 +213,7 @@
                 $('#RateUs').modal('show');
             }, 1); // 10000 milliseconds = 10 seconds
         })
-            ;
+        ;
 
     </script>
     <script>
