@@ -27,13 +27,26 @@
 
 
 </head>
-<style>
-    @media screen and (max-width: 1550px) {
-        body {
-            zoom: 75%;
+ <style>
+        @media screen and (max-width: 1550px) {
+            .body-wrap {
+                zoom: 75%;
+            }
         }
-    }
-</style>
+
+        /* Adjusting the Tawk.to chat widget */
+        #tawkchat-container {
+            transform: scale(1.3333); /* Adjust the scale to counteract zoom (1 / 0.75) */
+            transform-origin: bottom right; /* Ensure the scaling happens from the bottom right corner */
+        }
+
+        /* Additional styling to ensure proper positioning */
+        #tawkchat-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+
 <body>
 <!-- body wrap start -->
 <div class="body-wrap overflow-hidden">
@@ -63,6 +76,19 @@
 
 </div>
 
+
+<!-- body wrap end -->
+<script src="{% static 'website/js/jquery.min.js' %}"></script>
+<script src="{% static 'website/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'website/js/aos.js' %}"></script>
+<script src="{% static 'website/js/magnific-popup.min.js' %}"></script>
+<script src="{% static 'website/js/nice-select.min.js' %}"></script>
+<script src="{% static 'website/js/countdown.min.js' %}"></script>
+<script src="{% static 'website/js/slick.min.js' %}"></script>
+<script src="{% static 'website/js/custom.js' %}"></script>
+<script type="text/javascript" src="{% static 'website/js/toastify.js' %}"></script>
+{% include 'messages.html' %}
+
 <script>
     var Tawk_API = Tawk_API || {};
     var Tawk_LoadStart = new Date();
@@ -77,25 +103,6 @@
         s0.parentNode.insertBefore(s1, s0);
     })();
 </script>
-<script>
-// Add event listener for when the Tawk.to script has finished loading
-document.getElementById("Tawk_LoadStart").addEventListener("load", function () {
-    var chatButton = document.getElementById("chatButton");
-    chatButton.style.display = "none"; // This will hide the button
-});
-</script>
-<!-- body wrap end -->
-<script src="{% static 'website/js/jquery.min.js' %}"></script>
-<script src="{% static 'website/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'website/js/aos.js' %}"></script>
-<script src="{% static 'website/js/magnific-popup.min.js' %}"></script>
-<script src="{% static 'website/js/nice-select.min.js' %}"></script>
-<script src="{% static 'website/js/countdown.min.js' %}"></script>
-<script src="{% static 'website/js/slick.min.js' %}"></script>
-<script src="{% static 'website/js/custom.js' %}"></script>
-<script type="text/javascript" src="{% static 'website/js/toastify.js' %}"></script>
-{% include 'messages.html' %}
-
 
 </body>
 

@@ -503,7 +503,7 @@ p {
 .backtotop {
     right: 15px;
     z-index: 999;
-    bottom: 60px;
+    bottom: 120px;
     display: none;
     position: fixed;
 }
