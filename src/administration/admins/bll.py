@@ -78,39 +78,31 @@ def match_state(state_patterns, state):
 def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state):
     print("matched State is ", matched_state)
     if service_type == "normal":
-        if matched_state == "local":
+        if matched_state == "gujarat":
             return 30 * chargeable_weight
-        elif matched_state == "gujarat":
-            return 40 * chargeable_weight
         elif matched_state == "mumbai":
             return 60 * chargeable_weight
         else:
             return 80 * chargeable_weight
     elif service_type == "fast":
         if chargeable_weight <= 0.5:
-            if matched_state == "local":
+            if matched_state == "gujarat":
                 return 150
-            elif matched_state == "gujarat":
-                return 200
             elif matched_state == "mumbai":
                 return 250
             else:
                 return 300
         elif chargeable_weight <= 1:
-            if matched_state == "local":
+            if matched_state == "gujarat":
                 return 200
-            elif matched_state == "gujarat":
-                return 250
             elif matched_state == "mumbai":
                 return 300
             else:
                 return 350
 
         else:
-            if matched_state == "local":
+            if matched_state == "gujarat":
                 return 200 * chargeable_weight
-            elif matched_state == "gujarat":
-                return 250 * chargeable_weight
             elif matched_state == "mumbai":
                 return 300 * chargeable_weight
             else:
@@ -141,10 +133,8 @@ def get_custom_shipping_charge(cart_items, service_type, state):
             width = Decimal('10')
             height = Decimal('10')
             weight = Decimal('1')
-
-        volumetric_weight = calculate_volumetric_weight(length, width, height)
-        chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
-        custom_shipping_cost += calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state)
+        actual_weight = cart_item.product_weight.get_product_size()
+        custom_shipping_cost += calculate_custom_shipping_cost(actual_weight.weight, service_type, matched_state)
     return custom_shipping_cost
 
 
