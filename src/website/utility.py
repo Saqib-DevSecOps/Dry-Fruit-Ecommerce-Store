@@ -31,7 +31,7 @@ def calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate):
         if remaining_weight % Decimal('0.5') != 0:
             additional_cost += additional_500g_rate
         cost += additional_cost
-        return cost * 10
+        return cost
 
 
 def get_total_amount(request):
