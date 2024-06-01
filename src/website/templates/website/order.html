@@ -13,7 +13,8 @@
                 {% csrf_token %}
                 <!-- Billing info start -->
                 <div class="billing_form mb_50">
-                    <h6 class=" text-warning mb_30 float-end"><a class="text-warning" href="{% url 'client:address-create' %}"><i
+                    <h6 class=" text-warning mb_30 float-end"><a class="text-warning"
+                                                                 href="{% url 'client:address-create' %}"><i
                             class="fa fa-plus"></i>&nbsp;Add New Address</a></h6>
                     <h3 class="form_title mb_30">Select Address</h3>
                     <div class="row">
@@ -51,81 +52,93 @@
         <div class="container">
             <form method="post">
                 {% csrf_token %}
-                <!-- Billing info start -->
-                <div class="billing_form mb_50">
-                    <h3 class="form_title mb_30">Billing details</h3>
-                    <div class="form_wrap card">
-                        <style>
-                            #div_id_shipment_type .nice-select {
-                                display: none;
-                            }
+                <div class="row">
+                    <div class="col-7">
 
-                            #div_id_service_type .nice-select {
-                                display: none;
-                            }
-                        </style>
-                        {{ form|crispy }}
-                        <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
-                            <h3 class="form_title mb_30">Your order</h3>
-                            <form action="#">
-                                <div class="form_wrap card">
-                                    <div class="checkout_table table-responsive">
-                                        <table class="table text-center mb_50">
-                                            <thead class="text-uppercase text-uppercase">
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for obj in cart %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="cart_product">
-                                                            <div class="item_image">
-                                                                <img src="{{ obj.product.thumbnail_image|image_or_placeholder }}"
-                                                                     alt="image_not_found">
-                                                            </div>
-                                                            <div class="item_content">
-                                                                <h4 class="item_title mb_0">{{ obj.product.title }}</h4>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
+                        <!-- Billing info start -->
+                        <div class="billing_form mb_50">
+                            <h3 class="form_title mb_30">Billing details</h3>
+                            <div class="form_wrap card">
+                                <style>
+                                    #div_id_shipment_type .nice-select {
+                                        display: none;
+                                    }
+
+                                    #div_id_service_type .nice-select {
+                                        display: none;
+                                    }
+                                </style>
+                                {{ form|crispy }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-5">
+                            <h4 class="form_title mb_30">Items details</h4>
+                            <div class="form_wrap ">
+                                <div class="billing_form aos-init" data-aos="fade-up" data-aos-duration="2000">
+                                    <form action="#">
+                                        <div class="form_wrap card">
+                                            <div class="checkout_table table-responsive">
+                                                <table class="table text-center mb_50">
+                                                    <thead class="text-uppercase text-uppercase">
+                                                    <tr>
+                                                        <th>Product Name</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for obj in cart %}
+                                                        <tr>
+                                                            <td>
+                                                                <div class="cart_product">
+                                                                    <div class="item_image">
+                                                                        <img src="{{ obj.product.thumbnail_image|image_or_placeholder }}"
+                                                                             alt="image_not_found">
+                                                                    </div>
+                                                                    <div class="item_content">
+                                                                        <h4 class="item_title mb_0">{{ obj.product.title }}</h4>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
                                                     <span class="price_text">{% if obj.product_weight %}
                                                         {{ obj.product_weight.get_product_weight_discounted_price }}{% else %}
                                                         {{ obj.product.get_price }}{% endif %}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="quantity_text">{{ obj.quantity }}</span>
-                                                    </td>
-                                                    <td> <span class="total_price">
+                                                            </td>
+                                                            <td>
+                                                                <span class="quantity_text">{{ obj.quantity }}</span>
+                                                            </td>
+                                                            <td> <span class="quantity_text">
                                                         {% if obj.product_weight %}
                                                             {{ obj.quantity|multiply:obj.product_weight.get_product_weight_discounted_price }}
                                                         {% else %}
                                                             {{ obj.quantity|multiply:obj.product.get_price }}
                                                         {% endif %}
                                                           </span>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                    <div class="billing_payment_mathod">
-                                        <button type="submit" id="pay-btn" class="custom_btn bg_default_red text-white">
-                                            PLACE ORDER
-                                        </button>
-                                    </div>
+                                            <div class="billing_payment_mathod">
+                                                <button type="submit" id="pay-btn"
+                                                        class="custom_btn bg_default_red text-white">
+                                                    PLACE ORDER
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </form>
+
         </div>
     </section>
 

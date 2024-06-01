@@ -129,7 +129,9 @@ env.bak/
 venv.bak/
 migrations
 /migrations
-
+/media
+media/
+media
 # Spyder project settings
 .spyderproject
 .spyproject
