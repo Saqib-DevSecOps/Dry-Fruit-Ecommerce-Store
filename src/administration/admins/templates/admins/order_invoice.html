@@ -36,23 +36,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="text-muted">
-                                <h5 class="font-size-16 mb-3">Billed To:</h5>
-                                <h5 class="font-size-15 mb-2">{{ object.full_name }}</h5>
-                                <p class="mb-1">{{ object.address }}, {{ object.city }}
-                                    ,{{ object.state }}, {{ object.country }}
-                                <p class="mb-1">{{ object.email }}</p>
-                                <p class="mb-1">{{ object.contact }}</p>
-                                {% if object.gst_in %}
-                                    <p class="mb-1">CSGT: {{ object.gst_in }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="text-muted">
                                 <h5 class="font-size-16 mb-3">Billed By:</h5>
-
-                                Billed By
                                 <h5>j h webtech</h5>
                                 <p class="m-0">185, karannagar (G.H.B, Sanand - Nalsarovar Rd, Ahmedabad, Gujarat
                                     382110,</p>
@@ -65,6 +49,22 @@
                                 <p class="m-0">Bank Name: Bank Of Baroda</p>
                                 <p class="m-0">Bank Account No: 31030200001599</p>
                                 <p class="m-0">IFSC Code: BARB0SANAND</p>
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="text-muted">
+                                <h5 class="font-size-16 mb-3">Billed To:</h5>
+                                <h5 class="font-size-15 mb-2">{{ object.full_name }}</h5>
+                                <p class="mb-1">{{ object.address }}, {{ object.city }}
+                                    ,{{ object.state }}, {{ object.country }}
+                                <p class="mb-1">{{ object.email }}</p>
+                                <p class="mb-1">{{ object.contact }}</p>
+                                {% if object.gst_in %}
+                                    <p class="mb-1">CSGT: {{ object.gst_in }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- end col -->
