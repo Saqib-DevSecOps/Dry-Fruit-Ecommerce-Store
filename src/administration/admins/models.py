@@ -498,7 +498,7 @@ class Order(models.Model):
     sub_total = models.FloatField(default=0)
     address_label = models.CharField(max_length=250, null=True, blank=False, choices=ADDRESS_LABEL,
                                      default=ADDRESS_LABEL[0][0])
-    gst_in = models.CharField(max_length=255, null=True, blank=True)
+    gst_in = models.CharField(max_length=300, null=True, blank=True)
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE_CHOICE, default=PAYMENT_TYPE_CHOICE[0][0])
     order_status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICE, default=ORDER_STATUS_CHOICE[0][0])
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS_CHOICE, default=PAYMENT_STATUS_CHOICE[0][0])
