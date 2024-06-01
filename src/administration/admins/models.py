@@ -246,7 +246,7 @@ class ProductWeight(models.Model):
         return discounted_price
 
     def get_product_size(self):
-        return ProductSize.objects.get(product_weight=self)
+        return ProductSize.objects.filter(product_weight=self).first()
 
 
 class ProductSize(models.Model):
