@@ -31,7 +31,7 @@
                                         <p class="mb-1">{{ object.email }}</p>
                                         <p class="mb-1">{{ object.contact }}</p>
                                         {% if object.gst_in %}
-                                            <p class="mb-1">CSGT: {{ object.gst_in }}</p>
+                                            <p class="mb-1">GST IN: {{ object.gst_in }}</p>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -122,7 +122,8 @@
                                         <!-- end tr -->
                                         <tr>
                                             <th scope="row" colspan="4" class="border-0 text-end">
-                                                Tax {% if object.state == "gujarat" %}( sgst + cgst ){% else %}( igst ){% endif %}:
+                                                Tax {% if object.state == "gujarat" %}( sgst + cgst ){% else %}( igst
+                                                ){% endif %}:
                                             </th>
                                             <td class="border-0 text-end">{{ object.tax }}</td>
                                         </tr>
