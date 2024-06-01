@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="m-4">
                                     <h5 class="float-end">{{ order.tax|floatformat:2 }}</h5>
-                                    <h5>Tax</h5>
+                                    <h5>Tax&nbsp;&nbsp;({% if order.state == "gujarat" %}sgst + cgst){% else %}igst{% endif %})</h5>
                                 </div>
                                 <div class="m-4">
                                     <h5 class="float-end">{{ order.sub_total|floatformat:2 }}</h5>
