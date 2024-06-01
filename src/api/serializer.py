@@ -355,7 +355,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             'full_name', 'contact', 'postal_code', 'address', 'address_label', 'city', 'state', 'country'
-            , 'csg_in', 'payment_type', 'shipment_type', 'service_type'
+            , 'gst_in', 'payment_type', 'shipment_type', 'service_type'
 
         ]
 
