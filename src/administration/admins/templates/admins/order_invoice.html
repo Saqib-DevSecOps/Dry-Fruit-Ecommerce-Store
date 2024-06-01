@@ -137,7 +137,8 @@
                                 <!-- end tr -->
                                 <tr>
                                     <th scope="row" colspan="4" class="border-0 text-end">
-                                        Tax :
+                                        Tax {% if object.state == "gujarat" %}( sgst + cgst ){% else %}( igst
+                                        ){% endif %} :
                                     </th>
                                     <td class="border-0 text-end">{{ object.tax }}</td>
                                 </tr>

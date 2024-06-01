@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from src.administration.admins.bll import get_cart_calculations
+from src.administration.admins.bll import get_cart_calculations, get_custom_shipping_charge
 from src.administration.admins.filters import OrderFilter
 from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment, \
     ProductRating, Shipment
@@ -87,7 +87,8 @@ class CartListCreateAPIView(ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        total_price, discount_price, shiprocket_sipping_charges, custom_sipping_charges, sub_total = get_total_amount(request)
+        total_price, discount_price, shiprocket_sipping_charges, custom_sipping_charges, sub_total = get_total_amount(
+            request)
         data = {
             'cart_items': serializer.data,
             'total_price': total_price,
@@ -229,14 +230,21 @@ class OrderCreateApiView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         razorpay_order_id = None
         user = self.request.user
-        total, service_charges, shipping_charges, sub_total = get_cart_calculations(user)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        order = serializer.save(client=user, total=total, service_charges=service_charges)
+        order = serializer.save(client=user, )
         if order.is_online():
             razorpay_order_id = get_razorpay_order_id(self, request, order.id)
-        return Response({'data': serializer.data, 'razorpay_order_id': razorpay_order_id},
-                        status=status.HTTP_201_CREATED)
+
+        order_detail_serializer = OrderDetailSerializer(order)
+
+        return Response(
+            {
+                'data': order_detail_serializer.data,
+                'razorpay_order_id': razorpay_order_id
+            },
+            status=status.HTTP_201_CREATED
+        )
 
 
 class PaymentSuccessAPIView(GenericAPIView):
