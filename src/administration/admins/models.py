@@ -545,6 +545,10 @@ class Order(models.Model):
         invoice, created = OrderInvoice.objects.get_or_create(order=self)
         return invoice
 
+    def get_invoice_number(self):
+        invoice = self.get_order_invoice()
+        return invoice.invoice_number
+
     def get_shipment_status(self):
         if self.shipment_type == "custom":
             shipment, created = Shipment.objects.get_or_create(order=self)

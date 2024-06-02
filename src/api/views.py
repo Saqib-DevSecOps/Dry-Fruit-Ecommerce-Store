@@ -232,7 +232,7 @@ class OrderCreateApiView(CreateAPIView):
         user = self.request.user
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        order = serializer.save(client=user, )
+        order = serializer.save(client=user)
         if order.is_online():
             razorpay_order_id = get_razorpay_order_id(self, request, order.id)
 

@@ -292,28 +292,26 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderDetailSerializer(serializers.ModelSerializer):
     shipment_id = serializers.SerializerMethodField()
     shiprocket_shipment_id = serializers.SerializerMethodField()
+    order_invoice_number = serializers.SerializerMethodField()
     order_items = OrderItemSerializer(many=True, read_only=True, source='get_cart')
 
     class Meta:
         model = Order
-        fields = ['id', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country', 'total',
-                  'service_charges', 'tax', 'shipping_charges', 'sub_total', 'payment_type', 'order_status',
-                  'payment_status', 'service_type',
-                  'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
-                  'is_active', 'created_on', 'order_items']
+        fields = [
+            'id', 'order_invoice_number', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country',
+            'total', 'service_charges', 'tax', 'shipping_charges', 'sub_total', 'payment_type', 'order_status',
+            'payment_status', 'service_type', 'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
+            'is_active', 'created_on', 'order_items'
+        ]
 
     def get_shipment_id(self, obj):
-        shipment, created = Shipment.objects.get_or_create(order=obj)
-        if created:
-            shipment.save()
-            return shipment.id
-        return shipment.id
+        return obj.get_shipment_id()
 
     def get_shiprocket_shipment_id(self, obj):
-        shipment = ShipRocketOrder.objects.filter(order=obj).first()
-        if shipment:
-            return shipment.id
-        return None
+        return obj.get_shiprocket_shipment_id()
+
+    def get_order_invoice_number(self, obj):
+        return obj.get_invoice_number()
 
 
 class ProductRatingListSerializer:
