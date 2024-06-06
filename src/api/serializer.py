@@ -300,6 +300,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'order_invoice_number', 'full_name', 'contact', 'postal_code', 'address', 'city', 'state', 'country',
             'total', 'service_charges', 'tax', 'shipping_charges', 'sub_total', 'payment_type', 'order_status',
+            'shipment_type',
             'payment_status', 'service_type', 'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
             'is_active', 'created_on', 'order_items'
         ]
