@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from src.accounts.models import User
 from src.administration.admins.models import ProductCategory, Product, Cart, Wishlist, Order, OrderItem, \
-    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight, Shipment, ShipRocketOrder
+    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight, Shipment, ShipRocketOrder, Coupon
 
 
 class WeightSerializer(serializers.ModelSerializer):
@@ -75,14 +75,11 @@ class CartListSerializer(serializers.ModelSerializer):
     product_weight = serializers.SerializerMethodField()
     total_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     discount_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    shiprocket_shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    custom_shipping_charges = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     sub_total = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = Cart
         fields = ['id', 'product', 'quantity', 'product_weight', 'total_price', 'discount_price',
-                  'shiprocket_shipping_charges', 'custom_shipping_charges',
                   'sub_total']
 
     def get_product_weight(self, obj):
@@ -241,6 +238,18 @@ class WishlistDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
         fields = ['id', 'product']
+
+
+class CouponSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=250, required=True)
+
+
+class CouponListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = [
+            'code', 'discount', 'valid_from', 'valid_to', 'is_active',
+        ]
 
 
 """ ORDER """

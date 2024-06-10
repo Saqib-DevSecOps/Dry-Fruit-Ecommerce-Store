@@ -149,6 +149,8 @@ class Product(models.Model):
     sgst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
     cgst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
     igst = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0, validators=[positive_validator])
+    hsn_code = models.CharField(max_length=250, null=True, blank=False)
+
     # Statistics
     total_views = models.PositiveIntegerField(default=0)
     total_sales = models.PositiveIntegerField(default=0)
@@ -612,11 +614,6 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.order} {self.product.title}."
 
-    def get_total_price(self):
-        if self.product_weight:
-            return self.product_weight.get_product_weight_discounted_price() * self.qty
-        return self.qty * self.product.get_price()
-
     def get_discount_price(self):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.qty
@@ -631,6 +628,35 @@ class OrderItem(models.Model):
 
         igst_rate = Decimal(self.product.igst) if self.product.igst is not None else Decimal(0)
         return Decimal(self.get_discount_price()) * (igst_rate / 100)
+
+    def get_coupon_discount(self):
+        total_discount = Decimal(0)
+        buyer_coupons = BuyerCoupon.objects.filter(order=self.order, is_used=True)
+        for buyer_coupon in buyer_coupons:
+            coupon = buyer_coupon.coupon
+            coupon_discount_amount = coupon.discount
+            total_discount += coupon_discount_amount
+        return total_discount
+
+    def get_total_discount(self):
+        product_discount = self.product.discount
+        return self.get_coupon_discount() + product_discount
+
+    def get_tax_discount_percentage(self):
+        if self.order.state == "gujarat":
+            sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
+            cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
+            return sgst_rate + cgst_rate
+        return Decimal(self.product.igst) if self.product.igst is not None else Decimal(0)
+
+    def get_total_price(self):
+        price = self.get_discount_price()
+        tax_discount_percentage = self.get_tax_discount_percentage()
+        total_price = price
+        total_discount = self.get_total_discount()
+        total_price -= (total_price * total_discount / Decimal(100))
+        tax_amount = (total_price * Decimal(tax_discount_percentage)) / 100
+        return total_price + tax_amount
 
 
 class Shipment(models.Model):
@@ -812,3 +838,28 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, help_text="Discount is in Percentage")
+    is_active = models.BooleanField(default=True)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.code
+
+
+class BuyerCoupon(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.coupon.code

@@ -4,9 +4,10 @@ from datetime import datetime, timedelta
 from _decimal import Decimal
 from django.contrib import messages
 from django.db.models import Sum
+from django.utils import timezone
 
 from core.bll import calculate_shipping_charges, calculate_service_charges
-from src.administration.admins.models import OrderItem, Cart, Payment, Order
+from src.administration.admins.models import OrderItem, Cart, Payment, Order, BuyerCoupon
 from src.website.utility import calculate_volumetric_weight, get_chargeable_weight, calculate_shipping_cost
 
 """ HELPERS """
@@ -187,6 +188,18 @@ def create_order_items(order, user_request):
     order_items = OrderItem.objects.filter(order=order)
     tax += sum(item.get_tax() for item in order_items)
     cart.delete()
+
+    buyer_coupons = BuyerCoupon.objects.filter(user=user_request, is_used=False)
+    for buyer_coupon in buyer_coupons:
+        coupon = buyer_coupon.coupon
+        if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
+            discount_amount = total * (coupon.discount / Decimal('100'))
+            total -= discount_amount
+            total = max(total, Decimal(0))  # Ensure total price doesn't go below 0
+            buyer_coupon.is_used = True
+            buyer_coupon.order = order
+            buyer_coupon.save()
+    sub_total = total + shipping_charges
 
     # 4: Update Order
     if order.shipment_type == "custom":

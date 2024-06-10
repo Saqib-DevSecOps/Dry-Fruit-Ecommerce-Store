@@ -1,4 +1,5 @@
 from django.db.models import Sum, Subquery, OuterRef
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import permission_classes
@@ -13,13 +14,13 @@ from rest_framework.response import Response
 from src.administration.admins.bll import get_cart_calculations, get_custom_shipping_charge
 from src.administration.admins.filters import OrderFilter
 from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment, \
-    ProductRating, Shipment
+    ProductRating, Shipment, Coupon, BuyerCoupon
 from src.api.filter import ProductFilter
 from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
     WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
     ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer, ProductRatingListSerializer, \
-    OrderItemListSerializer, ShipmentSerializer
+    OrderItemListSerializer, ShipmentSerializer, CouponListSerializer, CouponSerializer
 from src.apps.razorpay.bll import get_razorpay_order_id
 from src.apps.shipment.bll import track_shipping
 from src.website.utility import get_total_amount
@@ -142,6 +143,33 @@ class WishlistDeleteAPIView(DestroyAPIView):
         return get_object_or_404(Wishlist, user=user, id=self.kwargs['pk'])
 
 
+class CouponListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CouponListSerializer
+    queryset = Coupon.objects.all()
+
+
+class ApplyCouponCode(CreateAPIView):
+    serializer_class = CouponSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        code = serializer.validated_data['code']
+
+        try:
+            coupon = Coupon.objects.get(code=code, is_active=True, valid_from__lte=timezone.now(),
+                                        valid_to__gte=timezone.now())
+            if BuyerCoupon.objects.filter(user=request.user, coupon=coupon).exists():
+                return Response({"message": "You have already used this coupon."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                BuyerCoupon.objects.get_or_create(user=request.user, coupon=coupon)
+                return Response({"message": "Coupon applied successfully!"}, status=status.HTTP_200_OK)
+        except Coupon.DoesNotExist:
+            return Response({"message": "Invalid or expired coupon"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 """Buyer Apis"""
 
 
@@ -235,7 +263,6 @@ class OrderCreateApiView(CreateAPIView):
         order = serializer.save(client=user)
         if order.is_online():
             razorpay_order_id = get_razorpay_order_id(self, request, order.id)
-
         order_detail_serializer = OrderDetailSerializer(order)
 
         return Response(

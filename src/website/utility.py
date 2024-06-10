@@ -2,8 +2,9 @@ import re
 
 from _decimal import Decimal
 from django.contrib import messages
+from django.utils import timezone
 
-from src.administration.admins.models import Cart
+from src.administration.admins.models import Cart, Coupon, BuyerCoupon
 
 
 def session_id(self):
@@ -37,6 +38,8 @@ def calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate):
 def get_total_amount(request):
     cart_items = Cart.objects.filter(user=request.user)
 
+    discount_amount = Decimal(0)
+    sub_total = Decimal(0)
     total_price = Decimal(0)
     discount_price = Decimal(0)
     shiprocket_shipping_charges = Decimal(0)
@@ -63,6 +66,17 @@ def get_total_amount(request):
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
         shiprocket_shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
 
+        # Apply all unused coupons discounts
+        buyer_coupons = BuyerCoupon.objects.filter(user=request.user, is_used=False)
+        for buyer_coupon in buyer_coupons:
+            coupon = buyer_coupon.coupon
+            if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
+                discount_amount = total_price * (coupon.discount / Decimal('100'))
+                total_price -= discount_amount
+                total_price = max(total_price, Decimal(0))  # Ensure total price doesn't go below 0
+                buyer_coupon.save()
+    discount_amount = discount_amount
+    discount_price += discount_amount
     sub_total = total_price + shiprocket_shipping_charges
     return total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total
 

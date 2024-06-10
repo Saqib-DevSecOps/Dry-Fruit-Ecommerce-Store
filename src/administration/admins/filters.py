@@ -3,7 +3,7 @@ from django import forms
 from django.forms import TextInput
 
 from src.accounts.models import User
-from src.administration.admins.models import Product, Order, Blog
+from src.administration.admins.models import Product, Order, Blog, Coupon
 
 
 class UserFilter(django_filters.FilterSet):
@@ -40,3 +40,7 @@ class BlogFilter(django_filters.FilterSet):
         fields = {'status'}
 
 
+class CouponFilter(django_filters.FilterSet):
+    class Meta:
+        model = Coupon
+        fields = {'code', 'discount'}

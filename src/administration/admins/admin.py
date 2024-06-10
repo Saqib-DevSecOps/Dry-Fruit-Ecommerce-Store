@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import Language, Tag, ProductTag, ProductCategory, Product, ProductImage, ProductRating, Cart, Order, \
     OrderItem, BlogCategory, Blog, Wishlist, \
     ProductWeight, Weight, Payment, Shipment, PickupLocation, ProductSize, ShipRocketOrder, ProductDeal, TeamMember, \
-    Testimonial, Address
+    Testimonial, Address, Coupon, BuyerCoupon
 
 # Register your models here.
 
@@ -35,7 +35,7 @@ class ProductAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 'sku', 'thumbnail_image', 'title', 'manufacturer_brand', 'slug', 'category', 'description',
-                'video_link')
+                'video_link', 'hsn_code', 'igst', 'cgst', 'sgst',)
         }),
         ('Price & Inventory', {
             'fields': ('price', 'quantity', 'discount', 'promotional')
@@ -66,6 +66,20 @@ class ShipmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'order', 'provider', 'shipment_status', 'started', 'reached', 'is_active', 'created_on')
     list_filter = ('shipment_status', 'is_active', 'created_on')
     search_fields = ('order__id', 'provider', 'tracking_id', 'tracking_number')
+
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['code', 'discount', 'is_active', 'valid_from', 'valid_to', 'created_at', 'updated_at']
+    list_filter = ['is_active', 'valid_from', 'valid_to', 'created_at', 'updated_at']
+    search_fields = ['code']
+
+
+@admin.register(BuyerCoupon)
+class BuyerCouponAdmin(admin.ModelAdmin):
+    list_display = ['user', 'coupon', 'created_at', 'updated_at']
+    list_filter = ['created_at', 'updated_at', 'user']
+    search_fields = ['user__username', 'coupon__code']
 
 
 admin.site.register(Shipment, ShipmentAdmin)

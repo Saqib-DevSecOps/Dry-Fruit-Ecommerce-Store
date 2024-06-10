@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from .models import (
-    Product, ProductImage, Blog, ProductWeight, PickupLocation, ProductSize, ProductDeal
+    Product, ProductImage, Blog, ProductWeight, PickupLocation, ProductSize, ProductDeal, Coupon
 )
 from ...accounts.models import User
 
@@ -12,7 +12,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             'thumbnail_image', 'title', 'category', 'manufacturer_brand',
-            'tags', 'description', 'video_link', 'igst', 'cgst', 'sgst', 'short_description',
+            'tags', 'description', 'video_link', 'igst', 'cgst', 'sgst', 'hsn_code', 'short_description',
             'promotional', 'price', 'quantity', 'discount',
         ]
 
@@ -74,3 +74,16 @@ class ShipRocketShipmentForm(forms.Form):
                                 help_text="The height of the item in cms. Must be more than 0.5.")
     weight = forms.DecimalField(max_digits=10, decimal_places=2, required=True,
                                 help_text="The weight of the item in kgs. Must be more than 0.")
+
+
+class CouponForm(forms.ModelForm):
+
+    class Meta:
+        model = Coupon
+        fields = [
+            'code', 'discount', 'valid_from', 'valid_to', 'is_active',
+        ]
+        widgets = {
+            'valid_from': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'valid_to': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }

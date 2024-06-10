@@ -218,6 +218,7 @@ class ProductRatingCreateView(CreateView):
         form.instance.order_id = self.kwargs.get('order_id')
         form.instance.client = self.request.user
         form.save()
+        messages.success(self.request, 'Rating Successfully added for the product')
         calculate_reviews(rate, self.kwargs.get('product_id'))
         return super().form_valid(form)
 
@@ -279,6 +280,7 @@ class PasswordSetView(PasswordSetView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        messages.success(self.request,"Password Successfully Set")
         return response
 
 
@@ -289,4 +291,5 @@ class PasswordChangeView(PasswordChangeView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        messages.success(self.request,"Password Successfully Changed")
         return response

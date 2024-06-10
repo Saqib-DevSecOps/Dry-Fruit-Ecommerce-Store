@@ -119,15 +119,17 @@
                         <div class="col-12">
                             <div class="card p-3" data-aos="fade-up" data-aos-duration="2000">
                                 <h5>COUPON</h5>
-
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        <input type="text" placeholder="ENTER COUPON CODE" id="coupan" name="coupan">
+                                <form method="post" action="{% url 'website:coupon-apply' %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <input type="text" placeholder="ENTER COUPON CODE" id="id_code" name="code">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button type="submit" class="btn btn-sm custom_btn mt-4">Apply</button>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <button class="btn btn-sm custom_btn mt-4">Apply</button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                         <div class="col-12 mt-4">
@@ -153,14 +155,14 @@
                                                     <p class="mb-1">{{ discount_amount|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
-{#                                            <tr>#}
-{#                                                <td>#}
-{#                                                    <p class="mb-1">Shipping Charges</p>#}
-{#                                                </td>#}
-{#                                                <td>#}
-{#                                                    <p class="mb-1">{{ sipping_charges|floatformat:"2" }}</p>#}
-{#                                                </td>#}
-{#                                            </tr>#}
+                                            {#                                            <tr>#}
+                                            {#                                                <td>#}
+                                            {#                                                    <p class="mb-1">Shipping Charges</p>#}
+                                            {#                                                </td>#}
+                                            {#                                                <td>#}
+                                            {#                                                    <p class="mb-1">{{ sipping_charges|floatformat:"2" }}</p>#}
+                                            {#                                                </td>#}
+                                            {#                                            </tr>#}
                                             </tbody>
                                         </table>
                                     </div>

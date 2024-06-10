@@ -17,11 +17,11 @@ from django.views.generic import (
 from src.accounts.decorators import admin_protected
 from src.accounts.models import User
 from src.administration.admins.bll import get_sales_by_month, get_orders_by_month
-from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter
+from src.administration.admins.filters import UserFilter, ProductFilter, OrderFilter, BlogFilter, CouponFilter
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
-    ShipRocketShipmentForm, ProductSizeForm, ProductDealForm
+    ShipRocketShipmentForm, ProductSizeForm, ProductDealForm, CouponForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal
+    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal, Coupon
 from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
     generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail, track_shipping
 
@@ -173,20 +173,32 @@ class CategoryListView(ListView):
 class CategoryUpdateView(UpdateView):
     model = ProductCategory
     fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
-    success_url = reverse_lazy('admins:category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Category Successfully Updated")
+        success_url = reverse_lazy('admins:category-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class CategoryCreateView(CreateView):
     model = ProductCategory
     fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
-    success_url = reverse_lazy('admins:category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Category Successfully Created")
+        success_url = reverse_lazy('admins:category-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class CategoryDeleteView(DeleteView):
     model = ProductCategory
-    success_url = reverse_lazy('admins:category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Category Successfully Deleted")
+        success_url = reverse_lazy('admins:category-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -198,20 +210,32 @@ class WeightListView(ListView):
 class WeightUpdateView(UpdateView):
     model = Weight
     fields = ['name', 'is_active']
-    success_url = reverse_lazy('admins:weight-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Weight Successfully Updated")
+        success_url = reverse_lazy('admins:weight-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class WeightCreateView(CreateView):
     model = Weight
     fields = ['name', 'is_active']
-    success_url = reverse_lazy('admins:weight-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Weight Successfully Created")
+        success_url = reverse_lazy('admins:weight-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class WeightDeleteView(DeleteView):
     model = Weight
-    success_url = reverse_lazy('admins:weight-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Weight Successfully Deleted")
+        success_url = reverse_lazy('admins:weight-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -223,20 +247,32 @@ class BlogCategoryListView(ListView):
 class BlogCategoryUpdateView(UpdateView):
     model = BlogCategory
     fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
-    success_url = reverse_lazy('admins:post-category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Blog Category Successfully Updated")
+        success_url = reverse_lazy('admins:post-category-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class BlogCategoryCreateView(CreateView):
     model = BlogCategory
     fields = ['name', 'thumbnail_image', 'banner_image', 'description', 'parent', 'is_active']
-    success_url = reverse_lazy('admins:post-category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Blog Category Successfully Created")
+        success_url = reverse_lazy('admins:post-category-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class BlogCategoryDeleteView(DeleteView):
     model = BlogCategory
-    success_url = reverse_lazy('admins:post-category-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Blog Category Successfully Deleted")
+        success_url = reverse_lazy('admins:post-category-list')
+        return success_url
 
 
 """ INVENTORY """
@@ -264,14 +300,22 @@ class ProductListView(ListView):
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('admins:product-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Successfully Updated")
+        success_url = reverse_lazy('admins:product-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('admins:product-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Successfully Created")
+        success_url = reverse_lazy('admins:product-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -290,7 +334,11 @@ class ProductDetailView(DetailView):
 @method_decorator(admin_protected, name='dispatch')
 class ProductDeleteView(DeleteView):
     model = Product
-    success_url = reverse_lazy('admins:product-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Product Successfully Updated")
+        success_url = reverse_lazy('admins:product-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -431,7 +479,11 @@ class OrderInvoiceDetailView(DetailView):
 @method_decorator(admin_protected, name='dispatch')
 class OrderDeleteView(DeleteView):
     model = Order
-    success_url = reverse_lazy('admins:Order-list')
+
+    def get_success_url(self):
+        messages.success(self.request, "Blog Category Successfully Updated")
+        success_url = reverse_lazy('admins:Order-list')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -451,6 +503,7 @@ class ShipmentUpdateView(UpdateView):
 
     def get_success_url(self):
         shipment = get_object_or_404(Shipment, pk=self.kwargs['pk'])
+        messages.success(self.request, "Shipment Successfully Updated")
         return reverse("admins:order-detail", args=[shipment.order.pk])
 
 
@@ -569,7 +622,11 @@ class BlogDetailView(DetailView):
 @method_decorator(admin_protected, name='dispatch')
 class BlogDeleteView(DeleteView):
     model = Blog
-    success_url = reverse_lazy('admins:post-list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:post-list')
+        messages.success(self.request, 'Blog Successfully Deleted')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -578,7 +635,11 @@ class BlogUpdateView(UpdateView):
     fields = [
         'thumbnail_image', 'title', 'category', 'read_time', 'content', 'status'
     ]
-    success_url = reverse_lazy('admins:post-list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:post-list')
+        messages.success(self.request, 'Blog Successfully Updated')
+        return success_url
 
 
 @method_decorator(admin_protected, name='dispatch')
@@ -587,7 +648,11 @@ class BlogCreateView(CreateView):
     fields = [
         'thumbnail_image', 'title', 'category', 'read_time', 'content', 'status'
     ]
-    success_url = reverse_lazy('admins:post-list')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:post-list')
+        messages.success(self.request, 'Blog Successfully Created')
+        return success_url
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -621,4 +686,59 @@ class PickupLocationCreate(CreateView):
             return self.form_invalid(form)
 
     def get_success_url(self):
+        messages.success(self.request, 'PickUp location SuccessFully Added')
         return reverse('admins:pickup-location')
+
+
+@method_decorator(admin_protected, name='dispatch')
+class CouponListView(ListView):
+    queryset = Coupon.objects.all()
+    paginate_by = 16
+
+    def get_context_data(self, **kwargs):
+        context = super(CouponListView, self).get_context_data(**kwargs)
+        _filter = CouponFilter(self.request.GET, queryset=Coupon.objects.filter())
+        context['filter_form'] = _filter.form
+
+        paginator = Paginator(_filter.qs, 16)
+        page_number = self.request.GET.get('page')
+        page_object = paginator.get_page(page_number)
+
+        context['object_list'] = page_object
+        return context
+
+
+@method_decorator(admin_protected, name='dispatch')
+class CouponDeleteView(DeleteView):
+    model = Coupon
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:coupon-list')
+        messages.success(self.request, 'Coupon Successfully Deleted')
+        return success_url
+
+
+@method_decorator(admin_protected, name='dispatch')
+class CouponUpdateView(UpdateView):
+    model = Coupon
+    form_class = CouponForm
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:coupon-list')
+        messages.success(self.request, 'Coupon Successfully Updated')
+        return success_url
+
+
+@method_decorator(admin_protected, name='dispatch')
+class CouponCreateView(CreateView):
+    model = Coupon
+    form_class = CouponForm
+
+    def get_success_url(self):
+        success_url = reverse_lazy('admins:coupon-list')
+        messages.success(self.request, 'Coupon Successfully Created')
+        return success_url
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(CouponCreateView, self).form_valid(form)

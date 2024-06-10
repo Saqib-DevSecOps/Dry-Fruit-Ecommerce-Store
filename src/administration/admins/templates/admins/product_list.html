@@ -57,7 +57,7 @@
                                         <tbody>
                                         <tr>
                                             <td class="fw-medium" scope="row">Price</td>
-                                            <td class="text-end">{{ object.get_price }}</td>
+                                            <td class="text-end">{% if object.discount %}<del>{{ object.price }}</del>&nbsp;&nbsp;{% endif %}{{ object.get_price }}</td>
                                         </tr>
                                         <tr>
                                             <td class="fw-medium" scope="row">Quantity</td>

@@ -138,3 +138,5 @@ def alert_type_class(value):
         return 'danger'
     else:
         return 'secondary'
+
+

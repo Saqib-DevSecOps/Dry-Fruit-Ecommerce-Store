@@ -1,3 +1,4 @@
+from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
@@ -17,3 +18,7 @@ class OrderCheckoutForm(ModelForm):
         if shipment_type not in ['custom', 'ship_rocket']:
             raise ValidationError('Please select a valid shipment type (Custom or Ship Rocket).')
         return shipment_type
+
+
+class CouponApplyForm(forms.Form):
+    code = forms.CharField(max_length=350)

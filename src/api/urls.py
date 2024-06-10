@@ -6,7 +6,7 @@ from .views import (
 
     CartRetrieveUpdateDestroyAPIView, CartListCreateAPIView, HomeProductsListAPIView,
     ProductListAPIView, ProductDetailAPIView, PaymentSuccessAPIView, ProductPendingRatingListView,
-    ShipmentRetrieveAPIView, ShipRocketShipmentRetrieveAPIView
+    ShipmentRetrieveAPIView, ShipRocketShipmentRetrieveAPIView, ApplyCouponCode, CouponListAPIView
 )
 
 app_name = 'api'
@@ -30,6 +30,11 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path('coupon-list/', CouponListAPIView.as_view(), name='coupon-list'),
+    path('apply-coupon/', ApplyCouponCode.as_view(), name='apply-coupon'),
+]
+
+urlpatterns += [
     path('dashboard/', BuyerDashboardAPIView.as_view(), name='dashboard'),
     path('order/', OrderListAPIView.as_view(), name='order-list'),
     path('order/<str:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
@@ -43,6 +48,9 @@ urlpatterns += [
     path('shiprocket/shipment-detail/<str:pk>/', ShipRocketShipmentRetrieveAPIView.as_view(), name="shiprocket_shipment")
 
 ]
+
+
+
 
 urlpatterns += [
     path('accounts/', include('src.api.accounts.urls', namespace='accounts')),

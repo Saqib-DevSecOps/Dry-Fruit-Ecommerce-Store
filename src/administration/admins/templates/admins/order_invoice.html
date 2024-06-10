@@ -34,54 +34,50 @@
                     <hr class="my-4">
 
                     <div class="row">
-                        <div class="col-sm-4">
-                            <div class="text-muted">
-                                <h5 class="font-size-16 mb-3">Billed To:</h5>
-                                <h5>j h webtech</h5>
-                                <p class="m-0">185, karannagar (G.H.B, Sanand - Nalsarovar Rd, Ahmedabad, Gujarat
-                                    382110,</p>
-                                <p class="m-0">Ahmedabad,</p>
-                                <p class="m-0">Gujarat, India - 382110</p>
-                                <p class="m-0">GSTIN: 24APVPJ6817J1ZC</p>
-                                <p class="m-0">PAN: APVPJ6817J</p>
-                                <p class="m-0">Email: jhwebtech2016@gmail.com</p>
-                                <p class="m-0">Phone: +91 70417 17178</p>
-                                <p class="m-0">Bank Name: Bank Of Baroda</p>
-                                <p class="m-0">Bank Account No: 31030200001599</p>
-                                <p class="m-0">IFSC Code: BARB0SANAND</p>
-
-
+                        <div class="col-4">
+                            <div class="">
+                                <h2 class=" mb-3">Billed By:</h2>
+                                <p class="m-0"><b>NAME </b>- RAJASTHAN DRY FRUIT HOUSE</p>
+                                <p class="m-0"><b>ADDRESS</b> :
+                                <p class="m-0">
+                                    GF-8, CAMPUS CORNER-2, OPP AUDA
+                                    GARDEN 100 FT ROAD,PRAHALAD
+                                    NAGAR, AHMEDABAD, Ahmedabad,
+                                    Gujarat, 380015</p>
+                                <p class="m-0"><b>MO.NO </b>: 8141066633</p>
+                                <p class="m-0"><b>EMAIL </b>: rajasthandryfruits21@gmail.com</p>
+                                <p class="m-0"><b>GSTIN</b>:-24ABEFR0010J1ZQ</p>
                             </div>
                         </div>
 
-                        <div class="col-sm-4">
-                            <div class="text-muted">
-                                <h5 class="font-size-16 mb-3">Billed By:</h5>
-                                <h5 class="font-size-15 mb-2">{{ object.full_name }}</h5>
-                                <p class="mb-1">{{ object.address }}, {{ object.city }}
-                                    ,{{ object.state }}, {{ object.country }}
-                                <p class="mb-1">{{ object.email }}</p>
-                                <p class="mb-1">{{ object.contact }}</p>
-                                {% if object.gst_in %}
-                                    <p class="mb-1">GST IN: {{ object.gst_in }}</p>
-                                {% endif %}
+                        <div class="col-5">
+                            <div class="">
+                                <h2 class=" mb-3">Billed To:</h2>
+                                <p class="m-0"><b>NAME </b>- {{ object.full_name }}</p>
+                                <p class="m-0"><b>ADDRESS</b> :
+                                <p class="m-0">
+                                    {{ object.address }}, {{ object.city }}
+                                    ,{{ object.state }},{{ object.postal_code }}, {{ object.country }}</p>
+                                <p class="m-0"><b>MO.NO </b>: {{ object.contact }}</p>
+                                <p class="m-0"><b>EMAIL </b>: {{ object.email }}</p>
+                                <p class="m-0"><b>GSTIN</b>:-{{ object.gst_in }}</p>
                             </div>
                         </div>
                         <!-- end col -->
 
                         <!-- end col -->
-                        <div class="col-sm-4">
-                            <div class="text-muted text-sm-end">
+                        <div class="col-3">
+                            <div class=" text-sm-end">
                                 <div>
-                                    <h5 class="font-size-15 mb-1">Invoice No:</h5>
+                                    <h3 class=" mb-1">Invoice No:</h3>
                                     <p>#{{ object.get_order_invoice.invoice_number }}</p>
                                 </div>
                                 <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Invoice Date:</h5>
+                                    <h3 class=" mb-1">Invoice Date:</h3>
                                     <p>{{ object.get_order_invoice.created_on }}</p>
                                 </div>
                                 <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Order No:</h5>
+                                    <h3 class=" mb-1">Order No:</h3>
                                     <p>#{{ object.id }}</p>
                                 </div>
                             </div>
@@ -91,16 +87,19 @@
                     <!-- end row -->
 
                     <div class="py-2">
-                        <h5 class="font-size-15">Order Summary</h5>
+                        <h3 class="">Order Summary</h3>
 
-                        <div class="table-responsive">
-                            <table class="table align-middle table-nowrap table-centered mb-0">
+                        <div class="table-responsive ">
+                            <table class="table align-middle table-bordered table-nowrap table-centered mb-0">
                                 <thead>
                                 <tr>
-                                    <th style="width: 70px;">No.</th>
+                                    <th style="width: 70px;">SR.No</th>
                                     <th>Item</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
+                                    <th>HSN CODE</th>
+                                    <th>QTY</th>
+                                    <th>AMOUNT</th>
+                                    <th>DISC (%)</th>
+                                    <th>TAX</th>
                                     <th class="text-end" style="width: 120px;">Total</th>
                                 </tr>
                                 </thead><!-- end thead -->
@@ -116,49 +115,91 @@
                                                     {{ obj.product_weight.weight }}{% endif %}</p>
                                             </div>
                                         </td>
+                                        <td>{{ obj.product.hsn_code }}</td>
+                                        <td>{{ obj.qty }}</td>
                                         <td>{% if obj.product_weight %}
                                             {{ obj.product_weight.get_product_weight_discounted_price }}{% endif %}</td>
-                                        <td>{{ obj.qty }}</td>
+                                        <td>{{ obj.get_total_discount }} %</td>
+                                        <td>{{ obj.get_tax_discount_percentage }} %</td>
                                         <td class="text-end">{{ obj.get_total_price }}</td>
                                     </tr>
                                 {% endfor %}
                                 <!-- end tr -->
-                                <tr>
-                                    <th scope="row" colspan="4" class="text-end">Total</th>
-                                    <td class="text-end">{{ object.total }}</td>
-                                </tr>
-                                <!-- end tr -->
-                                <tr>
-                                    <th scope="row" colspan="4" class="border-0 text-end">
-                                        Shipping Charge :
-                                    </th>
-                                    <td class="border-0 text-end">{{ object.shipping_charges }}</td>
-                                </tr>
-                                <!-- end tr -->
-                                <tr>
-                                    <th scope="row" colspan="4" class="border-0 text-end">
-                                        Tax {% if object.state == "gujarat" %}( sgst + cgst ){% else %}( igst
-                                        ){% endif %} :
-                                    </th>
-                                    <td class="border-0 text-end">{{ object.tax }}</td>
-                                </tr>
-                                <!-- end tr -->
-                                <tr>
-                                    <th scope="row" colspan="4" class="border-0 text-end">Sub Total</th>
-                                    <td class="border-0 text-end"><h4
-                                            class="m-0 fw-semibold">{{ object.sub_total }}</h4></td>
-                                </tr>
-                                <!-- end tr -->
                                 </tbody><!-- end tbody -->
                             </table><!-- end table -->
                         </div><!-- end table responsive -->
-                        <div class="d-print-none mt-4">
-                            <div class="float-end">
 
-                                <button id="download-btn"
-                                        class="btn btn-warning w-md">Download
-                                </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="">
+                                <p class="m-0"><b>Bank account number</b> :- 40570838103</p>
+                                <p class="m-0"><b>IFS Code</b>: SBIN00139251</p>
+                                <p class="m-0"><b>Bank Name</b>:- STATE BANK OF INDIA</p>
+                                <p class="m-0"><b>BRACH</b> : PRAHLADNAGAR ,SATELLITE, AHMEDABAD</p>
                             </div>
+                        </div>
+
+                        <!-- end col -->
+                        <div class="col-6">
+                            <div class=" text-sm-end">
+                                <p class="m-0"><b>Amount Before tax</b> : {{ object.total }} Rs</p>
+                                {% if object.state == "gujarat" %}
+                                    <p class="m-0"><b>cgst + sgst </b>: {{ object.tax }} Rs</p>
+                                {% else %}
+                                    <p class="m-0"><b>igst </b>: {{ object.tax }} Rs</p>
+                                {% endif %}
+                                <p class="m-0"><b>shipping</b> : {{ object.shipping_charges }} Rs</p>
+                                <p class="m-0"><b>SubTotal</b> : {{ object.sub_total }} Rs</p>
+
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <div class="receipt">
+                        <div class="row">
+
+                        </div>
+                        <div class="row">
+                           <div class="col-6">
+                               <div class="row">
+                            <div class="col-12" style="margin-top: 50px">
+                                <p>Remark : Thanks for your business.</p>
+                            </div>
+                            <div class="col-12">
+                                <p class="font-weight-bold"><b>Terms & Conditions </b>:</p>
+                                <ol>
+                                    <li>Goods once sold will not be taken back</li>
+                                    <li>Our risk & responsibility ceases as soon as good delivered</li>
+                                </ol>
+                            </div>
+
+                               </div>
+                           </div>
+                            <div class="col-6">
+                               <div class="row">
+                                    <div class="col-12" style="margin-top: 50px">
+                                <div class="float-end">
+                                    <div>
+                                        <p>For, POSSIBAL ENTERPRISE</p>
+                                    </div>
+                                    <div  style="margin-top: 100px">
+                                        <p>(Authorized Signature)</p>
+                                    </div>
+                                </div>
+                            </div>
+                               </div>
+                           </div>
+                        </div>
+
+                    </div>
+                    <div class="d-print-none mt-4">
+                        <div class="float-end">
+
+                            <button id="download-btn"
+                                    class="btn btn-warning w-md">Download
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -14,10 +15,10 @@ from core import settings
 from core.settings import BASE_URL
 from src.administration.admins.models import (
     Product, Blog, BlogCategory, Order, Cart, OrderItem, ProductCategory, ProductWeight, Wishlist, ProductRating,
-    TeamMember, Testimonial, Address
+    TeamMember, Testimonial, Address, Coupon, BuyerCoupon
 )
 from src.website.filters import ProductFilter, BlogFilter
-from src.website.forms import OrderCheckoutForm
+from src.website.forms import OrderCheckoutForm, CouponApplyForm
 from src.website.utility import get_total_amount, validate_product_quantity, calculate_shipment_price
 
 """ BASIC PAGES ---------------------------------------------------------------------------------------------- """
@@ -142,13 +143,38 @@ class CartTemplateView(ListView):
     def get_context_data(self, **kwargs):
         context = super(CartTemplateView, self).get_context_data(**kwargs)
         context['cart'] = Cart.objects.filter(user=self.request.user)
+        form = CouponApplyForm()
         total_amount, discount_amount, sipping_charges, custom_sipping_charges, sub_total = get_total_amount(
             self.request)
         context['total_amount'] = total_amount
         context['discount_amount'] = discount_amount
         context['sipping_charges'] = sipping_charges
         context['sub_total'] = sub_total
+        context['form'] = form
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class ApplyCouponCode(View):
+    def post(self, request, *args, **kwargs):
+        form = CouponApplyForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            try:
+                coupon = Coupon.objects.get(code=code, active=True, valid_from__lte=timezone.now(),
+                                            valid_to__gte=timezone.now())
+                # Check if the coupon has already been used by the user
+                if BuyerCoupon.objects.filter(user=request.user, coupon=coupon).exists():
+                    messages.error(request, "You have already used this coupon.")
+                else:
+                    BuyerCoupon.objects.create(user=request.user, coupon=coupon)
+                    request.session['coupon_id'] = coupon.id
+                    messages.success(request, "Coupon applied successfully!")
+            except Coupon.DoesNotExist:
+                messages.error(request, "Invalid or expired coupon")
+        else:
+            messages.error(request, "Invalid form submission")
+        return redirect('website:cart')  # Use redirect here
 
 
 @method_decorator(login_required, name='dispatch')
@@ -212,7 +238,6 @@ class UpdateCart(View):
         id = self.kwargs.get('id')
         quantity = int(self.kwargs.get('quantity'))
         cart = get_object_or_404(Cart, id=id, user=self.request.user)
-        print(cart.product.quantity)
         if str(cart.product.quantity) <= "0":
             messages.error(request, 'Insufficient quantity')
             return redirect('website:cart')
@@ -287,13 +312,13 @@ class OrderCreate(View):
         form = OrderCheckoutForm()
         currency = 'INR'
         amount = 20000
-        razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                           currency=currency,
-                                                           payment_capture='0'))
-        razorpay_order_id = razorpay_order['id']
-        callback_url = BASE_URL + "/razorpay/paymenthandler/"
-        payment_context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
-                           'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
+        # razorpay_order = razorpay_client.order.create(dict(amount=amount,
+        #                                                    currency=currency,
+        #                                                    payment_capture='0'))
+        # razorpay_order_id = razorpay_order['id']
+        # callback_url = BASE_URL + "/razorpay/paymenthandler/"
+        # payment_context = {'razorpay_order_id': razorpay_order_id, 'razorpay_merchant_key': settings.RAZORPAY_API_KEY,
+        #                    'razorpay_amount': amount, 'currency': currency, 'callback_url': callback_url}
 
         address = Address.objects.filter(user=self.request.user)
         data = {
@@ -327,8 +352,6 @@ class OrderCreate(View):
             order.client = request.user
             order.save()
             return redirect('razorpay:pay', order.pk)
-
-        messages.error(request, "There are some issues in your order, kindly review your order once again.")
         return render(request, self.template_name, {'form': form})
 
 
