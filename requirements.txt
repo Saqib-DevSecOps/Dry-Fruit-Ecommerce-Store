@@ -26,3 +26,4 @@ django-phonenumber-field
 razorpay
 requests
 WeasyPrint
+django-notifications-hq

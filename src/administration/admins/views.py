@@ -22,6 +22,7 @@ from src.administration.admins.forms import ProductImageForm, MyProfileForm, Pro
     ShipRocketShipmentForm, ProductSizeForm, ProductDealForm, CouponForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
     Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal, Coupon
+from src.administration.admins.notify import notify_admin_on_order_completed
 from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
     generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail, track_shipping
 

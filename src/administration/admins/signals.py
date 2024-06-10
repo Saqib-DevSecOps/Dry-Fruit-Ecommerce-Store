@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from src.administration.admins.bll import create_order_items
 from src.administration.admins.models import Order, OrderItem, Shipment, ShipRocketOrder
+from src.administration.admins.notify import notify_admin_on_order_completed
 
 """ ORDERS, SUB ORDERS, SHIPMENTS """
 
@@ -38,7 +39,7 @@ def order_save_post(sender, instance, created, **kwargs):
         # notify_vendor_on_order_approved(instance)
 
     if instance.order_status == "completed":
-        pass
+        notify_admin_on_order_completed()
 
 
 #

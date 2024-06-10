@@ -8,6 +8,7 @@ from django.http import HttpResponseBadRequest
 
 from core.settings import BASE_URL
 from src.administration.admins.models import Order
+from src.administration.admins.notify import notify_admin_on_order_received
 from src.apps.razorpay.bll import handle_payment
 
 # authorize razorpay client with API Keys.
@@ -54,6 +55,7 @@ def paymenthandler(request):
         payment_result, order = handle_payment(request)
         if payment_result == 'success':
             context = {'order': order}
+            notify_admin_on_order_received()
             return render(request, 'razorpay/success.html', context=context)
         elif payment_result == 'cancelled':
             return render(request, 'razorpay/cancelled.html')

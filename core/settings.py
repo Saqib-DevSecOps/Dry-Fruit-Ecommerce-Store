@@ -78,6 +78,10 @@ INSTALLED_APPS = [
     'src.apps.whisper.apps.WhisperConfig',
     'src.apps.razorpay.apps.RazorpayConfig',
     'src.apps.shipment',
+
+    # MUST BE AT THE END
+    'notifications',
+
 ]
 
 MIDDLEWARE = [

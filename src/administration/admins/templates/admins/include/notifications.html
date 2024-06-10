@@ -1,3 +1,4 @@
+{% load notifications_tags %}
 {% load static %}
 
 <div class="nav-item dropdown d-none d-md-flex me-3">
@@ -11,23 +12,40 @@
             <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/>
             <path d="M9 17v1a3 3 0 0 0 6 0v-1"/>
         </svg>
-        <span class="badge bg-red"></span>
+        <span class="badge bg-red">{% live_notify_badge %}</span>
     </a>
-    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-        <div class="card">
+    <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card" style="max-height: 400px; overflow-y: auto;">
+        <div class="card" style="width:300px">
             <div class="card-header">
-                <h3 class="card-title">Last updates</h3>
+                <h3 class="card-title">Last updates ({% live_notify_badge %})</h3>
             </div>
-            <div class="list-group list-group-flush list-group-hoverable">
+            <div class="list-group list-group-flush list-group-hoverable" style="max-height: 250px; overflow-y: auto;">
                 <div class="list-group-item">
                     <div class="row align-items-center">
-                        <div class="col-auto"><span
-                                class="status-dot status-dot-animated bg-red d-block"></span>
-                        </div>
+                        <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
                         <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">Notification</a>
                             <div class="d-block text-muted text-truncate mt-n1">
-                                notifications are not configured yet.
+                                {% if request.user.notifications.unread %}
+                                    {% for notification in request.user.notifications.unread %}
+                                        <div class="text-reset notification-item d-block dropdown-item position-relative">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
+                                                    <h3 class="mt-0 mb-2 lh-base">{{ notification.verb }}</h3>
+                                                    <p>{{ notification.description }}</p>
+                                                    <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
+                                                        <span><i class="mdi mdi-clock-outline"></i> {{ notification.naturaltime }}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="my-3 text-center view-all">
+                                        <button type="button" onclick="unread_all_notifications()"
+                                                class="btn btn-secondary btn-sm">Mark All As read <i class="ri-arrow-right-line align-middle"></i></button>
+                                    </div>
+                                {% else %}
+                                    Notifications not found.
+                                {% endif %}
                             </div>
                         </div>
                     </div>
