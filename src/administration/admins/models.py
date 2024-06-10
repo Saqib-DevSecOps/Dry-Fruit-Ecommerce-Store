@@ -615,9 +615,24 @@ class OrderItem(models.Model):
         return f"{self.order} {self.product.title}."
 
     def get_discount_price(self):
-        if self.product_weight:
-            return self.product_weight.get_product_weight_discounted_price() * self.qty
-        return self.qty * self.product.get_price()
+        product_price = self.product_weight.get_product_weight_discounted_price() if self.product_weight else self.product.get_price()
+        coupon_discount = self.get_coupon_discount()
+        discounted_price = product_price - (product_price * (coupon_discount / 100))
+        print("Discounted Price",discounted_price * self.qty)
+        return discounted_price * self.qty
+
+    def get_coupon_discount(self):
+        total_discount = Decimal(0)
+        buyer_coupons = BuyerCoupon.objects.filter(order=self.order)
+        for buyer_coupon in buyer_coupons:
+            coupon = buyer_coupon.coupon
+            coupon_discount_amount = coupon.discount
+            total_discount += coupon_discount_amount
+        return total_discount
+
+    def get_total_discount(self):
+        product_discount = self.product.discount
+        return self.get_coupon_discount() + product_discount
 
     def get_tax(self):
         if self.order.state == "gujarat":
@@ -628,19 +643,6 @@ class OrderItem(models.Model):
 
         igst_rate = Decimal(self.product.igst) if self.product.igst is not None else Decimal(0)
         return Decimal(self.get_discount_price()) * (igst_rate / 100)
-
-    def get_coupon_discount(self):
-        total_discount = Decimal(0)
-        buyer_coupons = BuyerCoupon.objects.filter(order=self.order, is_used=True)
-        for buyer_coupon in buyer_coupons:
-            coupon = buyer_coupon.coupon
-            coupon_discount_amount = coupon.discount
-            total_discount += coupon_discount_amount
-        return total_discount
-
-    def get_total_discount(self):
-        product_discount = self.product.discount
-        return self.get_coupon_discount() + product_discount
 
     def get_tax_discount_percentage(self):
         if self.order.state == "gujarat":
@@ -653,8 +655,6 @@ class OrderItem(models.Model):
         price = self.get_discount_price()
         tax_discount_percentage = self.get_tax_discount_percentage()
         total_price = price
-        total_discount = self.get_total_discount()
-        total_price -= (total_price * total_discount / Decimal(100))
         tax_amount = (total_price * Decimal(tax_discount_percentage)) / 100
         return total_price + tax_amount
 

@@ -186,7 +186,7 @@ def create_order_items(order, user_request):
     OrderItem.objects.bulk_create(order_items)
 
     order_items = OrderItem.objects.filter(order=order)
-    tax += sum(item.get_tax() for item in order_items)
+
     cart.delete()
 
     buyer_coupons = BuyerCoupon.objects.filter(user=user_request, is_used=False)
@@ -209,12 +209,15 @@ def create_order_items(order, user_request):
     else:
         final_shipping_charges = shipping_charges
 
+    tax += sum(item.get_tax() for item in order_items)
+
     order.total = total
     order.sub_total = int(sub_total) + int(tax)
     order.service_charges = service_charges
     order.shipping_charges = final_shipping_charges
     order.tax = tax
     order.save()
+
     payment, created = Payment.objects.get_or_create(order=order)
     payment.save()
     return order

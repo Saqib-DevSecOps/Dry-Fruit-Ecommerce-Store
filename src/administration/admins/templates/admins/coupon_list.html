@@ -1,4 +1,5 @@
 {% extends 'admins/base.html' %}
+{% load custom_tags %}
 {% load static %}
 
 {% block base_subtitle %} Coupon{% endblock %}
@@ -60,9 +61,40 @@
                         <p class="text-danger mb-0"><b>No objects available</b></p>
                     </div>
                 {% endif %}
+
+
                 </div>
+
             </div>
         </div>
+              {% if object_list %}
+            <div class="mt-3">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
     </div>
 
 {% endblock %}

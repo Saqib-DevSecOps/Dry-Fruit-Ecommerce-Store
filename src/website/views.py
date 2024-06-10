@@ -161,7 +161,7 @@ class ApplyCouponCode(View):
         if form.is_valid():
             code = form.cleaned_data['code']
             try:
-                coupon = Coupon.objects.get(code=code, active=True, valid_from__lte=timezone.now(),
+                coupon = Coupon.objects.get(code=code, is_active=True, valid_from__lte=timezone.now(),
                                             valid_to__gte=timezone.now())
                 # Check if the coupon has already been used by the user
                 if BuyerCoupon.objects.filter(user=request.user, coupon=coupon).exists():
