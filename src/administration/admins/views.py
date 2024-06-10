@@ -45,7 +45,7 @@ class DashboardView(TemplateView):
         context['completed_orders'] = Order.objects.filter(order_status='completed').count()
         context['pending_orders'] = Order.objects.filter(order_status='approved').count()
         context['cancelled_orders'] = Order.objects.filter(order_status='cancelled').count()
-        context['recent_orders'] = Order.objects.order_by('created_on')
+        context['recent_orders'] = Order.objects.order_by('created_on')[:10]
         return context
 
 
