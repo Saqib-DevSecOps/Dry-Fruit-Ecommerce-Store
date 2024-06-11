@@ -247,6 +247,15 @@ class ProductRatingAddAPIView(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class RatingListAPIView(ListAPIView):
+    serializer_class = ProductRatingListSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+
+    def get_queryset(self):
+        return ProductRating.objects.filter(client=self.request.user)
+
+
 """Order Apis"""
 
 

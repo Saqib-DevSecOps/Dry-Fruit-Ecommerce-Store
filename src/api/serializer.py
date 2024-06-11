@@ -341,7 +341,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         return obj.get_invoice_number()
 
 
-class ProductRatingListSerializer:
+class ProductRatingListSerializer(serializers.ModelSerializer):
     product = ProductListSerializer()
 
     class Meta:
