@@ -187,7 +187,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id', 'sku', 'title', 'slug', 'description', 'thumbnail_image', 'price',
+            'id', 'sku', 'title', 'slug', 'hsn_code', 'description', 'thumbnail_image', 'price',
             'discount', 'promotional', 'total_reviews', 'average_review'
         ]
 
@@ -292,10 +292,27 @@ class OrderItemListSerializer(serializers.ModelSerializer):
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductListSerializer()
     product_weight = ProductWeightSerializer()
+    price = serializers.SerializerMethodField()
+    total_discount = serializers.SerializerMethodField()
+    tax_discount_percentage = serializers.SerializerMethodField()
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderItem
-        fields = ['product', 'product_weight', 'qty']
+        fields = ['product', 'product_weight', 'qty', 'price', 'total_discount', 'tax_discount_percentage',
+                  'total_price']
+
+    def get_price(self, obj):
+        return obj.get_price()
+
+    def get_total_discount(self, obj):
+        return obj.get_total_discount()
+
+    def get_tax_discount_percentage(self, obj):
+        return obj.get_tax_discount_percentage()
+
+    def get_total_price(self, obj):
+        return obj.get_total_price()
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
