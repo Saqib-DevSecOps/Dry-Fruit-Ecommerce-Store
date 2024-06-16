@@ -52,7 +52,7 @@ class HomeTemplateView(TemplateView):
 
 class ProductListView(ListView):
     template_name = 'website/product_list.html'
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
@@ -310,8 +310,8 @@ class OrderCreate(View):
 
     def get(self, request):
         form = OrderCheckoutForm()
-        currency = 'INR'
-        amount = 20000
+        # currency = 'INR'
+        # amount = 20000
         # razorpay_order = razorpay_client.order.create(dict(amount=amount,
         #                                                    currency=currency,
         #                                                    payment_capture='0'))
@@ -352,7 +352,9 @@ class OrderCreate(View):
             order.client = request.user
             order.save()
             return redirect('razorpay:pay', order.pk)
-        return render(request, self.template_name, {'form': form})
+        messages.error(self.request, 'Please Fill All the Required Fields')
+        address = Address.objects.filter(user=self.request.user)
+        return render(request, self.template_name, {'form': form, 'address': address})
 
 
 @method_decorator(login_required, name='dispatch')

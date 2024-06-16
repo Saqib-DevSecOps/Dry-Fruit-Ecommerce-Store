@@ -115,7 +115,7 @@
                                                    id="{{ object.id }}">
                                             <label class="form-check-label" for="{{ object.id }}">
                                                 {{ object.weight }}<br>
-                                                {{ object.price }}
+                                                {{ object.get_discounted_price_with_tax }}
                                             </label>
                                         </div>
                                     </div>
@@ -296,9 +296,9 @@
                                            target="_blank">{{ object.title }}</a>
                                     </h3>
                                     <div class="product_price">
-                                        <span class="sale_price pe-1">{{ object.get_price }}</span>
+                                        <span class="sale_price pe-1">{{ object.get_discounted_price_with_tax }}</span>
                                         {% if object.discount %}
-                                            <del>{{ object.price }}</del>
+                                            <del>{{ object.get_price_with_tax }}</del>
                                         {% endif %}
                                     </div>
                                 </div>

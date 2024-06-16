@@ -60,8 +60,8 @@ def get_total_amount(request):
             height = Decimal('10')
             weight = Decimal('1')
 
-        total_price += Decimal(cart_item.get_discount_price())
-        discount_price += Decimal(cart_item.get_item_price()) - Decimal(cart_item.get_discount_price())
+        total_price += Decimal(cart_item.get_discounted_price_with_tax())
+        discount_price += Decimal(cart_item.get_price_with_tax()) - Decimal(cart_item.get_discounted_price_with_tax())
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
         shiprocket_shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)

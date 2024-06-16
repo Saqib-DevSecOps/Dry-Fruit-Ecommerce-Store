@@ -238,6 +238,12 @@ class Product(models.Model):
         random_string = get_random_string(8).upper()
         return f'{self.id}-{random_string}'
 
+    def is_product_weight_added(self):
+        weight = ProductWeight.objects.filter(product=self)
+        if weight.exists():
+            return True
+        return False
+
 
 class ProductDeal(models.Model):
     product = models.OneToOneField(Product, on_delete=models.SET_NULL, null=True, blank=False)
@@ -358,6 +364,16 @@ class Cart(models.Model):
         if self.product_weight:
             return self.product_weight.get_product_weight_discounted_price() * self.quantity
         return self.quantity * self.product.get_price()
+
+    def get_price_with_tax(self):
+        if self.product_weight:
+            return self.product_weight.get_price_with_tax() * self.quantity
+        return self.quantity * self.product.get_price_with_tax()
+
+    def get_discounted_price_with_tax(self):
+        if self.product_weight:
+            return self.product_weight.get_discounted_price_with_tax() * self.quantity
+        return self.quantity * self.product.get_discounted_price_with_tax()
 
     def get_product_size(self):
         if self.product_weight:

@@ -60,15 +60,22 @@
                                             </td>
                                             <td style="padding: 30px">
                                                 {% if object.product.discount %}
-                                                    <del class="text-secondary">{% if object.product_weight %}
-                                                        {{ object.product_weight.price }}
+                                                    <del class="text-secondary">
+                                                    {% if object.product_weight %}
+
+                                                        {{ object.product_weight.get_price_with_tax }}
+
                                                     {% else %}
-                                                        {{ object.product.price }}{% endif %}</del>
+
+                                                        {{ object.product.get_price_with_tax }}
+
+                                                    {% endif %}
+                                                    </del>
                                                 {% endif %}
                                                 <br>
                                                 <span>{% if object.product_weight %}
-                                                    {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
-                                                    {{ object.product.get_price }}{% endif %}</span>
+                                                    {{ object.product_weight.get_discounted_price_with_tax }}{% else %}
+                                                    {{ object.product.get_discounted_price_with_tax }}{% endif %}</span>
                                             </td>
                                             <td style="padding: 30px">
                                                 <div class="nice-select form-select" tabindex="0"><span
