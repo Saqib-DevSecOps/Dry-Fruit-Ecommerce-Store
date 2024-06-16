@@ -198,6 +198,24 @@ class Product(models.Model):
             return self.price - (self.price * self.discount / 100)
         return self.price
 
+    def get_price_with_tax(self):
+        price = self.price
+        sgst_rate = Decimal(self.sgst) if self.sgst is not None else Decimal(0)
+        cgst_rate = Decimal(self.cgst) if self.cgst is not None else Decimal(0)
+        tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
+        price += price + tax
+        return price
+
+    def get_discounted_price_with_tax(self):
+        price = self.price
+        sgst_rate = Decimal(self.sgst) if self.sgst is not None else Decimal(0)
+        cgst_rate = Decimal(self.cgst) if self.cgst is not None else Decimal(0)
+        tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
+        price += price + tax
+        if self.discount > 0:
+            return price - (price * self.discount / 100)
+        return price
+
     def total_revenue_generated(self):
         return self.total_sales * self.get_price()
 
@@ -249,6 +267,24 @@ class ProductWeight(models.Model):
 
     def get_product_size(self):
         return ProductSize.objects.filter(product_weight=self).first()
+
+    def get_price_with_tax(self):
+        price = self.price
+        sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
+        cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
+        tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
+        price += price + tax
+        return price
+
+    def get_discounted_price_with_tax(self):
+        price = self.price
+        sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
+        cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
+        tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
+        price += price + tax
+        if self.product.discount > 0:
+            return price - (price * self.product.discount / 100)
+        return price
 
 
 class ProductSize(models.Model):
@@ -614,11 +650,9 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.order} {self.product.title}."
 
-
     def get_price(self):
         product_price = self.product_weight.get_product_weight_discounted_price() if self.product_weight else self.product.get_price()
         return product_price
-
 
     def get_discount_price(self):
         product_price = self.product_weight.get_product_weight_discounted_price() if self.product_weight else self.product.get_price()

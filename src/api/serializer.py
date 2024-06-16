@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from src.accounts.models import User
 from src.administration.admins.models import ProductCategory, Product, Cart, Wishlist, Order, OrderItem, \
-    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight, Shipment, ShipRocketOrder, Coupon
+    ProductRating, ProductTag, ProductImage, Tag, Weight, ProductWeight, Shipment, ShipRocketOrder, Coupon, Address
 
 
 class WeightSerializer(serializers.ModelSerializer):
@@ -413,3 +413,23 @@ class ShipmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shipment
         fields = "__all__"
+
+
+class BuyerAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = [
+            'id', 'full_name', 'contact', 'postal_code', 'address',
+            'address_label', 'city', 'state', 'country',
+            'created_on', 'updated_on'
+        ]
+        read_only_fields = ['id']
+
+
+class BuyerAddressRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = [
+            'full_name', 'contact', 'postal_code', 'address',
+            'address_label', 'city', 'state', 'country',
+        ]

@@ -266,6 +266,15 @@ class AddressUpdate(UpdateView):
 
 
 @method_decorator(client_protected, name='dispatch')
+class AddressDelete(View):
+    def get(self, request, pk, *args, **kwargs):
+        address = get_object_or_404(Address, user=self.request.user)
+        address.delete()
+        messages.success(request, 'Address  Deleted SuccessFully')
+        return redirect("client:address")
+
+
+@method_decorator(client_protected, name='dispatch')
 class PasswordCheck(View):
     def get(self, request, *args, **kwargs):
         if request.user.has_usable_password():

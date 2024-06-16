@@ -24,7 +24,8 @@
                                                         <div class="col-sm-6">
                                                             <div class="card">
                                                                 <div class="card-body">
-                                                                    <a href="{% url 'client:user-address-update' object.id %}" class=" float-end text-warning m-0">Edit</a>
+                                                                    <a href="{% url 'client:user-address-delete' object.id %}" class=" float-end text-danger m-0">&nbsp;&nbsp;<i class="fa fa-trash"></i></a>
+                                                                    <a href="{% url 'client:user-address-update' object.id %}" class=" float-end text-warning m-0"><i class="fa fa-edit"></i></a>
                                                                     <p class=" m-0">{{ object.full_name }}</p>
                                                                     <p class=" m-0">{{ object.contact }}</p>
                                                                     <p class=" m-0">{{ object.state }}</p>

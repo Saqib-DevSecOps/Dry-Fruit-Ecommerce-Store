@@ -14,13 +14,14 @@ from rest_framework.response import Response
 from src.administration.admins.bll import get_cart_calculations, get_custom_shipping_charge
 from src.administration.admins.filters import OrderFilter
 from src.administration.admins.models import ProductCategory, Product, Cart, Order, Wishlist, OrderItem, Payment, \
-    ProductRating, Shipment, Coupon, BuyerCoupon
+    ProductRating, Shipment, Coupon, BuyerCoupon, Address
 from src.api.filter import ProductFilter
 from src.api.serializer import OrderCreateSerializer, ProductSerializer, \
     ProductDetailSerializer, HomeProductsListSerializer, CartListSerializer, CartCreateSerializer, CartUpdateSerializer, \
     WishlistListSerializer, WishlistCreateSerializer, WishlistDeleteSerializer, OrderSerializer, \
     ProductRatingSerializer, OrderDetailSerializer, PaymentSuccessSerializer, ProductRatingListSerializer, \
-    OrderItemListSerializer, ShipmentSerializer, CouponListSerializer, CouponSerializer
+    OrderItemListSerializer, ShipmentSerializer, CouponListSerializer, CouponSerializer, BuyerAddressSerializer, \
+    BuyerAddressRetrieveUpdateDestroySerializer
 from src.apps.razorpay.bll import get_razorpay_order_id
 from src.apps.shipment.bll import track_shipping
 from src.website.utility import get_total_amount
@@ -340,3 +341,34 @@ class ShipRocketShipmentRetrieveAPIView(APIView):
             return Response(tracking_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+"""Address Apis"""
+
+
+class BuyerAddressListCreateApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BuyerAddressSerializer
+    queryset = Address.objects.all()
+
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class BuyerAddressUpdateDeleteApiView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BuyerAddressRetrieveUpdateDestroySerializer
+    queryset = Address.objects.all()
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter_kwargs = {
+            'user': self.request.user,
+            'pk': self.kwargs['pk']
+        }
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
