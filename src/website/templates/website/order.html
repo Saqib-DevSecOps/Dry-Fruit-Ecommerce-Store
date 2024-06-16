@@ -26,7 +26,7 @@
                                             <input type="radio" name="selected_address"
                                                    id="address{{ forloop.counter }}"
                                                    value="{{ object.id }}" class="form-check-input float-end" required
-                                                   onchange="logAddressDetails('{{ object.full_name }}', '{{ object.contact }}', '{{ object.postal_code }}', '{{ object.address }}', '{{ object.address_label }}', '{{ object.city }}', '{{ object.state }}', '{{ object.country }}')">
+                                                   onchange="logAddressDetails('{{ object.full_name }}', '{{ object.contact }}', '{{ object.postal_code }}', '{{ object.address }}', '{{ object.address_label }}', '{{ object.city }}', '{{ object.state }}', '{{ object.country }}', '{{ object.gst_in }}')">
                                             <p class=" m-0">{{ object.full_name }}</p>
                                             <p class=" m-0">{{ object.contact }}</p>
                                             <p class=" m-0">{{ object.state }}</p>
@@ -147,7 +147,7 @@
         // Wait for the page to load
 
         // JavaScript function to log address details
-        function logAddressDetails(fullName, contact, postal_code, address, address_Label, city, state, country) {
+        function logAddressDetails(fullName, contact, postal_code, address, address_Label, city, state, country,gst_in) {
             // Populate the form fields with the selected address details
             document.getElementById('id_full_name').value = fullName;
             document.getElementById('id_contact').value = contact;
@@ -157,6 +157,7 @@
             document.getElementById('id_city').value = city;
             document.getElementById('id_state').value = state;
             document.getElementById('id_country').value = country;
+            document.getElementById('id_gst_in').value = gst_in;
         }
 
         window.addEventListener('load', function () {

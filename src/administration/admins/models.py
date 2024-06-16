@@ -493,6 +493,7 @@ class Address(models.Model):
     state = models.CharField(max_length=250, null=True, blank=False, choices=INDIA_STATES_AND_UTS,
                              default=INDIA_STATES_AND_UTS[0][0])
     country = models.CharField(choices=Country, null=True, blank=False, max_length=20)
+    gst_in = models.CharField(max_length=255, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

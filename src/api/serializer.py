@@ -420,8 +420,8 @@ class BuyerAddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = [
             'id', 'full_name', 'contact', 'postal_code', 'address',
-            'address_label', 'city', 'state', 'country',
-            'created_on', 'updated_on'
+            'address_label', 'city', 'state', 'country', 'gst_in'
+                                                         'created_on', 'updated_on'
         ]
         read_only_fields = ['id']
 
@@ -431,5 +431,5 @@ class BuyerAddressRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         model = Address
         fields = [
             'full_name', 'contact', 'postal_code', 'address',
-            'address_label', 'city', 'state', 'country',
+            'address_label', 'city', 'state', 'country', 'gst_in'
         ]
