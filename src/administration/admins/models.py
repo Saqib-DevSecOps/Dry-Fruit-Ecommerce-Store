@@ -203,7 +203,7 @@ class Product(models.Model):
         sgst_rate = Decimal(self.sgst) if self.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.cgst) if self.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price += price + tax
+        price += tax
         return price
 
     def get_discounted_price_with_tax(self):
@@ -211,7 +211,7 @@ class Product(models.Model):
         sgst_rate = Decimal(self.sgst) if self.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.cgst) if self.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price += price + tax
+        price += tax
         if self.discount > 0:
             return price - (price * self.discount / 100)
         return price
@@ -279,7 +279,7 @@ class ProductWeight(models.Model):
         sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price += price + tax
+        price +=  tax
         return price
 
     def get_discounted_price_with_tax(self):
@@ -287,7 +287,7 @@ class ProductWeight(models.Model):
         sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price += price + tax
+        price +=  tax
         if self.product.discount > 0:
             return price - (price * self.product.discount / 100)
         return price
