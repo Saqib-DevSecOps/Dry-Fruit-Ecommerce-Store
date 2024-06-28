@@ -8,7 +8,8 @@ from django.utils import timezone
 
 from core.bll import calculate_shipping_charges, calculate_service_charges
 from src.administration.admins.models import OrderItem, Cart, Payment, Order, BuyerCoupon
-from src.website.utility import calculate_volumetric_weight, get_chargeable_weight, calculate_shipping_cost
+from src.website.utility import calculate_volumetric_weight, get_chargeable_weight, calculate_shipping_cost, \
+    get_total_amount
 
 """ HELPERS """
 
@@ -131,6 +132,7 @@ def get_custom_shipping_charge(cart_items, service_type, state):
 
 def get_cart_calculations(user):
     cart_items = Cart.objects.filter(user=user)
+    total_discounted_price = Decimal(0)
     total_price = Decimal(0)
     discount_price = Decimal(0)
     shipping_charges = Decimal(0)
@@ -151,17 +153,24 @@ def get_cart_calculations(user):
             weight = Decimal('1')
 
         total_price += Decimal(cart_item.get_discount_price())
+        total_discounted_price += Decimal(cart_item.get_item_price())
         discount_price += Decimal(cart_item.get_item_price()) - Decimal(cart_item.get_discount_price())
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
         shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
 
     sub_total = total_price + shipping_charges
-    return total_price, discount_price, shipping_charges, sub_total
+    return total_price, total_discounted_price, discount_price, shipping_charges, sub_total
 
 
-def calculate_tax(item):
-    pass
+def complete_buyer_coupon_status(user_request, order):
+    buyer_coupons = BuyerCoupon.objects.filter(user=user_request, is_used=False)
+    for buyer_coupon in buyer_coupons:
+        coupon = buyer_coupon.coupon
+        if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
+            buyer_coupon.is_used = True
+            buyer_coupon.order = order
+            buyer_coupon.save()
 
 
 # VERIFIED
@@ -172,10 +181,11 @@ def create_order_items(order, user_request):
     3: Delete Cart Items
     4: Update Order
     """
+    discount_amount = Decimal(0)
     tax = Decimal(0)
-    # 1: Calculate Charge
     cart = Cart.objects.filter(user=user_request)
-    total, service_charges, shipping_charges, sub_total = get_cart_calculations(user_request)
+    total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total, coupon_discount = get_total_amount(
+        user_request)
     custom_shipping_cost = get_custom_shipping_charge(cart, order.service_type, order.state)
 
     # 2: Create Order Items
@@ -184,36 +194,23 @@ def create_order_items(order, user_request):
                   qty=cart_item.quantity) for cart_item in cart
     ]
     OrderItem.objects.bulk_create(order_items)
-
     order_items = OrderItem.objects.filter(order=order)
-
     cart.delete()
+    complete_buyer_coupon_status(user_request, order)
 
-    buyer_coupons = BuyerCoupon.objects.filter(user=user_request, is_used=False)
-    for buyer_coupon in buyer_coupons:
-        coupon = buyer_coupon.coupon
-        if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
-            discount_amount = total * (coupon.discount / Decimal('100'))
-            total -= discount_amount
-            total = max(total, Decimal(0))  # Ensure total price doesn't go below 0
-            buyer_coupon.is_used = True
-            buyer_coupon.order = order
-            buyer_coupon.save()
-    sub_total = total + shipping_charges
+    for item in order_items:
+        tax += item.get_tax()
 
     # 4: Update Order
     if order.shipment_type == "custom":
-        sub_total = sub_total - shipping_charges
-        sub_total = sub_total + custom_shipping_cost
         final_shipping_charges = custom_shipping_cost
     else:
-        final_shipping_charges = shipping_charges
+        final_shipping_charges = shiprocket_shipping_charges
 
-    tax += sum(item.get_tax() for item in order_items)
+    order.total = sub_total - tax
 
-    order.total = total
-    order.sub_total = int(sub_total) + int(tax)
-    order.service_charges = service_charges
+    order.sub_total = int(sub_total + final_shipping_charges)
+    order.service_charges = 0
     order.shipping_charges = final_shipping_charges
     order.tax = tax
     order.save()

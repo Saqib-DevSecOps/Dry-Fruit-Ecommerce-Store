@@ -86,7 +86,6 @@
                                                         <th>Product Name</th>
                                                         <th>Price</th>
                                                         <th>Quantity</th>
-                                                        <th>Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -105,19 +104,11 @@
                                                             </td>
                                                             <td>
                                                     <span class="price_text">{% if obj.product_weight %}
-                                                        {{ obj.product_weight.get_discounted_price_with_tax }}{% else %}
-                                                        {{ obj.product.get_discounted_price_with_tax }}{% endif %}</span>
+                                                        {{ obj.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                        {{ obj.product.get_price }}{% endif %}</span>
                                                             </td>
                                                             <td>
                                                                 <span class="quantity_text">{{ obj.quantity }}</span>
-                                                            </td>
-                                                            <td> <span class="quantity_text">
-                                                        {% if obj.product_weight %}
-                                                            {{ obj.quantity|multiply:obj.product_weight.get_discounted_price_with_tax }}
-                                                        {% else %}
-                                                            {{ obj.quantity|multiply:obj.product.get_discounted_price_with_tax }}
-                                                        {% endif %}
-                                                          </span>
                                                             </td>
                                                         </tr>
                                                     {% endfor %}

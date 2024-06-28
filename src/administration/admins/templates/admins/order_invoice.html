@@ -119,9 +119,9 @@
                                         <td>{{ obj.qty }}</td>
                                         <td>{% if obj.product_weight %}
                                             {{ obj.product_weight.get_product_weight_discounted_price }}{% endif %}</td>
-                                        <td>{{ obj.get_total_discount }} %</td>
+                                        <td>{{ obj.product.discount }} %</td>
                                         <td>{{ obj.get_tax_discount_percentage }} %</td>
-                                        <td class="text-end">{{ obj.get_total_price }}</td>
+                                        <td class="text-end">{{ obj.get_price|multiply:obj.qty }}</td>
                                     </tr>
                                 {% endfor %}
                                 <!-- end tr -->
@@ -145,6 +145,7 @@
                         <div class="col-6">
                             <div class=" text-sm-end">
                                 <p class="m-0"><b>Amount Before tax</b> : {{ object.total }} Rs</p>
+                                <p class="m-0"><b>Coupon Discount</b> : {{ object.get_coupon_discount }} Rs</p>
                                 {% if object.state == "gujarat" %}
                                     <p class="m-0"><b>cgst + sgst </b>: {{ object.tax }} Rs</p>
                                 {% else %}

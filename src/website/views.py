@@ -29,22 +29,28 @@ class HomeTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeTemplateView, self).get_context_data(**kwargs)
-        context['new_products'] = Product.objects.order_by('-created_on')[:10]
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        context['new_products'] = products_with_weight.order_by('-created_on')[:10]
         context['blogs'] = Blog.objects.order_by('-created_on')[:10]
-        context['top_products'] = Product.objects.order_by('-total_views', '-total_sales', '-total_reviews')[:10]
-        context['best_selling'] = Product.objects.order_by('-total_sales', )[:10]
+        context['top_products'] = products_with_weight.order_by('-total_views', '-total_sales', '-total_reviews')[:10]
+        context['best_selling'] = products_with_weight.order_by('-total_sales', )[:10]
         categories = ProductCategory.objects.all()[:10]
         context['top_categories'] = categories
-        context[f'product_category_all'] = Product.objects.all()[:8]
+        context[f'product_category_all'] = products_with_weight.all()[:8]
         for i, category in enumerate(categories):
-            context[f'product_category_{i}'] = Product.objects.filter(category=category)[:8]
+            context[f'product_category_{i}'] = products_with_weight.filter(category=category)[:8]
         current_datetime = timezone.now()
 
-        products_with_deals = Product.objects.filter(
+        products_with_deals = products_with_weight.filter(
             productdeal__started_at__lte=current_datetime,
             productdeal__expire_at__gt=current_datetime
         ).distinct()
-        context['popular_discount'] = Product.objects.order_by('-discount').exclude(discount__lte=0)
+        context['popular_discount'] = products_with_weight.order_by('-discount').exclude(discount__lte=0)
         context['discount_deals'] = products_with_deals[:8]
 
         return context
@@ -54,9 +60,18 @@ class ProductListView(ListView):
     template_name = 'website/product_list.html'
     queryset = Product.objects.filter()
 
+    def get_queryset(self):
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        return products_with_weight
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
-        filter_product = ProductFilter(self.request.GET, queryset=self.queryset)
+        filter_product = ProductFilter(self.request.GET, queryset=self.get_queryset())
         pagination = Paginator(filter_product.qs, 50)
         page_number = self.request.GET.get('page')
         page_obj = pagination.get_page(page_number)
@@ -78,7 +93,13 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
-        context['related_product'] = Product.objects.filter().distinct()[:4]
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        context['related_product'] = products_with_weight.filter().distinct()[:4]
         context['reviews'] = ProductRating.objects.filter(product_id=self.kwargs.get('pk'))
         return context
 
@@ -144,10 +165,11 @@ class CartTemplateView(ListView):
         context = super(CartTemplateView, self).get_context_data(**kwargs)
         context['cart'] = Cart.objects.filter(user=self.request.user)
         form = CouponApplyForm()
-        total_amount, discount_amount, sipping_charges, custom_sipping_charges, sub_total = get_total_amount(
-            self.request)
+        total_amount, discount_amount, sipping_charges, custom_sipping_charges, sub_total, coupon_discount = get_total_amount(
+            self.request.user)
         context['total_amount'] = total_amount
         context['discount_amount'] = discount_amount
+        context['coupon_discount'] = coupon_discount
         context['sipping_charges'] = sipping_charges
         context['sub_total'] = sub_total
         context['form'] = form

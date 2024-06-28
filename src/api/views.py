@@ -36,11 +36,29 @@ class ProductListAPIView(ListAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProductFilter
 
+    def get_queryset(self):
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        return products_with_weight
+
 
 class ProductDetailAPIView(RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     permission_classes = [AllowAny]
     queryset = Product.objects.all()
+
+    def get_queryset(self):
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        return products_with_weight
 
 
 """ HOME """
@@ -51,9 +69,15 @@ class HomeProductsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        new_products = Product.objects.all().order_by('-created_on')[:5]
-        most_sales = Product.objects.order_by('-quantity')[:5]
-        top_discounted_products = Product.objects.order_by('-discount')[:5]
+        products_with_weight = Product.objects.filter(
+            id__in=[
+                product.id for product in Product.objects.all()
+                if product.is_product_weight_added()
+            ]
+        )
+        new_products = products_with_weight.all().order_by('-created_on')[:5]
+        most_sales = products_with_weight.order_by('-quantity')[:5]
+        top_discounted_products = products_with_weight.order_by('-discount')[:5]
         categories = ProductCategory.objects.all()[:12]
 
         return {
@@ -89,12 +113,13 @@ class CartListCreateAPIView(ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        total_price, discount_price, shiprocket_sipping_charges, custom_sipping_charges, sub_total = get_total_amount(
-            request)
+        total_price, discount_price, shiprocket_sipping_charges, custom_sipping_charges, sub_total, coupon_discount = get_total_amount(
+            request.user)
         data = {
             'cart_items': serializer.data,
             'total_price': total_price,
             'discount_price': discount_price,
+            'coupon_discount': coupon_discount,
             'shiprocket_shipping_charges': shiprocket_sipping_charges,
             'custom_shipping_charges': custom_sipping_charges,
             'sub_total': sub_total

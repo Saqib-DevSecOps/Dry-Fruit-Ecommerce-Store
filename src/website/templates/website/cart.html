@@ -63,19 +63,19 @@
                                                     <del class="text-secondary">
                                                     {% if object.product_weight %}
 
-                                                        {{ object.product_weight.get_price_with_tax }}
+                                                        {{ object.product_weight.price }}
 
                                                     {% else %}
 
-                                                        {{ object.product.get_price_with_tax }}
+                                                        {{ object.product.price }}
 
                                                     {% endif %}
                                                     </del>
                                                 {% endif %}
                                                 <br>
                                                 <span>{% if object.product_weight %}
-                                                    {{ object.product_weight.get_discounted_price_with_tax }}{% else %}
-                                                    {{ object.product.get_discounted_price_with_tax }}{% endif %}</span>
+                                                    {{ object.product_weight.get_product_weight_discounted_price }}{% else %}
+                                                    {{ object.product.get_product_weight_discounted_price }}{% endif %}</span>
                                             </td>
                                             <td style="padding: 30px">
                                                 <div class="nice-select form-select" tabindex="0"><span
@@ -162,6 +162,14 @@
                                                     <p class="mb-1">{{ discount_amount|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <p class="mb-1">Coupon Discount</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-1">{{ coupon_discount|floatformat:"2" }}</p>
+                                                </td>
+                                            </tr>
                                             {#                                            <tr>#}
                                             {#                                                <td>#}
                                             {#                                                    <p class="mb-1">Shipping Charges</p>#}
@@ -184,14 +192,14 @@
                                                     <p class="mb-1">Sub Total</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-1">{{ total_amount|floatformat:"2" }}</p>
+                                                    <p class="mb-1">{{ sub_total|floatformat:"2" }}</p>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <a href="{% url 'website:order' %}" class="btn btn-sm custom_btn  mt-4">Continue To
-                                        Checkout {{ total_amount|floatformat:"2" }}</a>
+                                        Checkout {{ sub_total|floatformat:"2" }}</a>
                                 </div>
                             </div>
                         </div>

@@ -239,10 +239,12 @@ class Product(models.Model):
         return f'{self.id}-{random_string}'
 
     def is_product_weight_added(self):
-        weight = ProductWeight.objects.filter(product=self)
-        if weight.exists():
-            return True
-        return False
+        weights = ProductWeight.objects.filter(product=self)
+        for weight in weights:
+            product_size = ProductSize.objects.filter(product_weight=weight).first()
+            if not product_size:
+                return False
+        return weights.exists()
 
 
 class ProductDeal(models.Model):
@@ -267,9 +269,12 @@ class ProductWeight(models.Model):
         return str(self.price)
 
     def get_product_weight_discounted_price(self):
-        discount_amount = self.price * self.product.discount / 100
-        discounted_price = self.price - discount_amount
-        return discounted_price
+        if self.product.discount:
+            discount_amount = self.price * self.product.discount / 100
+            discounted_price = self.price - discount_amount
+            return discounted_price
+        else:
+            return self.price
 
     def get_product_size(self):
         return ProductSize.objects.filter(product_weight=self).first()
@@ -279,7 +284,7 @@ class ProductWeight(models.Model):
         sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price +=  tax
+        price += tax
         return price
 
     def get_discounted_price_with_tax(self):
@@ -287,7 +292,7 @@ class ProductWeight(models.Model):
         sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
         cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
         tax = (price * (sgst_rate / 100)) + (price * (cgst_rate / 100))
-        price +=  tax
+        price += tax
         if self.product.discount > 0:
             return price - (price * self.product.discount / 100)
         return price
@@ -611,6 +616,15 @@ class Order(models.Model):
         shiprocket_shipment, created = ShipRocketOrder.objects.get_or_create(order=self)
         return shiprocket_shipment.status
 
+    def get_coupon_discount(self):
+        buyer_coupon = BuyerCoupon.objects.filter(order=self).first()
+        if buyer_coupon:
+            coupon_discount = buyer_coupon.coupon.discount
+            total_amount = self.total + self.tax
+            total_discount = self.sub_total * float(coupon_discount) / 100
+            return total_discount
+        return 0
+
 
 class OrderInvoice(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='invoice')
@@ -691,14 +705,10 @@ class OrderItem(models.Model):
         return self.get_coupon_discount() + product_discount
 
     def get_tax(self):
-        if self.order.state == "gujarat":
-            sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
-            cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
-            discount_price = Decimal(self.get_discount_price())
-            return (discount_price * (sgst_rate / 100)) + (discount_price * (cgst_rate / 100))
-
-        igst_rate = Decimal(self.product.igst) if self.product.igst is not None else Decimal(0)
-        return Decimal(self.get_discount_price()) * (igst_rate / 100)
+        sgst_rate = Decimal(self.product.sgst) if self.product.sgst is not None else Decimal(0)
+        cgst_rate = Decimal(self.product.cgst) if self.product.cgst is not None else Decimal(0)
+        discount_price = Decimal(self.get_discount_price())
+        return (discount_price * (sgst_rate / 100)) + (discount_price * (cgst_rate / 100))
 
     def get_tax_discount_percentage(self):
         if self.order.state == "gujarat":

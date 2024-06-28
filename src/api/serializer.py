@@ -21,6 +21,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
 
 class ProductHomeSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer()
+    discounted_price = serializers.SerializerMethodField()
     price_with_tax = serializers.SerializerMethodField()
     discounted_price_with_tax = serializers.SerializerMethodField()
 
@@ -28,8 +29,11 @@ class ProductHomeSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'title', 'slug', 'thumbnail_image', 'price', 'discount', 'category', 'average_review',
-            'total_reviews', 'price_with_tax', 'discounted_price_with_tax'
+            'total_reviews', 'discounted_price', 'price_with_tax', 'discounted_price_with_tax'
         ]
+
+    def get_discounted_price(self, obj):
+        return obj.get_price()
 
     def get_price_with_tax(self, obj):
         return obj.get_price_with_tax()
@@ -146,12 +150,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductWeightSerializer(serializers.ModelSerializer):
     weight = WeightSerializer()
+    discounted_price = serializers.SerializerMethodField()
     price_with_tax = serializers.SerializerMethodField()
     discounted_price_with_tax = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductWeight
-        fields = ['id', 'price', 'weight', 'price_with_tax', 'discounted_price_with_tax']
+        fields = ['id', 'price', 'weight', 'discounted_price', 'price_with_tax', 'discounted_price_with_tax']
+
+    def get_discounted_price(self, obj):
+        return obj.get_product_weight_discounted_price()
 
     def get_price_with_tax(self, obj):
         return obj.get_price_with_tax()
@@ -162,6 +170,7 @@ class ProductWeightSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer()
+    discounted_price = serializers.SerializerMethodField()
     price_with_tax = serializers.SerializerMethodField()
     discounted_price_with_tax = serializers.SerializerMethodField()
 
@@ -171,8 +180,11 @@ class ProductSerializer(serializers.ModelSerializer):
             'id', 'title', 'slug', 'thumbnail_image',
             'quantity', 'price', 'discount', 'promotional', 'total_reviews',
             'average_review',
-            'category', 'price_with_tax', 'discounted_price_with_tax'
+            'category', 'discounted_price', 'price_with_tax', 'discounted_price_with_tax'
         ]
+
+    def get_discounted_price(self, obj):
+        return obj.get_price()
 
     def get_price_with_tax(self, obj):
         return obj.get_price_with_tax()
@@ -196,6 +208,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True, source='productimage_set')
     product_weight = ProductWeightSerializer(many=True, read_only=True, source='get_product_weight')
     product_review = ProductReviewsSerializer(many=True, read_only=True, source='get_all_ratings')
+    discounted_price = serializers.SerializerMethodField()
     price_with_tax = serializers.SerializerMethodField()
     discounted_price_with_tax = serializers.SerializerMethodField()
 
@@ -205,8 +218,12 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             'id', 'sku', 'title', 'slug', 'manufacturer_brand', 'short_description', 'category', 'images',
             'description',
             'thumbnail_image', 'average_review', 'video_link', 'quantity', 'price', 'discount', 'promotional',
-            'total_reviews', 'product_weight', 'product_review', 'price_with_tax', 'discounted_price_with_tax'
+            'total_reviews', 'product_weight', 'product_review', 'discounted_price', 'price_with_tax',
+            'discounted_price_with_tax'
         ]
+
+    def get_discounted_price(self, obj):
+        return obj.get_price()
 
     def get_price_with_tax(self, obj):
         return obj.get_price_with_tax()
@@ -216,6 +233,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
+    discounted_price = serializers.SerializerMethodField()
     price_with_tax = serializers.SerializerMethodField()
     discounted_price_with_tax = serializers.SerializerMethodField()
 
@@ -223,8 +241,12 @@ class ProductListSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'sku', 'title', 'slug', 'hsn_code', 'description', 'thumbnail_image', 'price',
-            'discount', 'promotional', 'total_reviews', 'average_review', 'price_with_tax', 'discounted_price_with_tax'
+            'discount', 'promotional', 'total_reviews', 'average_review', 'discounted_price', 'price_with_tax',
+            'discounted_price_with_tax'
         ]
+
+    def get_discounted_price(self, obj):
+        return obj.get_price()
 
     def get_price_with_tax(self, obj):
         return obj.get_price_with_tax()
