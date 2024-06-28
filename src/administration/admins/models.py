@@ -868,7 +868,7 @@ class ShipRocketOrder(models.Model):
     is_added = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.order.full_name
+        return str(self.order.full_name)
 
 
 class TeamMember(models.Model):
