@@ -72,7 +72,7 @@ def handle_payment(request):
 def get_razorpay_order_id(self, request, order_id):
     currency = 'INR'
     order = get_object_or_404(Order, id=order_id)
-    amount = int(order.sub_total)  # Ensure it's correctly rounded to an integer if needed
+    amount = int(1000)  # Ensure it's correctly rounded to an integer if needed
     try:
         razorpay_order = razorpay_client.order.create(dict(
             amount=amount,
