@@ -1,5 +1,6 @@
 import razorpay
 from django.shortcuts import get_object_or_404
+from razorpay.errors import BadRequestError
 
 from core.settings import RAZORPAY_API_KEY, RAZORPAY_API_SECRET, BASE_URL
 from src.administration.admins.models import Order, OrderItem, Payment
@@ -71,11 +72,20 @@ def handle_payment(request):
 def get_razorpay_order_id(self, request, order_id):
     currency = 'INR'
     order = get_object_or_404(Order, id=order_id)
-    amount = int(order.sub_total)
-    razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                       currency=currency,
-                                                       payment_capture='0'))
-    razorpay_order_id = razorpay_order['id']
-    order.razorpay_order_id = razorpay_order_id
-    order.save()
-    return razorpay_order_id
+    amount = int(order.sub_total)  # Ensure it's correctly rounded to an integer if needed
+    try:
+        razorpay_order = razorpay_client.order.create(dict(
+            amount=amount,
+            currency=currency,
+            payment_capture='0'
+        ))
+        razorpay_order_id = razorpay_order['id']
+        order.razorpay_order_id = razorpay_order_id
+        order.save()
+        return razorpay_order_id
+    except BadRequestError as e:
+        print(f"Razorpay error: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None

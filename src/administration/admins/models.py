@@ -620,8 +620,8 @@ class Order(models.Model):
         buyer_coupon = BuyerCoupon.objects.filter(order=self).first()
         if buyer_coupon:
             coupon_discount = buyer_coupon.coupon.discount
-            total_amount = self.total + self.tax
-            total_discount = total_amount * float(coupon_discount) / 100
+            total_amount = Decimal(self.total + self.tax)
+            total_discount = total_amount * Decimal(coupon_discount / 100)
             return total_discount
         return 0
 
