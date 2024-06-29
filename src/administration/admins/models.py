@@ -621,7 +621,7 @@ class Order(models.Model):
         if buyer_coupon:
             coupon_discount = buyer_coupon.coupon.discount
             total_amount = self.total + self.tax
-            total_discount = self.sub_total * float(coupon_discount) / 100
+            total_discount = total_amount * float(coupon_discount) / 100
             return total_discount
         return 0
 

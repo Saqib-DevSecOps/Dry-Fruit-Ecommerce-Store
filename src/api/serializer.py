@@ -379,6 +379,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
+    coupon_discount = serializers.SerializerMethodField()
     shipment_id = serializers.SerializerMethodField()
     shiprocket_shipment_id = serializers.SerializerMethodField()
     order_invoice_number = serializers.SerializerMethodField()
@@ -391,6 +392,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             'total', 'service_charges', 'tax', 'shipping_charges', 'sub_total', 'payment_type', 'order_status',
             'shipment_type',
             'payment_status', 'service_type', 'razorpay_order_id', 'shipment_id', 'shiprocket_shipment_id',
+            'coupon_discount',
             'is_active', 'created_on', 'order_items'
         ]
 
@@ -402,6 +404,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
     def get_order_invoice_number(self, obj):
         return obj.get_invoice_number()
+
+    def get_coupon_discount(self, obj):
+        return obj.get_coupon_discount()
 
 
 class ProductRatingListSerializer(serializers.ModelSerializer):

@@ -206,10 +206,10 @@ def create_order_items(order, user_request):
         final_shipping_charges = custom_shipping_cost
     else:
         final_shipping_charges = shiprocket_shipping_charges
+    total = sub_total - tax + coupon_discount
+    order.total = total
 
-    order.total = sub_total - tax
-
-    order.sub_total = int(sub_total + final_shipping_charges)
+    order.sub_total = int(total + tax + final_shipping_charges - coupon_discount)
     order.service_charges = 0
     order.shipping_charges = final_shipping_charges
     order.tax = tax

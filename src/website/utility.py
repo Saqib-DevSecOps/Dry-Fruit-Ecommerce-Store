@@ -73,9 +73,10 @@ def get_total_amount(user):
         for buyer_coupon in buyer_coupons:
             coupon = buyer_coupon.coupon
             if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
-                discount_amount = total_price * (coupon.discount / Decimal('100'))
+                discount_amount = sub_total * (coupon.discount / Decimal('100'))
                 buyer_coupon.save()
     coupon_discount = discount_amount
+    print("Sub Total",sub_total)
     sub_total = sub_total - coupon_discount
     return total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total, coupon_discount
 

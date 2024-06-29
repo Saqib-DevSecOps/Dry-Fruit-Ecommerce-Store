@@ -22,16 +22,25 @@
 
                                 <div class="m-4">
                                     <h5 class="float-end">{{ order.total|floatformat:2 }}</h5>
+                                    <h5>Price</h5>
+                                </div>
+                                 <div class="m-4">
+                                    <h5 class="float-end">{{ order.tax|floatformat:2 }}</h5>
+                                    <h5>Tax&nbsp;&nbsp;{% if order.state == "gujarat" %}( sgst + cgst ){% else %}( igst ){% endif %}</h5>
+                                </div>
+                                 <div class="m-4">
+                                    <h5 class="float-end">{{ order.total|addition:order.tax }}</h5>
                                     <h5>Total</h5>
+                                </div>
+                                <div class="m-4">
+                                    <h5 class="float-end">{{ order.get_coupon_discount|floatformat:2 }}</h5>
+                                    <h5>Coupon Discount </h5>
                                 </div>
                                 <div class="m-4">
                                     <h5 class="float-end">{{ order.shipping_charges|floatformat:2 }}</h5>
                                     <h5>Shipping Charges </h5>
                                 </div>
-                                <div class="m-4">
-                                    <h5 class="float-end">{{ order.tax|floatformat:2 }}</h5>
-                                    <h5>Tax&nbsp;&nbsp;{% if order.state == "gujarat" %}( sgst + cgst ){% else %}( igst ){% endif %}</h5>
-                                </div>
+
                                 <div class="m-4">
                                     <h5 class="float-end">{{ order.sub_total|floatformat:2 }}</h5>
                                     <h5>Sub Total </h5>

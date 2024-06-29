@@ -134,12 +134,13 @@
                                 <div class="col-6">
                                     <div class=" text-sm-end">
                                         <p class="m-0"><b>Amount Before tax</b> : {{ object.total }} Rs</p>
-                                        <p class="m-0"><b>Coupon Discount</b> : {{ object.get_coupon_discount }} Rs</p>
-                                        {% if object.state == "gujarat" %}
+                                         {% if object.state == "gujarat" %}
                                             <p class="m-0"><b>cgst + sgst </b>: {{ object.tax }} Rs</p>
                                         {% else %}
                                             <p class="m-0"><b>igst </b>: {{ object.tax }} Rs</p>
                                         {% endif %}
+                                        <p class="m-0"><b>Total</b> : {{ object.total|addition:object.tax }} Rs</p>
+                                        <p class="m-0"><b>Coupon Discount</b> : {{ object.get_coupon_discount }} Rs</p>
                                         <p class="m-0"><b>shipping</b> : {{ object.shipping_charges }} Rs</p>
                                         <p class="m-0"><b>SubTotal</b> : {{ object.sub_total }} Rs</p>
 
@@ -172,7 +173,7 @@
                                             <div class="col-12" style="margin-top: 50px">
                                                 <div class="float-end">
                                                     <div>
-                                                        <p>For, POSSIBAL ENTERPRISE</p>
+                                                    <p>For, Rajasthan DryFruit House</p>
                                                     </div>
                                                     <div style="margin-top: 100px">
                                                         <p>(Authorized Signature)</p>

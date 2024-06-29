@@ -127,6 +127,11 @@ def multiply(value, arg):
 
 
 @register.filter
+def addition(value, arg):
+    return value + arg
+
+
+@register.filter
 def alert_type_class(value):
     if value in ['cod', 'delivery', 'in_transit', 'bank_account', 'applied','online']:
         return 'primary'
