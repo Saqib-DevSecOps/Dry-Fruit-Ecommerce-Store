@@ -686,10 +686,8 @@ class OrderItem(models.Model):
         return product_price
 
     def get_discount_price(self):
-        product_price = self.product_weight.get_product_weight_discounted_price() if self.product_weight else self.product.get_price()
-        coupon_discount = self.get_coupon_discount()
-        discounted_price = product_price - (product_price * (coupon_discount / 100))
-        return discounted_price * self.qty
+        product_price = self.get_price()
+        return product_price * self.qty
 
     def get_coupon_discount(self):
         total_discount = Decimal(0)
