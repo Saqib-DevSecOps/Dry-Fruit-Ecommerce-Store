@@ -699,7 +699,6 @@ class CouponListView(ListView):
         context = super(CouponListView, self).get_context_data(**kwargs)
         _filter = CouponFilter(self.request.GET, queryset=Coupon.objects.filter())
         context['filter_form'] = _filter.form
-
         paginator = Paginator(_filter.qs, 20)
         page_number = self.request.GET.get('page')
         page_object = paginator.get_page(page_number)
