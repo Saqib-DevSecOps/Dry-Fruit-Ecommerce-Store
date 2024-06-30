@@ -666,7 +666,7 @@ class Payment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.order.full_name
+        return str(self.order.full_name)
 
 
 class OrderItem(models.Model):
