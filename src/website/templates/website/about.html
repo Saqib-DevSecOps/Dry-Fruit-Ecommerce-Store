@@ -1,10 +1,10 @@
 {% extends  'website/base.html' %}
 {% load static %}
 {% block content %}
-    <section class="vendor_section sec_space_small">
+    <section class="vendor_section sec_space_small aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="container">
             <div class="vendor_image">
-                <img src="{% static 'website/images/backgrounds/about.png' %}" alt="image_not_found">
+                <img src="{% static 'website/images/backgrounds/banner.webp' %}" style="width: 12000px;"  alt="image_not_found">
             </div>
             <h2 class="title_text">
                 Rajasthan Dryfruit House: A Legacy of Premium Quality Dry Fruits
@@ -38,55 +38,57 @@
             </p>
             <div class="row">
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item ">
+                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="500">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service19.png' %}" alt="image_not_found">
                         </div>
                         <div class="item_content">
-                            <h3 class="item_title">LOWEST COST</h3>
+                            <h3 class="item_title">Premium Quality</h3>
                             <p class="mb-0">
-                                Enjoy premium quality dry fruits at unbeatable prices, ensuring great value in every
-                                purchase.
+                                "Experience top-quality, fresh dry fruits sourced from the best farms, ensuring
+                                nutritious and delicious snacks for all occasions."
+
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init">
+                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service20.png' %}" alt="image_not_found">
                         </div>
                         <div class="item_content">
-                            <h3 class="item_title">HIGH GROWTH RATE</h3>
+                            <h3 class="item_title">Health Benefits</h3>
                             <p class="mb-0">
-                                Our consistent quality and customer satisfaction have fueled our rapid growth and
-                                expansion over the years.
+                                "Boost your energy, heart health, and immunity with our dry fruits, rich in essential
+                                vitamins, minerals, and antioxidants."
+
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init">
+                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="1500">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service21.png' %}" alt="image_not_found">
                         </div>
                         <div class="item_content">
-                            <h3 class="item_title">DEDICATED PICKUP</h3>
+                            <h3 class="item_title">Perfect for On-the-Go</h3>
                             <p class="mb-0">
-                                We offer reliable and prompt delivery services, ensuring your orders reach you quickly
-                                and in perfect condition.
+                                "Enjoy our dry fruits in convenient, resealable packs that are perfect for snacking
+                                on-the-go, whether at work, school, or during travel."
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init">
+                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service22.png' %}" alt="image_not_found">
@@ -103,23 +105,6 @@
             </div>
         </div>
     </section>
-    <section class="vendor_section mt-0 sec_space_small ">
-        <div class="container">
-            <h5>1. Premium Quality</h5>
-            <p>"Experience top-quality, fresh dry fruits sourced from the best farms, ensuring nutritious and delicious
-                snacks for all occasions."</p>
-            <h5>2. Health Benefits</h5>
-            <p>"Boost your energy, heart health, and immunity with our dry fruits, rich in essential vitamins,
-                minerals, and antioxidants."</p>
-            <h5>3. Variety and Flavors</h5>
-            <p>"Explore our diverse range of almonds, cashews, walnuts, pistachios, and more, available in raw,
-                roasted, salted, and flavored options."</p>
-            <h5>4. Perfect for On-the-Go</h5>
-            <p>"Enjoy our dry fruits in convenient, resealable packs that are perfect for snacking on-the-go, whether
-                at work, school, or during travel."</p>
-        </div>
-    </section>
-
     <div class="team_inner_content mb-4">
         <div class="container">
             <h2 class="title_text text-center">
@@ -132,13 +117,22 @@
                         {% if team %}
                             {% for object in team %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
-                                    <div class="card team_content text-center ">
+                                    <div class="card team_content text-center aos-init aos-animate" data-aos="fade-left"
+                                         data-aos-duration="2000">
                                         <img class="rounded-pill" src="{{ object.image.url }}" alt="team3">
                                         <div class="card-body team_author_content">
                                             <h4 class="card-text team_author_post mb-2">{{ object.name }}</h4>
-                                            <h5 class="card-text team_author_post mb-2 text-warning">{{ object.rank }}</h5>
+                                            <h3 class="card-text team_author_post mb-2 text-warning">{{ object.rank }}</h3>
                                             <div class="team_author_social_link d-flex justify-content-center justify-content-around align-items-center">
                                                 <a class="text-warning social_twitt" href="
+
+
+
+
+
+
+
+
 
 
 
@@ -153,10 +147,26 @@
 
 
 
+
+
+
+
+
+
+
+
                                                         {% if object.facebook_link %}{{ object.twitter_link }}{% else %}javascript:void(0){% endif %}">
                                                     <i class="fab fa-facebook-square"></i>
                                                 </a>
                                                 <a class="text-warning social_twitt" href="
+
+
+
+
+
+
+
+
 
 
 
@@ -171,10 +181,26 @@
 
 
 
+
+
+
+
+
+
+
+
                                                         {% if object.instagram_link %}{{ object.twitter_link }}{% else %}javascript:void(0){% endif %}">
                                                     <i class="fab fa-instagram"></i>
                                                 </a>
                                                 <a class="text-warning social_twitt" href="
+
+
+
+
+
+
+
+
 
 
 
@@ -196,23 +222,56 @@
             </div>
         </div>
     </div>
-    <section class="vendor_section sec_space_small">
+    <section class="work_process_section sec_space_small pb-0"
+             style="background-image: url('{% static 'website/images/backgrounds/bg10.png' %}')">
         <div class="container">
-
-            <h5 class="title_text">
-               Why Choose Our Premium Dry Fruits?
-            </h5>
-            <ul class="mt-3">
-                <li class="mt-2">
-                    <b>Exceptional Quality and Freshness</b> "Indulge in the finest dry fruits, meticulously sourced for unmatched quality and guaranteed freshness in every bite."
-                </li>
-                <li class="mt-2">
-                    <b>Nutrient-Rich and Healthy </b>"Benefit from a natural source of essential vitamins, minerals, and antioxidants, promoting energy, heart health, and overall well-being."
-                </li>
-                <li class="mt-2">
-                    <b>Wide Selection for Every Taste </b>"Explore a diverse range of flavours and varieties, including almonds, cashews, walnuts, and pistachios, perfect for every palate and occasion."
-                </li>
-            </ul>
+            <div class="row justify-content-center">
+                <div class="col col-lg-5">
+                    <div class="section_title text-center">
+                        <h2 class="title_text mb-0">
+                            Why Choose Our Premium Dry Fruits?
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-lg-4">
+                    <div class="work_process_item"
+                         style="background-image: url('{% static 'website/images/vendor/vendor_bg_1.png' %}');">
+                        <div class="item_icon">1</div>
+                        <h3 class="item_title">
+                            Exceptional Quality and Freshness
+                        </h3>
+                        <p class="mb-0">
+                            "Indulge in the finest dry fruits, meticulously sourced for unmatched quality and guaranteed
+                            freshness in every bite."
+                        </p>
+                    </div>
+                </div>
+                <div class="col col-lg-4">
+                    <div class="work_process_item"
+                         style="background-image: url('{% static 'website/images/vendor/vendor_bg_2.png' %}');">
+                        <div class="item_icon">2</div>
+                        <h3 class="item_title">
+                            Nutrient-Rich and Healthy </h3>
+                        <p class="mb-0">
+                            "Benefit from a natural source of essential vitamins, minerals, and antioxidants, promoting
+                            energy, heart health, and overall well-being." </p>
+                    </div>
+                </div>
+                <div class="col col-lg-4">
+                    <div class="work_process_item"
+                         style="background-image: url('{% static 'website/images/vendor/vendor_bg_3.png' %}');">
+                        <div class="item_icon">3</div>
+                        <h3 class="item_title">
+                            Wide Selection for Every Taste </h3>
+                        <p class="mb-0">
+                            "Explore a diverse range of flavours and varieties, including almonds, cashews, walnuts, and
+                            pistachios, perfect for every palate and occasion."
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock content %}
