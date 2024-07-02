@@ -4,7 +4,8 @@
     <section class="vendor_section sec_space_small aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
         <div class="container">
             <div class="vendor_image">
-                <img src="{% static 'website/images/backgrounds/banner.webp' %}" style="width: 12000px;"  alt="image_not_found">
+                <img src="{% static 'website/images/backgrounds/banner.webp' %}" style="width: 12000px;"
+                     alt="image_not_found">
             </div>
             <h2 class="title_text">
                 Rajasthan Dryfruit House: A Legacy of Premium Quality Dry Fruits
@@ -38,7 +39,7 @@
             </p>
             <div class="row">
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="500">
+                    <div class="vendor_service_item ">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service19.png' %}" alt="image_not_found">
@@ -55,7 +56,7 @@
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000">
+                    <div class="vendor_service_item ">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service20.png' %}" alt="image_not_found">
@@ -72,32 +73,33 @@
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="1500">
+                    <div class="vendor_service_item" >
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service21.png' %}" alt="image_not_found">
                         </div>
                         <div class="item_content">
-                            <h3 class="item_title">Perfect for On-the-Go</h3>
+                            <h3 class="item_title">Variety and Flavors</h3>
                             <p class="mb-0">
-                                "Enjoy our dry fruits in convenient, resealable packs that are perfect for snacking
-                                on-the-go, whether at work, school, or during travel."
+                                "Explore our diverse range of almonds, cashews, walnuts, pistachios, and more, available
+                                in raw, roasted, salted, and flavored options."
+
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col col-lg-3 col-md-6 col-sm-6">
-                    <div class="vendor_service_item aos-init aos-animate" data-aos="fade-up" data-aos-duration="2000">
+                    <div class="vendor_service_item">
                         <div class="item_icon"
                              style="background-image: url('{% static 'website/images/services/service18.png' %}');">
                             <img src="{% static 'website/images/services/service22.png' %}" alt="image_not_found">
                         </div>
                         <div class="item_content">
-                            <h3 class="item_title">MOST APPROACHABLE</h3>
+                            <h3 class="item_title">Perfect for On-the-Go</h3>
                             <p class="mb-0">
-                                Our friendly customer service team is always ready to assist you with any queries or
-                                concerns you may have.
+                                "Enjoy our dry fruits in convenient, resealable packs that are perfect for snacking
+                                on-the-go, whether at work, school, or during travel."
                             </p>
                         </div>
                     </div>
@@ -117,14 +119,16 @@
                         {% if team %}
                             {% for object in team %}
                                 <div class="col-sm-6 col-md-6 col-xl-3">
-                                    <div class="card team_content text-center aos-init aos-animate" data-aos="fade-left"
-                                         data-aos-duration="2000">
+                                    <div class="card team_content text-center ">
                                         <img class="rounded-pill" src="{{ object.image.url }}" alt="team3">
                                         <div class="card-body team_author_content">
                                             <h4 class="card-text team_author_post mb-2">{{ object.name }}</h4>
                                             <h3 class="card-text team_author_post mb-2 text-warning">{{ object.rank }}</h3>
                                             <div class="team_author_social_link d-flex justify-content-center justify-content-around align-items-center">
                                                 <a class="text-warning social_twitt" href="
+
+
+
 
 
 
@@ -155,10 +159,16 @@
 
 
 
+
+
+
                                                         {% if object.facebook_link %}{{ object.twitter_link }}{% else %}javascript:void(0){% endif %}">
                                                     <i class="fab fa-facebook-square"></i>
                                                 </a>
                                                 <a class="text-warning social_twitt" href="
+
+
+
 
 
 
@@ -189,10 +199,16 @@
 
 
 
+
+
+
                                                         {% if object.instagram_link %}{{ object.twitter_link }}{% else %}javascript:void(0){% endif %}">
                                                     <i class="fab fa-instagram"></i>
                                                 </a>
                                                 <a class="text-warning social_twitt" href="
+
+
+
 
 
 
@@ -274,4 +290,5 @@
             </div>
         </div>
     </section>
+
 {% endblock content %}
