@@ -93,7 +93,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware'
 
     # YOUR MIDDLEWARES
 ]
@@ -233,7 +233,7 @@ OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-RAZORPAY_API_KEY = "Hiren9016573094@gmail.com"
-RAZORPAY_API_SECRET = "Hiren9016573094@gmail.com"
+RAZORPAY_API_KEY = env("RAZORPAY_API_KEY")
+RAZORPAY_API_SECRET = env("RAZORPAY_API_SECRET")
 SHIPROCKET_EMAIL = "Hiren9016573094@gmail.com"
 SHIPROCKET_PASSWORD = "Hiren@007"
