@@ -1238,9 +1238,9 @@ p {
 .banner_section_item {
     background-color: #2f333e; /* Solid background color */
     text-rendering: optimizelegibility;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07)), url('/static/website/images/backgrounds/background (2).png');
-    background-repeat: repeat; /* Adjust this according to your needs */
-    background-size: auto 350px; /* Adjust the size as needed */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07)), url('/static/website/IMG-20240704-WA0002.jpg');
+    /*background-repeat: repeat; !* Adjust this according to your needs *!*/
+    background-size: 2800px; /* Adjust the size as needed */
 }
 
 .banner_content {
