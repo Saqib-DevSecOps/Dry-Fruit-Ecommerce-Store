@@ -304,8 +304,7 @@ class ProductUpdateView(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, "Product Successfully Updated")
-        success_url = reverse_lazy('admins:product-list')
-        return success_url
+        return self.request.META.get('HTTP_REFERER')
 
 
 @method_decorator(admin_protected, name='dispatch')
