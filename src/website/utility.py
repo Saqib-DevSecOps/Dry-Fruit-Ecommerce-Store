@@ -4,7 +4,7 @@ from _decimal import Decimal
 from django.contrib import messages
 from django.utils import timezone
 
-from src.administration.admins.models import Cart, Coupon, BuyerCoupon
+from src.administration.admins.models import Cart, Coupon, BuyerCoupon, Package
 
 
 def session_id(self):
@@ -15,7 +15,14 @@ def session_id(self):
 
 
 def calculate_volumetric_weight(length, width, height, divisor=Decimal('5000')):
-    return (length * width * height) / divisor
+    packages = Package.objects.all()
+    cart_volume = length * width * height
+    actual_weight = cart_volume
+
+    for package in packages:
+        if int(package.get_total_dimensions()) == int(cart_volume):
+            actual_weight = package.get_total_dimensions()
+    return actual_weight / divisor
 
 
 def get_chargeable_weight(actual_weight, volumetric_weight):
@@ -61,11 +68,17 @@ def get_total_amount(user):
             height = Decimal('10')
             weight = Decimal('1')
 
+        # Add 10% to dimensions
+        length += length * Decimal('0.10')
+        width += width * Decimal('0.10')
+        height += height * Decimal('0.10')
+
         total_price += Decimal(cart_item.get_item_price())
         sub_total += Decimal(cart_item.get_discount_price())
         discount_price += Decimal(cart_item.get_item_price()) - Decimal(cart_item.get_discount_price())
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
+
         shiprocket_shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
 
         # Apply all unused coupons discounts
@@ -75,6 +88,9 @@ def get_total_amount(user):
             if coupon.is_active and coupon.valid_from <= timezone.now() <= coupon.valid_to:
                 discount_amount = sub_total * (coupon.discount / Decimal('100'))
                 buyer_coupon.save()
+
+    # Add 10% extra to the Shiprocket shipping charges
+    shiprocket_shipping_charges += shiprocket_shipping_charges * Decimal('0.10')
     coupon_discount = discount_amount
     sub_total = sub_total - coupon_discount
     return total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total, coupon_discount

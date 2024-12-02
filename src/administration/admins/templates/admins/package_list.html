@@ -1,0 +1,100 @@
+{% extends 'admins/base.html' %}
+{% load custom_tags %}
+{% load static %}
+
+{% block base_subtitle %} Package{% endblock %}
+{% block base_subhead_heading %} Package &rAarr; List{% endblock %}
+{% block base_subhead_paragraph %}List of all available Package{% endblock %}
+
+{% block base_subhead_button %}
+    <a class="btn btn-primary" href="{% url 'admins:package-add' %}">
+        Add Package
+    </a>
+{% endblock %}
+
+{% block base_content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                {% if object_list %}
+
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Length</th>
+                            <th>Width</th>
+                            <th>Height</th>
+                            <th>Is Active</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for object in object_list %}
+                            <tr>
+                                <td>{{ object.name }}</td>
+                                <td>{{ object.length }}</td>
+                                <td>{{ object.width }}</td>
+                                <td>{{ object.height }}</td>
+                                <td>{{ object.is_active }}</td>
+
+                                <td>
+                                    <a href="{% url 'admins:package-update' object.pk %}">
+                                        <i class="fa fa-edit"></i>
+                                    </a> &nbsp;
+                                    <a href="{% url 'admins:package-delete' object.pk %}" class="text-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+                    </table>
+
+                {% else %}
+                    <div class="card-body">
+                        <p class="text-danger mb-0"><b>No objects available</b></p>
+                    </div>
+                {% endif %}
+
+
+                </div>
+
+            </div>
+        </div>
+              {% if object_list %}
+            <div class="mt-3">
+                <ul class="pagination">
+                    {% if object_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if object_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

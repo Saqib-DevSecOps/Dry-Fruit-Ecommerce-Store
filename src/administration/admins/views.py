@@ -21,7 +21,8 @@ from src.administration.admins.filters import UserFilter, ProductFilter, OrderFi
 from src.administration.admins.forms import ProductImageForm, MyProfileForm, ProductForm, ProductWeightForm, \
     ShipRocketShipmentForm, ProductSizeForm, ProductDealForm, CouponForm
 from src.administration.admins.models import ProductCategory, BlogCategory, Product, ProductImage, Order, Blog, \
-    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal, Coupon
+    Language, ProductWeight, Weight, Shipment, PickupLocation, ShipRocketOrder, ProductSize, ProductDeal, Coupon, \
+    Package
 from src.administration.admins.notify import notify_admin_on_order_completed
 from src.apps.shipment.bll import create_shiprocket_order, add_new_pickup_location, get_or_refresh_token, \
     generate_awb_for_shipment, request_for_shipment_pickup, get_shipment_detail, track_shipping
@@ -740,3 +741,49 @@ class CouponCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super(CouponCreateView, self).form_valid(form)
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PackageListView(ListView):
+    model = Package
+    template_name = 'admins/package_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PackageListView, self).get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), 50)
+        page_number = self.request.GET.get('page')
+        page_object = paginator.get_page(page_number)
+        context['object_list'] = page_object
+        return context
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PackageCreateView(CreateView):
+    model = Package
+    fields = ['name', 'length', 'height', 'weight', 'is_active']
+    template_name = 'admins/package_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Package Successfully Created')
+        return reverse('admins:package-list')
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PackageUpdateView(UpdateView):
+    model = Package
+    fields = ['name', 'length', 'height', 'weight', 'is_active']
+    template_name = 'admins/package_form.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Package Successfully Updated')
+        return reverse('admins:package-list')
+
+
+@method_decorator(admin_protected, name='dispatch')
+class PackageDeleteView(DeleteView):
+    model = Package
+    template_name = 'admins/package_confirm_delete.html'
+
+    def get_success_url(self):
+        messages.success(self.request, 'Package Successfully Deleted')
+        return reverse('admins:package-list')
