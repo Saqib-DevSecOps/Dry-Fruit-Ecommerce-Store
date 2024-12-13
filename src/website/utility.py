@@ -17,7 +17,7 @@ def session_id(self):
 def calculate_volumetric_weight(length, width, height, divisor=Decimal('5000')):
     packages = Package.objects.all()
     cart_volume = length * width * height
-    cart_volume *= 1.10
+    cart_volume *= Decimal('1.10')
     actual_weight = cart_volume
     for package in packages:
         if int(package.get_total_dimensions()) == int(cart_volume + 0.5):
