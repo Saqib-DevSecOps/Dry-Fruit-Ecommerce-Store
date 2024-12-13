@@ -17,11 +17,12 @@ def session_id(self):
 def calculate_volumetric_weight(length, width, height, divisor=Decimal('5000')):
     packages = Package.objects.all()
     cart_volume = length * width * height
+    cart_volume *= 1.10
     actual_weight = cart_volume
-
     for package in packages:
-        if int(package.get_total_dimensions()) == int(cart_volume):
+        if int(package.get_total_dimensions()) == int(cart_volume + 0.5):
             actual_weight = package.get_total_dimensions()
+            break
     return actual_weight / divisor
 
 
@@ -89,8 +90,6 @@ def get_total_amount(user):
                 discount_amount = sub_total * (coupon.discount / Decimal('100'))
                 buyer_coupon.save()
 
-    # Add 10% extra to the Shiprocket shipping charges
-    shiprocket_shipping_charges += shiprocket_shipping_charges * Decimal('0.10')
     coupon_discount = discount_amount
     sub_total = sub_total - coupon_discount
     return total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total, coupon_discount
