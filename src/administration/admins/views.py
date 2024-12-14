@@ -760,7 +760,7 @@ class PackageListView(ListView):
 @method_decorator(admin_protected, name='dispatch')
 class PackageCreateView(CreateView):
     model = Package
-    fields = ['name', 'length', 'height', 'weight', 'is_active']
+    fields = ['name', 'length', 'height', 'width', 'is_active']
     template_name = 'admins/package_form.html'
 
     def get_success_url(self):
@@ -771,7 +771,7 @@ class PackageCreateView(CreateView):
 @method_decorator(admin_protected, name='dispatch')
 class PackageUpdateView(UpdateView):
     model = Package
-    fields = ['name', 'length', 'height', 'weight', 'is_active']
+    fields = ['name', 'length', 'height', 'width', 'is_active']
     template_name = 'admins/package_form.html'
 
     def get_success_url(self):
