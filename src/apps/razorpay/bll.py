@@ -58,17 +58,6 @@ def handle_payment(request):
                 # Update order status
                 order.payment_status = 'paid'
                 order.order_status = 'approved'
-                order_items = OrderItem.objects.filter(order=order)
-
-                # Update product quantities
-                for order_item in order_items:
-                    if order_item.product.quantity >= order_item.qty:
-                        product = order_item.product
-                        ordered_quantity = order_item.qty
-                        product.quantity -= ordered_quantity
-                        product.save()
-                        print(f"Product updated")
-
                 order.save()
                 print("Order saved with updated status")
 
