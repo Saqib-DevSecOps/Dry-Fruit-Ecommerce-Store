@@ -86,7 +86,7 @@ def create_shiprocket_order(form, order):
         "order_items": [
             {
                 "name": item.product.title,
-                "sku": f"{item.product.sku}_{item.product.pk}_{counter}",
+                "sku": f"{item.product.sku}_{item.product.pk}_{counter}"[:50],
                 "units": item.qty,
                 "selling_price": str(item.product.get_price()),
             }
