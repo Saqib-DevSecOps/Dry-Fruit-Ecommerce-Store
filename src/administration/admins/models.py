@@ -81,7 +81,6 @@ class ProductTag(models.Model):
 
 
 class ProductCategory(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True)
     thumbnail_image = models.ImageField(
         upload_to='vendor/inventory/product_category/thumbnail', null=True, blank=True,
@@ -120,7 +119,6 @@ class Product(models.Model):
         ('hot', 'Hot'),
     )
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sku = models.CharField(
         help_text="stock-keeping unit (SKU) is a store or catalog's product and service identification code",
         max_length=255
@@ -315,7 +313,6 @@ class ProductSize(models.Model):
 
 
 class ProductImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='vendor/inventory/product/images')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
