@@ -58,6 +58,8 @@ def get_total_amount(user):
 
     for cart_item in cart_items:
         product_size = cart_item.get_product_size()
+        quantity = cart_item.quantity  # Fetch the quantity of the item in the cart
+
         if product_size:
             length = Decimal(product_size.length)
             width = Decimal(product_size.breadth)
@@ -80,7 +82,8 @@ def get_total_amount(user):
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
 
-        shiprocket_shipping_charges += calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
+        item_shipping_charges = calculate_shipping_cost(chargeable_weight, base_rate, additional_500g_rate)
+        shiprocket_shipping_charges += item_shipping_charges * quantity
 
         # Apply all unused coupons discounts
         buyer_coupons = BuyerCoupon.objects.filter(user=user, is_used=False)
