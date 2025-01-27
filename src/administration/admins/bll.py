@@ -122,11 +122,16 @@ def get_custom_shipping_charge(cart_items, service_type, state):
     matched_state = match_state(state_patterns, state)
 
     for cart_item in cart_items:
+        quantity = cart_item.quantity
         if cart_item.product_weight is not None:
             actual_weight = cart_item.product_weight.get_product_size().weight
         else:
             actual_weight = 0
-        custom_shipping_cost += calculate_custom_shipping_cost(actual_weight, service_type, matched_state)
+        custom_shipping_cost += calculate_custom_shipping_cost(
+            actual_weight * quantity,  # Multiply weight by quantity
+            service_type,
+            matched_state
+        )
     return custom_shipping_cost
 
 
