@@ -20,7 +20,7 @@ def calculate_volumetric_weight(length, width, height, divisor=Decimal('5000')):
     cart_volume *= Decimal('1.10')
     actual_weight = cart_volume
     for package in packages:
-        if int(package.get_total_dimensions()) == int(cart_volume +Decimal('0.5')):
+        if int(package.get_total_dimensions()) == int(cart_volume + Decimal('0.5')):
             actual_weight = package.get_total_dimensions()
             break
     return actual_weight / divisor
@@ -181,6 +181,8 @@ def get_custom_shipping_charge(request, service_type, state):
 
     for cart_item in cart_items:
         product_size = cart_item.get_product_size()
+        quantity = cart_item.quantity  # Fetch the quantity of the item in the cart
+
         if product_size:
             length = Decimal(product_size.length)
             width = Decimal(product_size.breadth)
@@ -194,7 +196,9 @@ def get_custom_shipping_charge(request, service_type, state):
 
         volumetric_weight = calculate_volumetric_weight(length, width, height)
         chargeable_weight = get_chargeable_weight(weight, volumetric_weight)
-        custom_shipping_cost += calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state)
+        item_shipping_cost = calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state)
+        custom_shipping_cost += item_shipping_cost * quantity
+
     return custom_shipping_cost
 
 
