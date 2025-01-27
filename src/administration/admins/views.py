@@ -678,12 +678,16 @@ class PickupLocationCreate(CreateView):
         if status_code == 200:
             return super().form_valid(form)
         else:
-            error_message = response['message']
-            errors = response['errors']
-            messages.error(self.request, f"API error: {error_message}")
-            for field, error_messages in errors.items():
-                for error_message in error_messages:
-                    form.add_error(field, error_message)
+            error_message = response.get('message', "Unknown API error")
+            try:
+                error_details = json.loads(error_message)
+
+                for field, error_messages in error_details.items():
+                    for single_error in error_messages:
+                        form.add_error(field, single_error)
+            except (json.JSONDecodeError, TypeError, KeyError):
+                messages.error(self.request, f"API error: {error_message}")
+
             return self.form_invalid(form)
 
     def get_success_url(self):

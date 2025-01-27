@@ -30,7 +30,7 @@ def get_or_refresh_token():
 def add_new_pickup_location(form):
     token = get_or_refresh_token()
     if not token:
-        return None
+        return None , 500
 
     url = "https://apiv2.shiprocket.in/v1/external/settings/company/addpickup"
     payload = {

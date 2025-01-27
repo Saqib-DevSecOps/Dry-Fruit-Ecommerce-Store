@@ -9,8 +9,9 @@ class OrderCheckoutForm(ModelForm):
     class Meta:
         model = Order
         fields = [
-            'full_name', 'contact', 'postal_code', 'address', 'address_label', 'city',
-            'state', 'country', 'gst_in', 'shipment_type', 'service_type'
+            'full_name', 'contact', 'country', 'state', 'city',
+            'address', 'address_label', 'postal_code',
+            'gst_in', 'shipment_type', 'service_type'
         ]
 
     def clean_shipment_type(self):
