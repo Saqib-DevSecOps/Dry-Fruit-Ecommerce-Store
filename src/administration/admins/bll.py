@@ -1,3 +1,4 @@
+import math
 import re
 from datetime import datetime, timedelta
 
@@ -69,6 +70,10 @@ def order_repay_quantity_check(request, order):
 """ ORDERS """
 
 
+def convert_chargeable_weight_to_kg(chargeable_weight):
+    return math.ceil(chargeable_weight)
+
+
 def match_state(state_patterns, state):
     state = state.lower()
     for key, pattern in state_patterns.items():
@@ -77,8 +82,9 @@ def match_state(state_patterns, state):
     return "other"
 
 
-def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state,city):
+def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state, city):
     if service_type == "normal":
+        chargeable_weight = convert_chargeable_weight_to_kg(0.8)
         if matched_state == "gujarat":
             if city == "ahmedabad":
                 return 30 * chargeable_weight

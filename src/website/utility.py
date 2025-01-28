@@ -128,7 +128,6 @@ def match_state(state_patterns, state):
 
 
 def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state):
-    chargeable_weight = int(chargeable_weight + 0.5)
     if service_type == "normal":
         if matched_state == "local":
             return 30 * chargeable_weight
