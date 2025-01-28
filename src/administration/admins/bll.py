@@ -86,7 +86,7 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
     if service_type == "normal":
         chargeable_weight = convert_chargeable_weight_to_kg(0.8)
         if matched_state == "gujarat":
-            if city == "ahmedabad":
+            if city.lower() == "ahmedabad":
                 return 30 * chargeable_weight
             return 40 * chargeable_weight
         elif matched_state == "mumbai":
@@ -96,7 +96,7 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
     elif service_type == "fast":
         if chargeable_weight <= 0.5:
             if matched_state == "gujarat":
-                if city == "ahmedabad":
+                if city.lower() == "ahmedabad":
                     return 150 * chargeable_weight
                 return 200 * chargeable_weight
             elif matched_state == "mumbai":
@@ -105,7 +105,7 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
                 return 300 * chargeable_weight
         elif chargeable_weight <= 1:
             if matched_state == "gujarat":
-                if city == "ahmedabad":
+                if city.lower() == "ahmedabad":
                     return 200 * chargeable_weight
                 return 250 * chargeable_weight
             elif matched_state == "mumbai":
@@ -115,7 +115,7 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
 
         else:
             if matched_state == "gujarat":
-                if city == "ahmedabad":
+                if city.lower() == "ahmedabad":
                     return 200 * chargeable_weight
                 return 250 * chargeable_weight
             elif matched_state == "mumbai":
