@@ -77,10 +77,12 @@ def match_state(state_patterns, state):
     return "other"
 
 
-def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state):
+def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_state,city):
     if service_type == "normal":
         if matched_state == "gujarat":
-            return 30 * chargeable_weight
+            if city == "ahmedabad":
+                return 30 * chargeable_weight
+            return 40 * chargeable_weight
         elif matched_state == "mumbai":
             return 60 * chargeable_weight
         else:
@@ -88,22 +90,28 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
     elif service_type == "fast":
         if chargeable_weight <= 0.5:
             if matched_state == "gujarat":
-                return 150
+                if city == "ahmedabad":
+                    return 150 * chargeable_weight
+                return 200 * chargeable_weight
             elif matched_state == "mumbai":
-                return 250
+                return 250 * chargeable_weight
             else:
-                return 300
+                return 300 * chargeable_weight
         elif chargeable_weight <= 1:
             if matched_state == "gujarat":
-                return 200
+                if city == "ahmedabad":
+                    return 200 * chargeable_weight
+                return 250 * chargeable_weight
             elif matched_state == "mumbai":
-                return 300
+                return 300 * chargeable_weight
             else:
-                return 350
+                return 350 * chargeable_weight
 
         else:
             if matched_state == "gujarat":
-                return 200 * chargeable_weight
+                if city == "ahmedabad":
+                    return 200 * chargeable_weight
+                return 250 * chargeable_weight
             elif matched_state == "mumbai":
                 return 300 * chargeable_weight
             else:
@@ -112,7 +120,7 @@ def calculate_custom_shipping_cost(chargeable_weight, service_type, matched_stat
         return 1
 
 
-def get_custom_shipping_charge(cart_items, service_type, state):
+def get_custom_shipping_charge(cart_items, service_type, state, city):
     custom_shipping_cost = Decimal(0)
     state_patterns = {
         "gujarat": r"gujarat",
@@ -130,7 +138,8 @@ def get_custom_shipping_charge(cart_items, service_type, state):
         custom_shipping_cost += calculate_custom_shipping_cost(
             actual_weight * quantity,  # Multiply weight by quantity
             service_type,
-            matched_state
+            matched_state,
+            city
         )
     return custom_shipping_cost
 
@@ -191,7 +200,7 @@ def create_order_items(order, user_request):
     cart = Cart.objects.filter(user=user_request)
     total_price, discount_price, shiprocket_shipping_charges, custom_shipping_charges, sub_total, coupon_discount = get_total_amount(
         user_request)
-    custom_shipping_cost = get_custom_shipping_charge(cart, order.service_type, order.state)
+    custom_shipping_cost = get_custom_shipping_charge(cart, order.service_type, order.state, order.city)
 
     # 2: Create Order Items
     order_items = [

@@ -417,7 +417,7 @@ class ProductWeightDeleteView(View):
 
 
 class ProductSizeCreateView(CreateView):
-    model = ProductWeight
+    model = ProductSize
     form_class = ProductSizeForm
     template_name = 'admins/productsize_form.html'
 
