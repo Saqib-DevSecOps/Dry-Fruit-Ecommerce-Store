@@ -27,12 +27,12 @@ def positive_validator(value):
 
 
 def product_size_validator(value):
-    if value < 0.5:
-        raise ValidationError('Must be more than 0.5.')
+    if value <= 0:
+        raise ValidationError('Must be more than 0.')
 
 
 def product_weight_validator(value):
-    if value < 1:
+    if value <= 0:
         raise ValidationError('Must be more than 0.')
 
 
@@ -300,11 +300,11 @@ class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_weight = models.OneToOneField(ProductWeight, on_delete=models.CASCADE)
     length = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
-                                 help_text="The Value of the item in cms. Must be more than 0.5.")
+                                 help_text="The Value of the item in cms. Must be more than 0.")
     breadth = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
-                                  help_text="The Value of the item in cms. Must be more than 0.5.")
+                                  help_text="The Value of the item in cms. Must be more than 0.")
     height = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_size_validator],
-                                 help_text="The Value of the item in cms. Must be more than 0.5.")
+                                 help_text="The Value of the item in cms. Must be more than 0.")
     weight = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[product_weight_validator],
                                  help_text="The Value of the item in kgs. Must be more than 0.")
 
